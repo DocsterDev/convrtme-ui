@@ -1,0 +1,146 @@
+// Typography SASS
+@import functions
+@import variables
+
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900,900i')
+
+$fontCircular: 'Circular'
+$fontRoboto: 'Roboto'
+
+@font-face
+  font-family: $fontCircular
+  src: url('assets/fonts/circular/circular-book.ttf') format('truetype')
+  font-weight: 300
+  font-style: normal
+
+@font-face
+  font-family: $fontCircular
+  src: url('assets/fonts/circular/circular-medium.ttf') format('truetype')
+  font-weight: 500
+  font-style: normal
+
+@font-face
+  font-family: $fontCircular
+  src: url('assets/fonts/circular/circular-bold.ttf') format('truetype')
+  font-weight: 700
+  font-style: normal
+
+
+@font-face
+  font-family: $fontCircular
+  src: url('assets/fonts/circular/circular-black.ttf') format('truetype')
+  font-weight: 900
+  font-style: normal
+
+@font-face
+  font-family: $fontCircular
+  src: url('assets/fonts/avenir/avenir-light.ttf') format('truetype')
+  font-weight: 100
+  font-style: normal
+
+@font-face
+  font-family: $fontCircular
+  src: url('assets/fonts/avenir/avenir-book.ttf') format('truetype')
+  font-weight: 300
+  font-style: normal
+
+@font-face
+  font-family: $fontCircular
+  src: url('assets/fonts/avenir/avenir-medium.ttf') format('truetype')
+  font-weight: 400
+  font-style: normal
+
+@font-face
+  font-family: $fontCircular
+  src: url('assets/fonts/avenir/avenir-heavy.ttf') format('truetype')
+  font-weight: 700
+  font-style: normal
+
+@font-face
+  font-family: $fontCircular
+  src: url('assets/fonts/avenir/avenir-black.ttf') format('truetype')
+  font-weight: 900
+  font-style: normal
+
+html, body
+  font-family: $fontRoboto, sans-serif
+  font-size: 100%
+  font-weigth: 400
+  color: $textColor
+
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+  font-smoothing: antialiased
+
+.t-font-circular
+  font-family: $fontCircular !important
+
+.t-small
+  font-size: rem(12px)
+  font-weight: 300
+  margin: 0
+
+.t-smaller
+  font-size: rem(14px)
+  font-weight: 300
+  margin: 0
+
+.t-normal
+  font-size: rem(16px)
+  font-weight: 400
+  margin: 0
+
+.t-normal2
+  font-size: rem(18px)
+  font-weight: 400
+  margin: 0
+
+.t-large
+  font-size: rem(20px)
+  font-weight: 500
+  margin: 0
+
+.t-larger
+  font-size: rem(28px)
+  font-weight: 500
+  margin: 0
+
+.t-jumbo
+  font-size: rem(34px)
+  font-weight: 500
+  margin: 0
+
+.t-light
+  font-weight: 300 !important
+
+.t-regular
+  font-weight: 400 !important
+
+.t-medium
+  font-weight: 500 !important
+
+.t-bold
+  font-weight: 700 !important
+
+.t-black
+  font-weight: 900 !important
+
+.t-italic
+  font-style: italic
+
+.t-light
+  color: $textColorLight !important
+
+//.logo
+//  font: 900 48px $fontCircular
+//  color: $accentColor
+//  letter-spacing: -5px
+//
+//.sub-title
+//  font: 700 normal 20px $fontCircular
+//  color: $textSubTitleColor
+//
+//.title
+//  font: 700 36px $fontCircular
+//  color: $accentColor
+//  letter-spacing: -2px

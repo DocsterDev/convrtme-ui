@@ -1,0 +1,53 @@
+@import variables
+@import mixins
+
+.no-select
+  -webkit-touch-callout: none
+  -webkit-user-select: none
+  -khtml-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+  user-select: none
+
+.button
+  +transition(border .10s ease-in, background-color 0.10s ease-in, color .10s ease-in)
+  @extend .no-select
+  font: 700 normal 18px $fontCircular
+  color: $btnTextColor
+  text-align: center
+  padding: 10px 15px
+  border-radius: 100px
+  border: 1px solid $primaryBtnColor
+  background: $primaryBtnColor
+  width: 240px
+  &:hover
+    cursor: pointer
+    background-color: $primaryBtnColorHover
+    border-color: $primaryBtnColorHover
+
+.secondary-button
+  @extend .button
+  background: $secondaryBtnColor
+  border-color: $secondaryBtnColor
+
+  &:hover
+    background: $secondaryBtnColorHover
+    border-color: $secondaryBtnColorHover
+
+.secondary-button-small
+  @extend .secondary-button
+  font: 700 normal 16px $fontCircular
+  padding: 0
+  width: 150px
+  height: 40px
+  line-height: 40px
+  margin: 0 15px
+  float: right
+
+.button-small
+  @extend .button
+  font: 700 normal 16px $fontCircular
+  padding: 0
+  width: 150px
+  height: 35px
+  line-height: 35px

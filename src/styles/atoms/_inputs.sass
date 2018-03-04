@@ -1,0 +1,49 @@
+@import variables
+
+.text-box
+  font: 400 18px $fontCircular
+  border: 1px solid $textInputBorder
+  color: $textInputBorder
+  border-radius: 100px
+  width: 240px
+  padding: 10px 17px
+  text-shadow: 0 0 0 $textInputColor
+  -webkit-text-fill-color: transparent
+  align-self: center
+  justify-self: center
+
+input
+  font: 300 18px $fontCircular
+  &:focus
+    outline: none
+input::-webkit-input-placeholder
+  text-shadow: none
+  -webkit-text-fill-color: initial
+  color: $textInputPlaceholderColor
+input::-moz-placeholder
+  color: $textInputPlaceholderColor
+input:-ms-input-placeholder
+  color: $textInputPlaceholderColor
+input:-moz-placeholder
+  color: $textInputPlaceholderColor
+input::-moz-selection
+  background: $textHighlightColor
+input::selection
+  background: $textHighlightColor
+
+
+
+
+.header-search-box
+  @extend .text-box
+  padding: 0 15px
+  margin: 0 15px
+  width: 300px
+  height: 40px
+  font-size: 17px
+  float: right
+  @media all and (max-width: $breakpointSmallDevice)
+    width: 80% !important
+    min-width: 100px
+    max-width: 300px
+
