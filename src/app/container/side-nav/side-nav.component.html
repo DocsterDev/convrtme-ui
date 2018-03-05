@@ -1,3 +1,7 @@
-<p>
-  side-nav works!
-</p>
+<div class="text-left c-font-circular c-bold c-smaller">
+  <div *ngFor="let option of navOptions" class="row tab-text Py(1)" (click)="navigate(option.index)">
+    <div class="col Mstart(1)">
+      {{option.display}}
+    </div>
+  </div>
+</div>

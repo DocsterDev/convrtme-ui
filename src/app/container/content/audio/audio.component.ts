@@ -12,4 +12,8 @@ export class AudioComponent implements OnInit {
   ngOnInit() {
   }
 
+  public onUpload(){
+    console.log('Upload files');
+  }
+
 }

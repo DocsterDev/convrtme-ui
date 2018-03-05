@@ -1,3 +1,5 @@
+@import variables
+
 .strict-width
   max-width: 150px
   min-width: 115px
@@ -5,3 +7,10 @@
 .strict-width-tab
   max-width: 750px
   min-width: 600px
+
+.tab-text
+  height: $navHeaderHeight
+  &:hover
+    // background: $tabHoverColor
+    cursor: pointer
+    color: $textColor

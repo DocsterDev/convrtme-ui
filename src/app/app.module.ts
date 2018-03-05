@@ -8,14 +8,13 @@ import {FooterComponent} from './footer/footer.component';
 import {ContainerComponent} from './container/container.component';
 import {AdComponent} from './container/ad/ad.component';
 import {PlaylistComponent} from './container/playlist/playlist.component';
-import {GenericComponent} from './container/content/generic/generic.component';
-import {VendorComponent} from './container/content/vendor/vendor.component';
-import {VideoComponent} from './container/content/generic/video/video.component';
-import {AudioComponent} from './container/content/generic/audio/audio.component';
+import {VideoComponent} from './container/content/video/video.component';
+import {AudioComponent} from './container/content/audio/audio.component';
 import {ContentComponent} from './container/content/content.component';
 import {SideNavComponent} from './container/side-nav/side-nav.component';
 import {RouterModule} from '@angular/router';
 import {appRoutes} from './app.routes';
+import { TileComponent } from './common/tile/tile.component';
 
 
 @NgModule({
@@ -28,10 +27,9 @@ import {appRoutes} from './app.routes';
     ContainerComponent,
     AdComponent,
     PlaylistComponent,
-    GenericComponent,
-    VendorComponent,
     VideoComponent,
-    AudioComponent
+    AudioComponent,
+    TileComponent
   ],
   imports: [
     BrowserModule,
@@ -40,4 +38,5 @@ import {appRoutes} from './app.routes';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

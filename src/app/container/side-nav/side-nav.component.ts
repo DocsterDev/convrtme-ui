@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-side-nav',
@@ -7,9 +7,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SideNavComponent implements OnInit {
 
-  constructor() { }
+  public navOptions = [{display: 'Audio', index: 0}, {display: 'Video', index: 1}, {display: 'YouTube', index: 2}];
+
+  constructor() {
+  }
 
   ngOnInit() {
+  }
+
+  public navigate(index) {
+    console.log('Navigating to index: ' + index);
   }
 
 }
