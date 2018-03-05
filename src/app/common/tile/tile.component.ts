@@ -16,6 +16,9 @@ export class TileComponent implements OnInit {
   @Input()
   public conversionTo: string;
 
+  @Input()
+  public type: string;
+
   constructor() {
   }
 

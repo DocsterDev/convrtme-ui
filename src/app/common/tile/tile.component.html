@@ -1,3 +1,13 @@
-<div class="tile-container My(1)">
+<div class="tile-container My(1) no-select">
   <ng-content></ng-content>
+  <div *ngIf="title" class="row">
+    <div class="col text-title c-font-avenir c-smaller c-bold Pt(1) Mx(1) flex-nowrap">
+      {{title}}
+    </div>
+  </div>
+  <div *ngIf="conversionFrom && conversionTo" class="row">
+    <div class="col text-subtitle c-font-avenir c-small c-bold Mx(1)">
+      {{conversionFrom}} to {{conversionTo}}
+    </div>
+  </div>
 </div>
