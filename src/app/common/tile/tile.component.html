@@ -1,5 +1,4 @@
 <div class="tile-container My(1) no-select">
-  <ng-content></ng-content>
   <div *ngIf="title" class="row">
     <div class="col text-title c-font-avenir c-smaller c-bold Pt(1) Mx(1) flex-nowrap">
       {{title}}
@@ -10,4 +9,5 @@
       {{conversionFrom}} to {{conversionTo}}
     </div>
   </div>
+  <ng-content></ng-content>
 </div>
