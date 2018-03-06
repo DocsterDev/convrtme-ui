@@ -15,11 +15,11 @@ export class AudioComponent implements OnInit {
       title: 'Gagnum Style [Official Video]',
       conversionFrom: 'MP3',
       conversionTo: 'WMA',
-      incrementValue: 100
+      incrementValue: 34
     },
     {
       uuid: 'abc1675',
-      title: 'Green Day - When I Come Around',
+      title: 'Green Day - Basket Case',
       conversionFrom: 'WAV',
       conversionTo: 'OGG',
       incrementValue: 88
@@ -43,7 +43,7 @@ export class AudioComponent implements OnInit {
       title: 'Good Charlotte - The Anthem',
       conversionFrom: 'MP3',
       conversionTo: 'FLAC',
-      incrementValue: 100
+      incrementValue: 23
     },
     {
       uuid: 'abc4568',
