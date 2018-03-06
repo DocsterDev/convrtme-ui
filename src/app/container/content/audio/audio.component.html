@@ -24,19 +24,51 @@
     <app-tile [title]="tile.title" [conversionFrom]="tile.conversionFrom" [conversionTo]="tile.conversionTo">
       <div [ngSwitch]="tile.incrementValue !== 100">
         <div *ngSwitchCase="true">
-          <div class="row text-center">
+          <div class="row Pt(1)">
             <div class="col">
-              {{tile.incrementValue}}
+              <circle-progress
+                [percent]="tile.incrementValue"
+                [radius]="65"
+                [space]="-10"
+                [outerStrokeWidth]="10"
+                [innerStrokeWidth]="10"
+                [outerStrokeColor]="'#13c4a3'"
+                [innerStrokeColor]="'#fafafa'"
+                [showInnerStroke]="true"
+                [animation]="false"
+                [showUnits]="true"
+                [showBackground]="false"
+                [showSubtitle]="false"
+                [units]="'%'"
+                [unitsFontSize]="26"
+                [titleFontSize]="26"
+                [titleColor]="'#4c6085'"
+                [subtitleColor]="'#4c6085'"
+                [unitsColor]="'#4c6085'"
+              ></circle-progress>
             </div>
           </div>
-          <div class="row justify-content-center">
+          <div class="row">
             <div class="col">
-              <div class="button c-font-circular c-bold c-smaller" (click)="increment(tile.uuid)">Increment</div>
+              <div style="margin-left:auto;margin-right:auto;" class="c-light c-smaller"
+                   (click)="increment(tile.uuid)">Converting
+              </div>
             </div>
           </div>
         </div>
         <div *ngSwitchCase="false">
-          <div class="button c-font-circular c-bold c-smaller" (click)="increment(tile.uuid)">Download</div>
+          <div class="row Py(2) My(1)">
+            <div class="col">
+             <div class="c-light c-smaller">Complete</div>
+            </div>
+          </div>
+          <div class="row Pt(1)">
+            <div class="col">
+              <div style="margin-left:auto;margin-right:auto;" class="button c-font-circular c-bold c-smaller"
+                   (click)="increment(tile.uuid)">Download
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </app-tile>

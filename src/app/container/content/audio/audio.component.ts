@@ -19,7 +19,7 @@ export class AudioComponent implements OnInit {
     },
     {
       uuid: 'abc1675',
-      title: 'Green Day - When I Come Around',
+      title: 'Green Day - Basket Case',
       conversionFrom: 'WAV',
       conversionTo: 'OGG',
       incrementValue: 88

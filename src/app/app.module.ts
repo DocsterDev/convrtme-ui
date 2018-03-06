@@ -15,6 +15,7 @@ import {SideNavComponent} from './container/side-nav/side-nav.component';
 import {RouterModule} from '@angular/router';
 import {appRoutes} from './app.routes';
 import { TileComponent } from './common/tile/tile.component';
+import {NgCircleProgressModule} from 'ng-circle-progress';
 
 
 @NgModule({
@@ -34,6 +35,7 @@ import { TileComponent } from './common/tile/tile.component';
   imports: [
     BrowserModule,
     RouterModule.forRoot(appRoutes),
+    NgCircleProgressModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
