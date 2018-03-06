@@ -10,7 +10,7 @@
     </div>
   </div>
 </div>
-<div class="row Py(1)">
+<div class="row Py(1) Mb(2)">
   <div class="col">
     <app-tile>
       <div class="row">
@@ -20,13 +20,25 @@
       </div>
     </app-tile>
   </div>
-  <div class="col">
-    <app-tile [title]="'Gagnum Style [Official Video]'" [conversionFrom]="'MP3'" [conversionTo]="'AAC'"></app-tile>
-  </div>
-  <div class="col">
-    <app-tile [title]="'Green Day - When I Come Around'" [conversionFrom]="'WAV'" [conversionTo]="'OGG'"></app-tile>
-  </div>
-  <div class="col">
-    <app-tile [title]="'Good Charlotte - The Anthem'" [conversionFrom]="'OGG'" [conversionTo]="'FLAC'"></app-tile>
+  <div *ngFor="let tile of audioData" class="col">
+    <app-tile [title]="tile.title" [conversionFrom]="tile.conversionFrom" [conversionTo]="tile.conversionTo">
+      <div [ngSwitch]="tile.incrementValue !== 100">
+        <div *ngSwitchCase="true">
+          <div class="row text-center">
+            <div class="col">
+              {{tile.incrementValue}}
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col">
+              <div class="button c-font-circular c-bold c-smaller" (click)="increment(tile.uuid)">Increment</div>
+            </div>
+          </div>
+        </div>
+        <div *ngSwitchCase="false">
+          <div class="button c-font-circular c-bold c-smaller" (click)="increment(tile.uuid)">Download</div>
+        </div>
+      </div>
+    </app-tile>
   </div>
 </div>
