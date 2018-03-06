@@ -24,7 +24,7 @@
     <app-tile [title]="tile.title" [conversionFrom]="tile.conversionFrom" [conversionTo]="tile.conversionTo">
       <div [ngSwitch]="tile.incrementValue !== 100">
         <div *ngSwitchCase="true">
-          <div class="row Pt(1)">
+          <div class="row Pt(1.5)">
             <div class="col">
               <circle-progress
                 [percent]="tile.incrementValue"
@@ -48,13 +48,13 @@
               ></circle-progress>
             </div>
           </div>
-          <div class="row">
-            <div class="col">
-              <div style="margin-left:auto;margin-right:auto;" class="c-light c-smaller"
-                   (click)="increment(tile.uuid)">Converting
-              </div>
-            </div>
-          </div>
+          <!--<div class="row">-->
+            <!--<div class="col">-->
+              <!--<div style="margin-left:auto;margin-right:auto;" class="c-light c-smaller"-->
+                   <!--(click)="increment(tile.uuid)">Converting-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</div>-->
         </div>
         <div *ngSwitchCase="false">
           <div class="row Py(2) My(1)">
@@ -62,7 +62,7 @@
              <div class="c-light c-smaller">Complete</div>
             </div>
           </div>
-          <div class="row Pt(1)">
+          <div class="row">
             <div class="col">
               <div style="margin-left:auto;margin-right:auto;" class="button c-font-circular c-bold c-smaller"
                    (click)="increment(tile.uuid)">Download
