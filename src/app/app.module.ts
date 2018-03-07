@@ -16,6 +16,7 @@ import {RouterModule} from '@angular/router';
 import {appRoutes} from './app.routes';
 import { TileComponent } from './common/tile/tile.component';
 import {NgCircleProgressModule} from 'ng-circle-progress';
+import {FileDropModule} from 'ngx-file-drop';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import {NgCircleProgressModule} from 'ng-circle-progress';
   imports: [
     BrowserModule,
     RouterModule.forRoot(appRoutes),
-    NgCircleProgressModule.forRoot()
+    NgCircleProgressModule.forRoot(),
+    FileDropModule
   ],
   providers: [],
   bootstrap: [AppComponent]

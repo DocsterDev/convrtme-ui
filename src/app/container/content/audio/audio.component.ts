@@ -1,4 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {UploadEvent, UploadFile} from 'ngx-file-drop';
+import {Http} from '@angular/http';
 
 @Component({
   selector: 'app-audio',
@@ -9,7 +11,7 @@ export class AudioComponent implements OnInit {
 
   private map = new Map();
 
-  public audioData = [
+  public data = [
     {
       uuid: 'abc1234',
       title: 'Gagnum Style [Official Video]',
@@ -69,18 +71,32 @@ export class AudioComponent implements OnInit {
     }
   ];
 
+  public files: UploadFile[] = [];
+
   constructor() {
   }
 
+
   ngOnInit() {
+
     /**
      * Load map will simulate when audio data is loaded after every server load and update of list
      */
     this.loadMap();
   }
 
+  /**
+   * Clicked Upload files
+   */
   public onUpload() {
     console.log('Upload files');
+  }
+
+  /**
+   * Clicked download
+   */
+  public onDownload() {
+    console.log('Download files');
   }
 
   /**
@@ -98,9 +114,42 @@ export class AudioComponent implements OnInit {
    * Load the map with key of uuid
    */
   public loadMap() {
-    this.audioData.forEach((e) => {
+    this.data.forEach((e) => {
       this.map.set(e.uuid, e);
     });
+  }
+
+
+  /**
+   * Dropped File Event
+   */
+  public dropped(event: UploadEvent) {
+    this.files = event.files;
+    this.files.forEach((e) => {
+      const obj = {
+        uuid: 'abc1234',
+        title: e.relativePath,
+        conversionFrom: 'MP3',
+        conversionTo: 'FLAC',
+        incrementValue: 100
+      };
+      this.data.push(obj);
+      this.loadMap();
+    });
+  }
+
+  /**
+   * File hover over
+   */
+  public fileOver(event) {
+    // console.log(event);
+  }
+
+  /**
+   * File leave
+   */
+  public fileLeave(event) {
+    // console.log(event);
   }
 
 }
