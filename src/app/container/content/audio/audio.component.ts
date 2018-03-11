@@ -90,6 +90,7 @@ export class AudioComponent implements OnInit {
    */
   public onUpload() {
     console.log('Upload files');
+
   }
 
   /**

@@ -17,6 +17,7 @@ import {appRoutes} from './app.routes';
 import { TileComponent } from './common/tile/tile.component';
 import {NgCircleProgressModule} from 'ng-circle-progress';
 import {FileDropModule} from 'ngx-file-drop';
+import {FileUploadService} from './service/file-upload.service';
 
 
 @NgModule({
@@ -39,7 +40,7 @@ import {FileDropModule} from 'ngx-file-drop';
     NgCircleProgressModule.forRoot(),
     FileDropModule
   ],
-  providers: [],
+  providers: [FileUploadService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
