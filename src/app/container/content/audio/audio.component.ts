@@ -1,6 +1,6 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {UploadEvent, UploadFile} from 'ngx-file-drop';
-import {Http} from '@angular/http';
+import {FileUploadModule, FileSelectDirective, FileDropDirective, FileUploader} from 'ng2-file-upload/ng2-file-upload';
 
 @Component({
   selector: 'app-audio',
@@ -10,6 +10,12 @@ import {Http} from '@angular/http';
 export class AudioComponent implements OnInit {
 
   private map = new Map();
+
+  private url = 'www.html.org';
+
+  public uploader: FileUploader = new FileUploader({url: this.url});
+  public hasBaseDropZoneOver = false;
+  public hasAnotherDropZoneOver = false;
 
   public data = [
     {
@@ -151,6 +157,16 @@ export class AudioComponent implements OnInit {
    */
   public fileLeave(event) {
     // console.log(event);
+  }
+
+
+
+  public fileOverBase(e: any): void {
+    this.hasBaseDropZoneOver = e;
+  }
+
+  public fileOverAnother(e: any): void {
+    this.hasAnotherDropZoneOver = e;
   }
 
 }
