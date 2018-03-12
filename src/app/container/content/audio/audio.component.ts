@@ -13,6 +13,12 @@ export class AudioComponent implements OnInit {
 
   private map = new Map();
 
+  private url = 'www.html.org';
+
+  public uploader: FileUploader = new FileUploader({url: this.url});
+  public hasBaseDropZoneOver = false;
+  public hasAnotherDropZoneOver = false;
+
   public data = [
     {
       uuid: 'abc1234',
@@ -158,6 +164,16 @@ export class AudioComponent implements OnInit {
    */
   public fileLeave(event) {
     // console.log(event);
+  }
+
+
+
+  public fileOverBase(e: any): void {
+    this.hasBaseDropZoneOver = e;
+  }
+
+  public fileOverAnother(e: any): void {
+    this.hasAnotherDropZoneOver = e;
   }
 
 
