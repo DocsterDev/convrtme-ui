@@ -159,7 +159,7 @@ export class AudioComponent implements OnInit {
         this.setValue('abc1234', progress.percentage);
       })
       .withDownloadProgressListener(progress => { console.log(`Downloading ${progress.percentage}%`); })
-      .post('http://localhost:8081/file-upload', form)
+      .post('http://localhost:8080/file-upload', form)
       .subscribe((response) => {
         console.log(response);
       });
