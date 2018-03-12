@@ -4,9 +4,12 @@
     <div class="col">
       <div class="row Mb(0.5)">
         <div class="col">
-          <div data-toggle="modal" data-target="#exampleModalCenter" class="secondary-button c-font-circular c-bold c-smaller force-center"
-               (click)="onUpload()">Upload files
-          </div>
+          <!--<app-file-upload #fu (change)="fu.upload()" [multiple]="true"></app-file-upload>-->
+          <!--<div id="fileUpload" #fileUpload type="file" class="secondary-button c-font-circular c-bold c-smaller force-center"-->
+               <!--(click)="onUpload()" value="Upload files">Upload Files-->
+          <!--</div>-->
+          <input type="file" value="Upload Files" (submit)="submit()">
+
         </div>
       </div>
       <div class="row Mt(0.5)">
@@ -79,26 +82,5 @@
         </div>
       </div>
     </app-tile>
-  </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
   </div>
 </div>

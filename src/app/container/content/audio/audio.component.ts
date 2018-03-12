@@ -1,6 +1,8 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {UploadEvent, UploadFile} from 'ngx-file-drop';
-import {Http} from '@angular/http';
+import {FileUploadService} from '../../../service/file-upload.service';
+import {Uploader} from 'angular2-http-file-upload';
+import {FileUploadItemComponent} from '../../../common/file-upload-item/file-upload-item.component';
 
 @Component({
   selector: 'app-audio',
@@ -73,7 +75,7 @@ export class AudioComponent implements OnInit {
 
   public files: UploadFile[] = [];
 
-  constructor() {
+  constructor(private fileUploadService: FileUploadService, public uploaderService: Uploader) {
   }
 
 
@@ -83,6 +85,7 @@ export class AudioComponent implements OnInit {
      * Load map will simulate when audio data is loaded after every server load and update of list
      */
     this.loadMap();
+
   }
 
   /**
@@ -90,6 +93,10 @@ export class AudioComponent implements OnInit {
    */
   public onUpload() {
     console.log('Upload files');
+    this.fileUploadService.uploadFile().subscribe((response) => {
+      console.log(JSON.stringify(response));
+    });
+
 
   }
 
@@ -151,6 +158,32 @@ export class AudioComponent implements OnInit {
    */
   public fileLeave(event) {
     // console.log(event);
+  }
+
+
+  /**
+   * onFileUpload
+   */
+  submit() {
+    const uploadFile = (<HTMLInputElement>window.document.getElementById('fileUpload')).files[0];
+
+    const myUploadItem = new FileUploadItemComponent(uploadFile);
+    myUploadItem.formData = { FormDataKey: 'Form Data Value' };  // (optional) form data can be sent with file
+
+    this.uploaderService.onSuccessUpload = (item, response, status, headers) => {
+      // success callback
+    };
+    this.uploaderService.onErrorUpload = (item, response, status, headers) => {
+      // error callback
+    };
+    this.uploaderService.onCompleteUpload = (item, response, status, headers) => {
+      // complete callback, called regardless of success or failure
+    };
+    this.uploaderService.onProgressUpload = (item, percentComplete) => {
+      // progress callback
+      console.log(percentComplete);
+    };
+    this.uploaderService.upload(myUploadItem);
   }
 
 }

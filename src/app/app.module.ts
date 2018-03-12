@@ -14,10 +14,13 @@ import {ContentComponent} from './container/content/content.component';
 import {SideNavComponent} from './container/side-nav/side-nav.component';
 import {RouterModule} from '@angular/router';
 import {appRoutes} from './app.routes';
-import { TileComponent } from './common/tile/tile.component';
+import {TileComponent} from './common/tile/tile.component';
 import {NgCircleProgressModule} from 'ng-circle-progress';
 import {FileDropModule} from 'ngx-file-drop';
 import {FileUploadService} from './service/file-upload.service';
+import {HttpClientModule} from '@angular/common/http';
+import {Uploader} from 'angular2-http-file-upload';
+import {FileUploadItemComponent} from './common/file-upload-item/file-upload-item.component';
 
 
 @NgModule({
@@ -32,15 +35,17 @@ import {FileUploadService} from './service/file-upload.service';
     PlaylistComponent,
     VideoComponent,
     AudioComponent,
-    TileComponent
+    TileComponent,
+    FileUploadItemComponent
   ],
   imports: [
     BrowserModule,
     RouterModule.forRoot(appRoutes),
     NgCircleProgressModule.forRoot(),
-    FileDropModule
+    FileDropModule,
+    HttpClientModule
   ],
-  providers: [FileUploadService],
+  providers: [FileUploadService, Uploader],
   bootstrap: [AppComponent]
 })
 export class AppModule {
