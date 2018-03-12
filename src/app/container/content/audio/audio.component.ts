@@ -1,8 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {UploadEvent, UploadFile} from 'ngx-file-drop';
 import {FileUploadService} from '../../../service/file-upload.service';
-import {Uploader} from 'angular2-http-file-upload';
-import {FileUploadItemComponent} from '../../../common/file-upload-item/file-upload-item.component';
+import {ProgressHttp} from 'angular-progress-http';
 
 @Component({
   selector: 'app-audio',
@@ -13,19 +12,13 @@ export class AudioComponent implements OnInit {
 
   private map = new Map();
 
-  private url = 'www.html.org';
-
-  public uploader: FileUploader = new FileUploader({url: this.url});
-  public hasBaseDropZoneOver = false;
-  public hasAnotherDropZoneOver = false;
-
   public data = [
     {
       uuid: 'abc1234',
       title: 'Gagnum Style [Official Video]',
       conversionFrom: 'MP3',
       conversionTo: 'WMA',
-      incrementValue: 34
+      incrementValue: 0
     },
     {
       uuid: 'abc1675',
@@ -81,7 +74,7 @@ export class AudioComponent implements OnInit {
 
   public files: UploadFile[] = [];
 
-  constructor(private fileUploadService: FileUploadService, public uploaderService: Uploader) {
+  constructor(private http: ProgressHttp) {
   }
 
 
@@ -95,18 +88,6 @@ export class AudioComponent implements OnInit {
   }
 
   /**
-   * Clicked Upload files
-   */
-  public onUpload() {
-    console.log('Upload files');
-    this.fileUploadService.uploadFile().subscribe((response) => {
-      console.log(JSON.stringify(response));
-    });
-
-
-  }
-
-  /**
    * Clicked download
    */
   public onDownload() {
@@ -116,12 +97,12 @@ export class AudioComponent implements OnInit {
   /**
    * Add 1 to the progress bar
    */
-  public increment(uuid) {
+  public setValue(uuid, value) {
     const val = this.map.get(uuid);
+    val.incrementValue = value;
     if (val.incrementValue === 100) {
       return;
     }
-    val.incrementValue++;
   }
 
   /**
@@ -137,7 +118,7 @@ export class AudioComponent implements OnInit {
   /**
    * Dropped File Event
    */
-  public dropped(event: UploadEvent) {
+  public addFile(event: UploadEvent) {
     this.files = event.files;
     this.files.forEach((e) => {
       const obj = {
@@ -166,40 +147,22 @@ export class AudioComponent implements OnInit {
     // console.log(event);
   }
 
-
-
-  public fileOverBase(e: any): void {
-    this.hasBaseDropZoneOver = e;
-  }
-
-  public fileOverAnother(e: any): void {
-    this.hasAnotherDropZoneOver = e;
-  }
-
-
   /**
-   * onFileUpload
+   * Upload File
    */
-  submit() {
-    const uploadFile = (<HTMLInputElement>window.document.getElementById('fileUpload')).files[0];
-
-    const myUploadItem = new FileUploadItemComponent(uploadFile);
-    myUploadItem.formData = { FormDataKey: 'Form Data Value' };  // (optional) form data can be sent with file
-
-    this.uploaderService.onSuccessUpload = (item, response, status, headers) => {
-      // success callback
-    };
-    this.uploaderService.onErrorUpload = (item, response, status, headers) => {
-      // error callback
-    };
-    this.uploaderService.onCompleteUpload = (item, response, status, headers) => {
-      // complete callback, called regardless of success or failure
-    };
-    this.uploaderService.onProgressUpload = (item, percentComplete) => {
-      // progress callback
-      console.log(percentComplete);
-    };
-    this.uploaderService.upload(myUploadItem);
+  public uploadFile(file) {
+    const form = new FormData();
+    form.append('file', file[0]);
+    this.http
+      .withUploadProgressListener(progress => {
+        console.log(`Uploading ${progress.percentage}%`);
+        this.setValue('abc1234', progress.percentage);
+      })
+      .withDownloadProgressListener(progress => { console.log(`Downloading ${progress.percentage}%`); })
+      .post('http://localhost:8081/file-upload', form)
+      .subscribe((response) => {
+        console.log(response);
+      });
   }
 
 }

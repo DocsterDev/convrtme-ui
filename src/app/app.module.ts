@@ -19,8 +19,8 @@ import {NgCircleProgressModule} from 'ng-circle-progress';
 import {FileDropModule} from 'ngx-file-drop';
 import {FileUploadService} from './service/file-upload.service';
 import {HttpClientModule} from '@angular/common/http';
-import {Uploader} from 'angular2-http-file-upload';
-import {FileUploadItemComponent} from './common/file-upload-item/file-upload-item.component';
+import {ProgressHttpModule} from 'angular-progress-http';
+import {HttpModule} from '@angular/http';
 
 
 @NgModule({
@@ -35,17 +35,18 @@ import {FileUploadItemComponent} from './common/file-upload-item/file-upload-ite
     PlaylistComponent,
     VideoComponent,
     AudioComponent,
-    TileComponent,
-    FileUploadItemComponent
+    TileComponent
   ],
   imports: [
     BrowserModule,
     RouterModule.forRoot(appRoutes),
     NgCircleProgressModule.forRoot(),
     FileDropModule,
-    HttpClientModule
+    HttpClientModule,
+    HttpModule,
+    ProgressHttpModule
   ],
-  providers: [FileUploadService, Uploader],
+  providers: [FileUploadService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

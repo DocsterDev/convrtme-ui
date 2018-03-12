@@ -1,14 +1,13 @@
-<file-drop [customstyle]="''" (onFileDrop)="dropped($event)"
+<file-drop [customstyle]="''" (onFileDrop)="addFile($event)"
            (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)" [class.over]="'hover-over'">
 <div class="row dashed-border no-select Py(0.75)">
     <div class="col">
       <div class="row Mb(0.5)">
         <div class="col">
           <!--<app-file-upload #fu (change)="fu.upload()" [multiple]="true"></app-file-upload>-->
-          <!--<div id="fileUpload" #fileUpload type="file" class="secondary-button c-font-circular c-bold c-smaller force-center"-->
-               <!--(click)="onUpload()" value="Upload files">Upload Files-->
-          <!--</div>-->
-          <input type="file" value="Upload Files" (submit)="submit()">
+          <input name="file" (change)="uploadFile(fileUpload.files)" #fileUpload type="file" class="secondary-button c-font-circular c-bold c-smaller force-center"
+               value="Upload files">
+          <!--<input type="file" value="Upload Files">-->
 
         </div>
       </div>
