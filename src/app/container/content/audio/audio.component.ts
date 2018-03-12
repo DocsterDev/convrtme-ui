@@ -19,7 +19,7 @@ export class AudioComponent implements OnInit {
       conversionFrom: 'MP3',
       conversionTo: 'WMA',
       incrementValue: 0
-    },
+    }/*,
     {
       uuid: 'abc1675',
       title: 'Green Day - Basket Case',
@@ -69,7 +69,7 @@ export class AudioComponent implements OnInit {
       conversionFrom: 'MP3',
       conversionTo: 'FLAC',
       incrementValue: 100
-    }
+    }*/
   ];
 
   public files: UploadFile[] = [];
@@ -134,6 +134,21 @@ export class AudioComponent implements OnInit {
   }
 
   /**
+   * Dropped File Event
+   */
+  public addFileToArray(name, uuid) {
+      const obj = {
+        uuid: uuid,
+        title: name,
+        conversionFrom: 'MP3',
+        conversionTo: 'FLAC',
+        incrementValue: 0
+      };
+      this.data.push(obj);
+      this.loadMap();
+  }
+
+  /**
    * File hover over
    */
   public fileOver(event) {
@@ -151,12 +166,14 @@ export class AudioComponent implements OnInit {
    * Upload File
    */
   public uploadFile(file) {
+    console.log(file[0].name);
+
+    this.addFileToArray(file[0].name, 'uuid-21');
     const form = new FormData();
     form.append('file', file[0]);
     this.http
       .withUploadProgressListener(progress => {
-        console.log(`Uploading ${progress.percentage}%`);
-        this.setValue('abc1234', progress.percentage);
+        this.setValue('uuid-21', progress.percentage);
       })
       .withDownloadProgressListener(progress => { console.log(`Downloading ${progress.percentage}%`); })
       .post('http://localhost:8080/file-upload', form)
