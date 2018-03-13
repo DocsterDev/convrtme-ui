@@ -13,63 +13,63 @@ export class AudioComponent implements OnInit {
   private map = new Map();
 
   public data = [
-    {
-      uuid: 'abc1234',
-      title: 'Gagnum Style [Official Video]',
-      conversionFrom: 'MP3',
-      conversionTo: 'WMA',
-      incrementValue: 0
-    }/*,
-    {
-      uuid: 'abc1675',
-      title: 'Green Day - Basket Case',
-      conversionFrom: 'WAV',
-      conversionTo: 'OGG',
-      incrementValue: 88
-    },
-    {
-      uuid: 'abc6743',
-      title: 'Good Charlotte - The Anthem',
-      conversionFrom: 'MP3',
-      conversionTo: 'FLAC',
-      incrementValue: 100
-    },
-    {
-      uuid: 'abc9877',
-      title: 'Good Charlotte - The Anthem',
-      conversionFrom: 'MP3',
-      conversionTo: 'FLAC',
-      incrementValue: 74
-    },
-    {
-      uuid: 'abc4845',
-      title: 'Good Charlotte - The Anthem',
-      conversionFrom: 'MP3',
-      conversionTo: 'FLAC',
-      incrementValue: 23
-    },
-    {
-      uuid: 'abc4568',
-      title: 'Good Charlotte - The Anthem',
-      conversionFrom: 'MP3',
-      conversionTo: 'FLAC',
-      incrementValue: 100
+    /* {
+       uuid: 'abc1234',
+       title: 'Gagnum Style [Official Video]',
+       conversionFrom: 'MP3',
+       conversionTo: 'WMA',
+       incrementValue: 0
+     },
+     {
+       uuid: 'abc1675',
+       title: 'Green Day - Basket Case',
+       conversionFrom: 'WAV',
+       conversionTo: 'OGG',
+       incrementValue: 88
+     },
+     {
+       uuid: 'abc6743',
+       title: 'Good Charlotte - The Anthem',
+       conversionFrom: 'MP3',
+       conversionTo: 'FLAC',
+       incrementValue: 100
+     },
+     {
+       uuid: 'abc9877',
+       title: 'Good Charlotte - The Anthem',
+       conversionFrom: 'MP3',
+       conversionTo: 'FLAC',
+       incrementValue: 74
+     },
+     {
+       uuid: 'abc4845',
+       title: 'Good Charlotte - The Anthem',
+       conversionFrom: 'MP3',
+       conversionTo: 'FLAC',
+       incrementValue: 23
+     },
+     {
+       uuid: 'abc4568',
+       title: 'Good Charlotte - The Anthem',
+       conversionFrom: 'MP3',
+       conversionTo: 'FLAC',
+       incrementValue: 100
 
-    },
-    {
-      uuid: 'abc7547',
-      title: 'Good Charlotte - The Anthem',
-      conversionFrom: 'MP3',
-      conversionTo: 'FLAC',
-      incrementValue: 95
-    },
-    {
-      uuid: 'abc3467',
-      title: 'Good Charlotte - The Anthem',
-      conversionFrom: 'MP3',
-      conversionTo: 'FLAC',
-      incrementValue: 100
-    }*/
+     },
+     {
+       uuid: 'abc7547',
+       title: 'Good Charlotte - The Anthem',
+       conversionFrom: 'MP3',
+       conversionTo: 'FLAC',
+       incrementValue: 95
+     },
+     {
+       uuid: 'abc3467',
+       title: 'Good Charlotte - The Anthem',
+       conversionFrom: 'MP3',
+       conversionTo: 'FLAC',
+       incrementValue: 100
+     }*/
   ];
 
   public files: UploadFile[] = [];

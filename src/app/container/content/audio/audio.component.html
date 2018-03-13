@@ -4,11 +4,8 @@
     <div class="col">
       <div class="row Mb(0.5)">
         <div class="col">
-          <!--<app-file-upload #fu (change)="fu.upload()" [multiple]="true"></app-file-upload>-->
-          <input name="file" (change)="uploadFile(fileUpload.files)" #fileUpload type="file" class="secondary-button c-font-circular c-bold c-smaller force-center"
-               value="Upload files">
-          <!--<input type="file" value="Upload Files">-->
-
+          <input type="file" name="file" id="file1" class="input-file" (change)="uploadFile(fileUpload.files)" #fileUpload/>
+          <label class="secondary-button c-font-circular c-bold c-smaller force-center" for="file1">Upload a file</label>
         </div>
       </div>
       <div class="row Mt(0.5)">
@@ -19,8 +16,10 @@
     </div>
 </div>
 </file-drop>
-<div class="row Py(1) Mb(2)">
+<div class="row Mb(2)">
   <div class="col">
+    <input type="file" name="file" id="file2" class="input-file" (change)="uploadFile(fileUpload.files)" #fileUpload/>
+    <label for="file2">
     <app-tile class="add-conversion">
       <div class="row">
         <div class="col">
@@ -28,6 +27,7 @@
         </div>
       </div>
     </app-tile>
+    </label>
   </div>
   <div *ngFor="let tile of data" class="col">
     <app-tile [title]="tile.title" [conversionFrom]="tile.conversionFrom" [conversionTo]="tile.conversionTo">
