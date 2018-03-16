@@ -21,6 +21,8 @@ import {FileUploadService} from './service/file-upload.service';
 import {HttpClientModule} from '@angular/common/http';
 import {ProgressHttpModule} from 'angular-progress-http';
 import {HttpModule} from '@angular/http';
+import {MetadataService} from './service/metadata.service';
+import {UserService} from './service/user.service';
 
 
 @NgModule({
@@ -46,7 +48,7 @@ import {HttpModule} from '@angular/http';
     HttpModule,
     ProgressHttpModule
   ],
-  providers: [FileUploadService],
+  providers: [FileUploadService, MetadataService, UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

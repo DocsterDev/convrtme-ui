@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {UploadEvent, UploadFile} from 'ngx-file-drop';
 import {FileUploadService} from '../../../service/file-upload.service';
 import {ProgressHttp} from 'angular-progress-http';
+import {MetadataService} from '../../../service/metadata.service';
+import {UserService} from '../../../service/user.service';
 
 @Component({
   selector: 'app-audio',
@@ -10,95 +12,130 @@ import {ProgressHttp} from 'angular-progress-http';
 })
 export class AudioComponent implements OnInit {
 
-  private map = new Map();
+  private metadataMap = new Map();
 
-  public data = [
-    /* {
-       uuid: 'abc1234',
-       title: 'Gagnum Style [Official Video]',
-       conversionFrom: 'MP3',
-       conversionTo: 'WMA',
-       incrementValue: 0
-     },
-     {
-       uuid: 'abc1675',
-       title: 'Green Day - Basket Case',
-       conversionFrom: 'WAV',
-       conversionTo: 'OGG',
-       incrementValue: 88
-     },
-     {
-       uuid: 'abc6743',
-       title: 'Good Charlotte - The Anthem',
-       conversionFrom: 'MP3',
-       conversionTo: 'FLAC',
-       incrementValue: 100
-     },
-     {
-       uuid: 'abc9877',
-       title: 'Good Charlotte - The Anthem',
-       conversionFrom: 'MP3',
-       conversionTo: 'FLAC',
-       incrementValue: 74
-     },
-     {
-       uuid: 'abc4845',
-       title: 'Good Charlotte - The Anthem',
-       conversionFrom: 'MP3',
-       conversionTo: 'FLAC',
-       incrementValue: 23
-     },
-     {
-       uuid: 'abc4568',
-       title: 'Good Charlotte - The Anthem',
-       conversionFrom: 'MP3',
-       conversionTo: 'FLAC',
-       incrementValue: 100
-
-     },
-     {
-       uuid: 'abc7547',
-       title: 'Good Charlotte - The Anthem',
-       conversionFrom: 'MP3',
-       conversionTo: 'FLAC',
-       incrementValue: 95
-     },
-     {
-       uuid: 'abc3467',
-       title: 'Good Charlotte - The Anthem',
-       conversionFrom: 'MP3',
-       conversionTo: 'FLAC',
-       incrementValue: 100
-     }*/
-  ];
+  public metadataList: any = [];
 
   public files: UploadFile[] = [];
 
-  constructor(private http: ProgressHttp) {
+  constructor(private http: ProgressHttp, private metadataService: MetadataService, private userService: UserService) {
   }
 
-
   ngOnInit() {
-
-    /**
-     * Load map will simulate when audio data is loaded after every server load and update of list
-     */
-    this.loadMap();
-
+    // Load existing metadata
+    this.metadataService.getMetadata(this.userService.getCurrentUser()).subscribe((response) => {
+      this.metadataList = response;
+      // Load map on startup
+      this.loadMetadataMap();
+      console.log(JSON.stringify(this.metadataList));
+    }, (error) => {
+      console.error(JSON.stringify(error));
+    });
   }
 
   /**
-   * Clicked download
+   * Load the map with key of uuid
    */
-  public onDownload() {
-    console.log('Download files');
+  public loadMetadataMap() {
+    this.metadataList.forEach((e) => {
+      this.metadataMap.set(e.uuid, e);
+    });
+  }
+
+  /**
+   * Dropped File Event
+   */
+  public addDroppedFile(event: UploadEvent) {
+    this.files = event.files;
+  }
+
+  /**
+   * Upload File Event
+   */
+  public addPickedFile(file) {
+    // Generate UUID
+    const uuid = this.generateUUID();
+    const name = file[0].name;
+    const convertFrom = 'MP3';
+    const convertTo = 'FLAC';
+    // Build metadata object
+    const metadata = {
+      uuid: uuid,
+      title: name,
+      conversionFrom: convertFrom,
+      conversionTo: convertTo,
+      uploadComplete: false,
+      conversionComplete: false,
+      incrementValue: 0
+    };
+
+    // Add to dashboard
+    this.addToDashboard(metadata);
+
+    // Add to metadata table in db
+    this.persistMetadata(metadata);
+
+    // Check if file already exists first
+    // Start the file upload
+    this.uploadFile(file[0], uuid);
+  }
+
+  /**
+   * Persist metadata
+   */
+  public persistMetadata(metadata: any) {
+    this.metadataService.addMetadata(this.userService.getCurrentUser(), metadata).subscribe((response) => {
+      console.log(JSON.stringify(response));
+    }, (error) => {
+      console.error(JSON.stringify(error));
+    });
+  }
+
+  /**
+   * Add new file metadata to dashboard
+   */
+  public addToDashboard(metadata: any) {
+    this.metadataList.push(metadata);
+    this.loadMetadataMap();
+  }
+
+  /**
+   * Upload File
+   */
+  public uploadFile(file, uuid) {
+    const form = new FormData();
+    form.append('file', file);
+    this.http
+      .withUploadProgressListener(progress => {
+        this.setValue(uuid, progress.percentage);
+        if (progress.percentage === 100) {
+          this.setComplete(uuid);
+        }
+      })
+      .withDownloadProgressListener(progress => {
+      })
+      .post('http://localhost:8080/file-upload', form)
+      .subscribe((response) => {
+      });
+  }
+
+  /**
+   * Set meta data to complete
+   */
+  public setComplete (uuid) {
+    console.log('Setting complete');
+    const metadata = this.metadataMap.get(uuid);
+    metadata.uploadComplete = true;
+    this.metadataService.updateMetadata(uuid, metadata).subscribe((response) => {
+      console.log(JSON.stringify(response));
+    });
   }
 
   /**
    * Add 1 to the progress bar
    */
   public setValue(uuid, value) {
-    const val = this.map.get(uuid);
+    const val = this.metadataMap.get(uuid);
     val.incrementValue = value;
     if (val.incrementValue === 100) {
       return;
@@ -106,80 +143,15 @@ export class AudioComponent implements OnInit {
   }
 
   /**
-   * Load the map with key of uuid
+   * Generate UUID
    */
-  public loadMap() {
-    this.data.forEach((e) => {
-      this.map.set(e.uuid, e);
-    });
-  }
-
-
-  /**
-   * Dropped File Event
-   */
-  public addFile(event: UploadEvent) {
-    this.files = event.files;
-    this.files.forEach((e) => {
-      const obj = {
-        uuid: 'abc1234',
-        title: e.relativePath,
-        conversionFrom: 'MP3',
-        conversionTo: 'FLAC',
-        incrementValue: 100
-      };
-      this.data.push(obj);
-      this.loadMap();
-    });
-  }
-
-  /**
-   * Dropped File Event
-   */
-  public addFileToArray(name, uuid) {
-      const obj = {
-        uuid: uuid,
-        title: name,
-        conversionFrom: 'MP3',
-        conversionTo: 'FLAC',
-        incrementValue: 0
-      };
-      this.data.push(obj);
-      this.loadMap();
-  }
-
-  /**
-   * File hover over
-   */
-  public fileOver(event) {
-    // console.log(event);
-  }
-
-  /**
-   * File leave
-   */
-  public fileLeave(event) {
-    // console.log(event);
-  }
-
-  /**
-   * Upload File
-   */
-  public uploadFile(file) {
-    console.log(file[0].name);
-
-    this.addFileToArray(file[0].name, 'uuid-21');
-    const form = new FormData();
-    form.append('file', file[0]);
-    this.http
-      .withUploadProgressListener(progress => {
-        this.setValue('uuid-21', progress.percentage);
-      })
-      .withDownloadProgressListener(progress => { console.log(`Downloading ${progress.percentage}%`); })
-      .post('http://localhost:8080/file-upload', form)
-      .subscribe((response) => {
-        console.log(response);
-      });
+  public generateUUID() {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   }
 
 }

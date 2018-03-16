@@ -1,10 +1,10 @@
-<file-drop [customstyle]="''" (onFileDrop)="addFile($event)"
-           (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)" [class.over]="'hover-over'">
-<div class="row dashed-border no-select Py(0.75)">
+<file-drop [customstyle]="''" (onFileDrop)="addDroppedFile($event)" [class.over]="'hover-over'">
+  <!--(onFileOver)=" " (onFileLeave)=" "-->
+  <div class="row dashed-border no-select Py(0.75)">
     <div class="col">
       <div class="row Mb(0.5)">
         <div class="col">
-          <input type="file" name="file" id="file1" class="input-file" (change)="uploadFile(fileUpload1.files)" #fileUpload1/>
+          <input type="file" name="file" id="file1" class="input-file" (change)="addPickedFile(fileUpload1.files)" #fileUpload1/>
           <label class="secondary-button c-font-circular c-bold c-smaller force-center" for="file1">Upload a file</label>
         </div>
       </div>
@@ -18,7 +18,7 @@
 </file-drop>
 <div class="row Mb(2)">
   <div class="col">
-    <input type="file" name="file" id="file2" class="input-file" (change)="uploadFile(fileUpload2.files)" #fileUpload2/>
+    <input type="file" name="file" id="file2" class="input-file" (change)="addPickedFile(fileUpload2.files)" #fileUpload2/>
     <label for="file2">
     <app-tile class="add-conversion">
       <div class="row">
@@ -29,10 +29,10 @@
     </app-tile>
     </label>
   </div>
-  <div *ngFor="let tile of data" class="col">
+  <div *ngFor="let tile of metadataList" class="col">
     <app-tile [title]="tile.title" [conversionFrom]="tile.conversionFrom" [conversionTo]="tile.conversionTo">
-      <div [ngSwitch]="tile.incrementValue !== 100">
-        <div *ngSwitchCase="true">
+      <div [ngSwitch]="tile.uploadComplete === true">
+        <div *ngSwitchCase="false">
           <div class="row Pt(1.5)">
             <div class="col">
               <circle-progress
@@ -65,7 +65,7 @@
           <!--</div>-->
           <!--</div>-->
         </div>
-        <div *ngSwitchCase="false">
+        <div *ngSwitchCase="true">
           <div class="row My(1)">
             <div class="col">
               <div class="c-light c-smaller"><img src="assets/img/svg/ic-check.svg"></div>
@@ -73,8 +73,7 @@
           </div>
           <div class="row">
             <div class="col">
-              <div style="margin-left:auto;margin-right:auto;" class="button c-font-circular c-bold c-smaller"
-                   (click)="onDownload(tile.title)">Download
+              <div style="margin-left:auto;margin-right:auto;" class="button c-font-circular c-bold c-smaller">Download
               </div>
             </div>
           </div>
