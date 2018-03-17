@@ -56,7 +56,7 @@ export class AudioComponent implements OnInit {
     // Generate UUID
     const uuid = this.generateUUID();
     const name = file[0].name;
-    const convertFrom = 'MP3';
+    const convertFrom = this.getFileExtension(file[0].name).toUpperCase();
     const convertTo = 'FLAC';
     // Build metadata object
     const metadata = {
@@ -152,6 +152,13 @@ export class AudioComponent implements OnInit {
         .substring(1);
     }
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+  }
+
+  /**
+   * Get file extension
+   */
+  public getFileExtension(filename: string) {
+    return filename.substring(filename.lastIndexOf('.') + 1, filename.length) || filename;
   }
 
 }
