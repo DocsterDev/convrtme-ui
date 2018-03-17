@@ -23,6 +23,7 @@ import {ProgressHttpModule} from 'angular-progress-http';
 import {HttpModule} from '@angular/http';
 import {MetadataService} from './service/metadata.service';
 import {UserService} from './service/user.service';
+import { ConvertModalComponent } from './common/convert-modal/convert-modal.component';
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import {UserService} from './service/user.service';
     PlaylistComponent,
     VideoComponent,
     AudioComponent,
-    TileComponent
+    TileComponent,
+    ConvertModalComponent
   ],
   imports: [
     BrowserModule,
