@@ -1,15 +1,37 @@
-<app-convert-modal>
-  <div class="row">
-    <div class="col">
-      <div class="c-bold c-smaller Pt(1)">Bro Seriously This is REAL</div>
+<div (click)="openModal(template)" style="margin-left:auto;margin-right:auto;"
+     class="button c-font-circular c-bold c-smaller">Open Modal
+</div>
+
+<ng-template #template>
+  <div class="modal-header">
+    <h4 class="c-font-avenir c-color c-bold c-font-avenir c-normal pull-left Pt(0.5)">Convert File</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row Pb(1)">
+      <div class="col">
+        <div class="text-center c-font-avenir c-accent-color c-bold c-smaller">You’re about to add a new audio file to
+          convert. What format would you like to convert it to?
+        </div>
+      </div>
+    </div>
+    <div class="row Py(1)">
+      <div class="col">
+        <ng-dropdown [selected]="1" [options]="options" (onchange)="changeValue($event)"></ng-dropdown>
+      </div>
+    </div>
+    <div class="row Py(1)">
+      <div class="col">
+        <div (click)="closeModal()" style="margin-left:auto;margin-right:auto;"
+             class="button c-font-circular c-bold c-smaller">Close Modal
+        </div>
+      </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col">
-      <div class="c-bold c-smaller Pt(1)">Bro Seriously This is REAL</div>
-    </div>
-  </div>
-</app-convert-modal>
+
+</ng-template>
 
 <file-drop [customstyle]="''" (onFileDrop)="addDroppedFile($event)" [class.over]="'hover-over'">
   <!--(onFileOver)=" " (onFileLeave)=" "-->
@@ -17,8 +39,10 @@
     <div class="col">
       <div class="row Mb(0.5)">
         <div class="col">
-          <input type="file" name="file" id="file1" class="input-file" (change)="addPickedFile(fileUpload1.files)" #fileUpload1/>
-          <label class="secondary-button c-font-circular c-bold c-smaller force-center" for="file1">Upload a file</label>
+          <input type="file" name="file" id="file1" class="input-file" (change)="addPickedFile(fileUpload1.files)"
+                 #fileUpload1/>
+          <label class="secondary-button c-font-circular c-bold c-smaller force-center" for="file1">Upload a
+            file</label>
         </div>
       </div>
       <div class="row Mt(0.5)">
@@ -27,19 +51,20 @@
         </div>
       </div>
     </div>
-</div>
+  </div>
 </file-drop>
 <div class="row Mb(2)">
   <div class="col">
-    <input type="file" name="file" id="file2" class="input-file" (change)="addPickedFile(fileUpload2.files)" #fileUpload2/>
+    <input type="file" name="file" id="file2" class="input-file" (change)="addPickedFile(fileUpload2.files)"
+           #fileUpload2/>
     <label for="file2">
-    <app-tile class="add-conversion">
-      <div class="row">
-        <div class="col">
-          <img style="padding: 92px 0" src="assets/img/svg/ic-plus.svg">
+      <app-tile class="add-conversion">
+        <div class="row">
+          <div class="col">
+            <img style="padding: 92px 0" src="assets/img/svg/ic-plus.svg">
+          </div>
         </div>
-      </div>
-    </app-tile>
+      </app-tile>
     </label>
   </div>
   <div *ngFor="let tile of metadataList" class="col">

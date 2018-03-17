@@ -23,7 +23,10 @@ import {ProgressHttpModule} from 'angular-progress-http';
 import {HttpModule} from '@angular/http';
 import {MetadataService} from './service/metadata.service';
 import {UserService} from './service/user.service';
-import { ConvertModalComponent } from './common/convert-modal/convert-modal.component';
+import {ConvertModalComponent} from './common/convert-modal/convert-modal.component';
+import {FormsModule} from '@angular/forms';
+import {DropdownModule} from 'ng-custom-select';
+import {ModalModule} from 'ngx-bootstrap';
 
 
 @NgModule({
@@ -42,13 +45,16 @@ import { ConvertModalComponent } from './common/convert-modal/convert-modal.comp
     ConvertModalComponent
   ],
   imports: [
+    FormsModule,
     BrowserModule,
     RouterModule.forRoot(appRoutes),
     NgCircleProgressModule.forRoot(),
     FileDropModule,
     HttpClientModule,
     HttpModule,
-    ProgressHttpModule
+    ProgressHttpModule,
+    DropdownModule,
+    ModalModule.forRoot()
   ],
   providers: [FileUploadService, MetadataService, UserService],
   bootstrap: [AppComponent]

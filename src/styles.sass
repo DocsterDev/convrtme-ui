@@ -10,7 +10,6 @@
 @import styles/atoms/inputs
 @import styles/atoms/search-suggestions
 
-
 html, body
   font-family: $fontAvenir !important
 
@@ -22,3 +21,50 @@ body
   min-height: 100%
   margin-right: 15px !important
   margin-left: 15px !important
+
+.dropdown-wrapper
+  @extend .c-font-circular
+  @extend .c-smaller
+  @extend .c-bold
+  padding: 12px 16px
+  width: 50%
+  border: 1px solid #4c6085
+  cursor: pointer
+  outline: none
+  color: #39A0ED
+  .dropdown
+    /* Styles */
+    -webkit-padding-start: 0
+    background: #fff
+    border-radius: 0 0 5px 5px
+    border: 1px solid #4c6085
+    border-top: none
+    box-sizing: border-box
+    max-height: 400px
+
+    /* Hover state */
+    .option:hover .text
+      color: #39A0ED
+
+    .option
+      padding: 0.8em
+      .text
+        text-decoration: none
+        color: #4c6085
+        padding: 1em 0
+
+.caret
+  &::after
+    //content: "▼"
+    content: url("/assets/img/svg/ic-expand-more.svg")
+    text-align: center
+    pointer-events: none
+
+.modal-body
+  padding: 3rem !important
+  margin-left: auto
+  margin-right: auto
+
+.modal-dialog
+  max-width: 50rem !important
+

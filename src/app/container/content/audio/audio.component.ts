@@ -1,9 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, TemplateRef} from '@angular/core';
 import {UploadEvent, UploadFile} from 'ngx-file-drop';
 import {FileUploadService} from '../../../service/file-upload.service';
 import {ProgressHttp} from 'angular-progress-http';
 import {MetadataService} from '../../../service/metadata.service';
 import {UserService} from '../../../service/user.service';
+import {FormsModule} from '@angular/forms';
+import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 
 @Component({
   selector: 'app-audio',
@@ -18,7 +20,11 @@ export class AudioComponent implements OnInit {
 
   public files: UploadFile[] = [];
 
-  constructor(private http: ProgressHttp, private metadataService: MetadataService, private userService: UserService) {
+  modalRef: BsModalRef;
+
+  public options = ['MP3', 'FLAC', 'WAV'];
+
+  constructor(private http: ProgressHttp, private metadataService: MetadataService, private userService: UserService, private modalService: BsModalService) {
   }
 
   ngOnInit() {
@@ -122,7 +128,7 @@ export class AudioComponent implements OnInit {
   /**
    * Set meta data to complete
    */
-  public setComplete (uuid) {
+  public setComplete(uuid) {
     console.log('Setting complete');
     const metadata = this.metadataMap.get(uuid);
     metadata.uploadComplete = true;
@@ -143,6 +149,13 @@ export class AudioComponent implements OnInit {
   }
 
   /**
+   * Selected
+   */
+  public changeValue($event) {
+    console.log($event);
+  }
+
+  /**
    * Generate UUID
    */
   public generateUUID() {
@@ -151,6 +164,7 @@ export class AudioComponent implements OnInit {
         .toString(16)
         .substring(1);
     }
+
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   }
 
@@ -159,6 +173,14 @@ export class AudioComponent implements OnInit {
    */
   public getFileExtension(filename: string) {
     return filename.substring(filename.lastIndexOf('.') + 1, filename.length) || filename;
+  }
+
+  openModal(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template);
+  }
+
+  closeModal() {
+    this.modalRef.hide();
   }
 
 }

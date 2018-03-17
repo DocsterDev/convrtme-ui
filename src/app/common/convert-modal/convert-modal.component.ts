@@ -7,6 +7,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ConvertModalComponent implements OnInit {
 
+  public options = [
+    'bro', 'dude', 'nope'
+  ]
+
   constructor() { }
 
   ngOnInit() {
