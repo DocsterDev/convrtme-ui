@@ -17,7 +17,6 @@ import {appRoutes} from './app.routes';
 import {TileComponent} from './common/tile/tile.component';
 import {NgCircleProgressModule} from 'ng-circle-progress';
 import {FileDropModule} from 'ngx-file-drop';
-import {FileUploadService} from './service/file-upload.service';
 import {HttpClientModule} from '@angular/common/http';
 import {ProgressHttpModule} from 'angular-progress-http';
 import {HttpModule} from '@angular/http';
@@ -54,7 +53,7 @@ import {ModalModule} from 'ngx-bootstrap';
     DropdownModule,
     ModalModule.forRoot()
   ],
-  providers: [FileUploadService, MetadataService, UserService],
+  providers: [MetadataService, UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -1,6 +1,5 @@
 import {Component, OnInit, TemplateRef} from '@angular/core';
 import {UploadEvent, UploadFile} from 'ngx-file-drop';
-import {FileUploadService} from '../../../service/file-upload.service';
 import {ProgressHttp} from 'angular-progress-http';
 import {MetadataService} from '../../../service/metadata.service';
 import {UserService} from '../../../service/user.service';
