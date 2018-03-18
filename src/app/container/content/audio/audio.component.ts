@@ -5,6 +5,7 @@ import {MetadataService} from '../../../service/metadata.service';
 import {UserService} from '../../../service/user.service';
 import {FormsModule} from '@angular/forms';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
+import {Http} from '@angular/http';
 
 @Component({
   selector: 'app-audio',
@@ -29,7 +30,7 @@ export class AudioComponent implements OnInit {
 
   public fileTypeConvertTo;
 
-  constructor(private http: ProgressHttp, private metadataService: MetadataService, private userService: UserService, private modalService: BsModalService) {
+  constructor(private httpClient: Http, private http: ProgressHttp, private metadataService: MetadataService, private userService: UserService, private modalService: BsModalService) {
   }
 
   ngOnInit() {
@@ -138,25 +139,48 @@ export class AudioComponent implements OnInit {
       .withUploadProgressListener(progress => {
         this.setValue(uuid, progress.percentage);
         if (progress.percentage === 100) {
-          this.setComplete(uuid);
+          this.setUploadComplete(uuid);
         }
-      })
-      .withDownloadProgressListener(progress => {
       })
       .post('http://localhost:8080/file-upload/' + uuid, form)
       .subscribe((response) => {
+        console.log(response);
       });
+  }
+
+  /**
+   * Download File
+   */
+  public downloadFile(uuid) {
+    console.log('Downloading: ' + uuid);
+    const url = window.URL.createObjectURL('http://localhost:8080/file-download/' + uuid);
+    window.open(url);
+    // this.httpClient
+    //   .get('http://localhost:8080/file-download/' + uuid)
+    //   .subscribe((response) => {
+    //     console.log(response);
+    //   });
   }
 
   /**
    * Set meta data to complete
    */
-  public setComplete(uuid) {
-    console.log('Setting complete');
+  public setUploadComplete(uuid) {
     const metadata = this.metadataMap.get(uuid);
     metadata.uploadComplete = true;
     this.metadataService.updateMetadata(uuid, metadata).subscribe((response) => {
-      console.log(JSON.stringify(response));
+
+    });
+  }
+
+  /**
+   * Set meta data to complete
+   */
+  public setConversionComplete(uuid) {
+    const metadata = this.metadataMap.get(uuid);
+    metadata.conversionComplete = true;
+    this.metadataService.updateMetadata(uuid, metadata).subscribe((response) => {
+
     });
   }
 

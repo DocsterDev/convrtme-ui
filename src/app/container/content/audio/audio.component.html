@@ -49,19 +49,7 @@
   </div>
 </file-drop>
 <div class="row Mb(2)">
-  <div class="col">
-    <input type="file" name="file" id="file2" class="input-file" (change)="addPickedFile(fileUpload2.files)"
-           #fileUpload2/>
-    <label for="file2">
-      <app-tile class="add-conversion">
-        <div class="row">
-          <div class="col">
-            <img style="padding: 92px 0" src="assets/img/svg/ic-plus.svg">
-          </div>
-        </div>
-      </app-tile>
-    </label>
-  </div>
+
   <div *ngFor="let tile of metadataList" class="col">
     <app-tile [title]="tile.title" [conversionFrom]="tile.conversionFrom" [conversionTo]="tile.conversionTo">
       <div [ngSwitch]="tile.uploadComplete === true">
@@ -106,13 +94,26 @@
           </div>
           <div class="row">
             <div class="col">
-              <div style="margin-left:auto;margin-right:auto;" class="button c-font-circular c-bold c-smaller">Download
+              <div (click)="downloadFile(tile.uuid)" style="margin-left:auto;margin-right:auto;" class="button c-font-circular c-bold c-smaller">Download
               </div>
             </div>
           </div>
         </div>
       </div>
     </app-tile>
+  </div>
+  <div class="col">
+    <input type="file" name="file" id="file2" class="input-file" (change)="addPickedFile(fileUpload2.files)"
+           #fileUpload2/>
+    <label for="file2">
+      <app-tile class="add-conversion">
+        <div class="row">
+          <div class="col">
+            <img style="padding: 92px 0" src="assets/img/svg/ic-plus.svg">
+          </div>
+        </div>
+      </app-tile>
+    </label>
   </div>
 </div>
 
