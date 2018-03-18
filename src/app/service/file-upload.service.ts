@@ -8,7 +8,7 @@ export class FileUploadService {
   constructor( private http: ProgressHttp) {
   }
 
-  public uploadFile(file) {
+  public uploadFile(file, uuid) {
     const form = new FormData();
     form.append('file', file);
     // return this.http.post('http://localhost:8080/file-upload', form);
@@ -18,7 +18,7 @@ export class FileUploadService {
 
       })
       .withDownloadProgressListener(progress => { console.log(`Downloading ${progress.percentage}%`); })
-      .post('http://localhost:8081/file-upload', form)
+      .post('http://localhost:8081/file-upload/' + uuid, form)
       .subscribe((response) => {
         console.log(response);
       });

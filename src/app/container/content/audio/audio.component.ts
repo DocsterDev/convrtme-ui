@@ -22,7 +22,13 @@ export class AudioComponent implements OnInit {
 
   modalRef: BsModalRef;
 
-  public options = ['MP3', 'FLAC', 'WAV'];
+  public options = [null, 'MP3', 'FLAC', 'WAV'];
+
+  public fileTypeConvertFrom;
+
+  public file;
+
+  public fileTypeConvertTo;
 
   constructor(private http: ProgressHttp, private metadataService: MetadataService, private userService: UserService, private modalService: BsModalService) {
   }
@@ -58,12 +64,30 @@ export class AudioComponent implements OnInit {
   /**
    * Upload File Event
    */
-  public addPickedFile(file) {
+  public addPickedFile(file, template) {
     // Generate UUID
+
+    this.fileTypeConvertFrom = this.getFileExtension(file[0].name);
+    this.modalRef = this.modalService.show(template);
+
+    this.file = file;
+  }
+
+  /**
+   * Continue with file conversion
+   */
+  public continueConversion() {
+
+    if (!this.fileTypeConvertTo) {
+      console.error('File to conversion is null');
+      return;
+    }
+
+    this.modalRef.hide();
     const uuid = this.generateUUID();
-    const name = file[0].name;
-    const convertFrom = this.getFileExtension(file[0].name).toUpperCase();
-    const convertTo = 'FLAC';
+    const name = this.file[0].name;
+    const convertFrom = this.getFileExtension(this.file[0].name).toUpperCase();
+    const convertTo = this.fileTypeConvertTo;
     // Build metadata object
     const metadata = {
       uuid: uuid,
@@ -83,7 +107,7 @@ export class AudioComponent implements OnInit {
 
     // Check if file already exists first
     // Start the file upload
-    this.uploadFile(file[0], uuid);
+    this.uploadFile(this.file[0], uuid);
   }
 
   /**
@@ -120,7 +144,7 @@ export class AudioComponent implements OnInit {
       })
       .withDownloadProgressListener(progress => {
       })
-      .post('http://localhost:8080/file-upload', form)
+      .post('http://localhost:8080/file-upload/' + uuid, form)
       .subscribe((response) => {
       });
   }
@@ -152,7 +176,8 @@ export class AudioComponent implements OnInit {
    * Selected
    */
   public changeValue($event) {
-    console.log($event);
+    console.log(this.options[$event]);
+    this.fileTypeConvertTo = this.options[$event];
   }
 
   /**
@@ -173,14 +198,6 @@ export class AudioComponent implements OnInit {
    */
   public getFileExtension(filename: string) {
     return filename.substring(filename.lastIndexOf('.') + 1, filename.length) || filename;
-  }
-
-  openModal(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template);
-  }
-
-  closeModal() {
-    this.modalRef.hide();
   }
 
 }
