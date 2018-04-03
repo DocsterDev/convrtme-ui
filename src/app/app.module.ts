@@ -56,7 +56,7 @@ import {WebsocketService} from './service/websocket.service';
     DropdownModule,
     ModalModule.forRoot()
   ],
-  providers: [MetadataService, UserService, StompService, WebsocketService],
+  providers: [MetadataService, UserService, StompService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

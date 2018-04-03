@@ -1,18 +1,18 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UploadEvent, UploadFile} from 'ngx-file-drop';
 import {ProgressHttp} from 'angular-progress-http';
 import {MetadataService} from '../../../service/metadata.service';
 import {UserService} from '../../../service/user.service';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 import {Http} from '@angular/http';
-import {WebsocketService} from '../../../service/websocket.service';
+import {StompService} from 'ng2-stomp-service/index';
 
 @Component({
   selector: 'app-audio',
   templateUrl: './audio.component.html',
   styleUrls: ['./audio.component.sass']
 })
-export class AudioComponent implements OnInit {
+export class AudioComponent implements OnInit, OnDestroy {
 
   private metadataMap = new Map();
 
@@ -30,9 +30,32 @@ export class AudioComponent implements OnInit {
 
   public fileTypeConvertTo;
 
+  private subscription: any;
+
   constructor(private httpClient: Http, private http: ProgressHttp,
               private metadataService: MetadataService, private userService: UserService,
-              private modalService: BsModalService, private websocketService: WebsocketService) {
+              private modalService: BsModalService, private stomp: StompService) {
+
+    // configuration
+    stomp.configure({
+      host: 'http://localhost:8080/websocket-example',
+      debug: false,
+      queue: {'init': false}
+    });
+
+    // start connection
+    stomp.startConnect().then(() => {
+      stomp.done('init');
+      console.log('connected');
+
+      // subscribe
+      this.subscription = stomp.subscribe('/topic/user', this.response);
+
+      // send data
+      stomp.send('/app/user', {'name': 'Brosef'});
+
+    });
+
   }
 
   ngOnInit() {
@@ -41,7 +64,6 @@ export class AudioComponent implements OnInit {
       this.metadataList = response;
       // Load map on startup
       this.loadMetadataMap();
-      console.log(JSON.stringify(this.metadataList));
     }, (error) => {
       console.error(JSON.stringify(error));
     });
@@ -139,7 +161,7 @@ export class AudioComponent implements OnInit {
     form.append('file', file);
     this.http
       .withUploadProgressListener(progress => {
-        this.setValue(uuid, progress.percentage);
+        this.setValue(uuid, progress.percentage, 'upload');
         if (progress.percentage === 100) {
           this.setUploadComplete(uuid);
         }
@@ -189,10 +211,14 @@ export class AudioComponent implements OnInit {
   /**
    * Add 1 to the progress bar
    */
-  public setValue(uuid, value) {
+  public setValue(uuid, value, action) {
     const val = this.metadataMap.get(uuid);
+    val.uploadComplete = false;
     val.incrementValue = value;
+    val.action = action;
+    console.log(val.incrementValue);
     if (val.incrementValue === 100) {
+      val.uploadComplete = true;
       return;
     }
   }
@@ -223,6 +249,26 @@ export class AudioComponent implements OnInit {
    */
   public getFileExtension(filename: string) {
     return filename.substring(filename.lastIndexOf('.') + 1, filename.length) || filename;
+  }
+
+  // response
+  public response = (data) => {
+      this.setValue(data.uuid, data.progress, data.action);
+  }
+
+  /**
+   * On Destroy
+   */
+  ngOnDestroy(): void {
+
+    // unsubscribe
+    this.subscription.unsubscribe();
+
+    // disconnect
+    this.stomp.disconnect().then(() => {
+      console.log('Connection closed');
+    });
+
   }
 
 }
