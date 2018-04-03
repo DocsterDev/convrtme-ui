@@ -30,19 +30,14 @@
 
 <file-drop [customstyle]="''" (onFileDrop)="addDroppedFile($event)" [class.over]="'hover-over'">
   <!--(onFileOver)=" " (onFileLeave)=" "-->
-  <div class="row dashed-border no-select Py(0.75)">
-    <div class="col">
-      <div class="row Mb(0.5)">
+  <div class="row dashed-border no-select align-content-center">
+    <div class="col" style="align-self: center">
+      <div class="row align-content-center">
         <div class="col">
           <input type="file" name="file" id="file1" class="input-file" (change)="addPickedFile(fileUpload1.files, template)"
                  #fileUpload1/>
           <label class="secondary-button c-font-circular c-bold c-smaller force-center" for="file1">Upload a
             file</label>
-        </div>
-      </div>
-      <div class="row Mt(0.5)">
-        <div class="col">
-          <div class="c-font-circular c-small c-bold c-light force-center">Drag files you want to convert here</div>
         </div>
       </div>
     </div>

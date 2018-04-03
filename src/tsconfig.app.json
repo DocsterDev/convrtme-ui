@@ -6,6 +6,11 @@
     "module": "es2015",
     "types": []
   },
+  "include": [
+    "../src/*",
+    "../node_modules/ng2-stomp-service/*",
+    "../node_modules/*"
+  ],
   "exclude": [
     "test.ts",
     "**/*.spec.ts"

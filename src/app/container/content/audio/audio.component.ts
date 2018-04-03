@@ -1,11 +1,11 @@
-import {Component, OnInit, TemplateRef} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {UploadEvent, UploadFile} from 'ngx-file-drop';
 import {ProgressHttp} from 'angular-progress-http';
 import {MetadataService} from '../../../service/metadata.service';
 import {UserService} from '../../../service/user.service';
-import {FormsModule} from '@angular/forms';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 import {Http} from '@angular/http';
+import {WebsocketService} from '../../../service/websocket.service';
 
 @Component({
   selector: 'app-audio',
@@ -30,7 +30,9 @@ export class AudioComponent implements OnInit {
 
   public fileTypeConvertTo;
 
-  constructor(private httpClient: Http, private http: ProgressHttp, private metadataService: MetadataService, private userService: UserService, private modalService: BsModalService) {
+  constructor(private httpClient: Http, private http: ProgressHttp,
+              private metadataService: MetadataService, private userService: UserService,
+              private modalService: BsModalService, private websocketService: WebsocketService) {
   }
 
   ngOnInit() {
