@@ -27,7 +27,6 @@ export class WebsocketService implements OnDestroy {
       // send data
       stomp.send('/app/user', {'name': 'Brosef'});
 
-
     });
 
   }
@@ -47,7 +46,7 @@ export class WebsocketService implements OnDestroy {
 
 // response
   public response = (data) => {
-    console.log(JSON.stringify(data));
+    console.log(data);
   };
 
 }
