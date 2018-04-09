@@ -1,13 +1,15 @@
-
 <div class="row My(1)">
-  <div class="col-sm-2 text-center">
-    <app-side-nav></app-side-nav>
+  <div *ngIf="showLoader" class="col text-center Mt(3)" style="height: 100%; width: 100%;">
+    <app-loader></app-loader>
   </div>
-  <div class="col text-center Mx(1)">
+  <div *ngIf="!showLoader" class="col text-center Mx(1)">
+    <div class="col-sm-2 text-center">
+      <app-side-nav></app-side-nav>
+    </div>
     <app-content></app-content>
-  </div>
-  <div class="col-2 text-center">
-    <app-playlist></app-playlist>
+    <div class="col-2 text-center">
+      <app-playlist></app-playlist>
+    </div>
   </div>
 </div>
 

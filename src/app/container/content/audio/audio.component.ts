@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {UploadEvent, UploadFile} from 'ngx-file-drop';
 import {ProgressHttp} from 'angular-progress-http';
 import {MetadataService} from '../../../service/metadata.service';
@@ -6,6 +6,7 @@ import {UserService} from '../../../service/user.service';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 import {Http} from '@angular/http';
 import {StompService} from 'ng2-stomp-service/index';
+import {UtilsService} from '../../../service/utils.service';
 
 @Component({
   selector: 'app-audio',
@@ -14,67 +15,65 @@ import {StompService} from 'ng2-stomp-service/index';
 })
 export class AudioComponent implements OnInit, OnDestroy {
 
+  @Output()
+  showLoader: EventEmitter<boolean> = new EventEmitter();
+
   private metadataMap = new Map();
-
-  public metadataList: any = [];
-
   public files: UploadFile[] = [];
-
   modalRef: BsModalRef;
-
-  public options = [null, 'MP3', 'FLAC', 'WAV'];
-
+  public fileTypeOptions = ['Select', 'MP3', 'FLAC', 'WAV'];
+  public fileQualityOptions = ['Select', 'Good', 'Better', 'Best'];
   public fileTypeConvertFrom;
-
   public file;
-
   public fileTypeConvertTo;
-
   private subscription: any;
 
-  constructor(private httpClient: Http, private http: ProgressHttp,
-              private metadataService: MetadataService, private userService: UserService,
-              private modalService: BsModalService, private stomp: StompService) {
+  constructor(private httpClient: Http,
+              private http: ProgressHttp,
+              private metadataSvc: MetadataService,
+              private userSvc: UserService,
+              private modalSvc: BsModalService,
+              private stompSvc: StompService,
+              private utilsSvc: UtilsService) {
+  }
 
-    // configuration
-    stomp.configure({
+  ngOnInit() {
+    // Connect To Web Socket on Startup
+    this.connectWebSocket();
+    // Load Dashboard for User
+    this.loadDashboard();
+  }
+
+  /**
+   * Connect to Web Socket
+   */
+  connectWebSocket() {
+    this.stompSvc.configure({
       host: 'http://localhost:8080/websocket-example',
       debug: false,
       queue: {'init': false}
     });
-
-    // start connection
-    stomp.startConnect().then(() => {
-      stomp.done('init');
-      console.log('connected');
-
-      // subscribe
-      this.subscription = stomp.subscribe('/topic/user', this.response);
-
-      // send data
-      stomp.send('/app/user', {'name': 'Brosef'});
-
-    });
-
-  }
-
-  ngOnInit() {
-    // Load existing metadata
-    this.metadataService.getMetadata(this.userService.getCurrentUser()).subscribe((response) => {
-      this.metadataList = response;
-      // Load map on startup
-      this.loadMetadataMap();
-    }, (error) => {
-      console.error(JSON.stringify(error));
+    this.stompSvc.startConnect().then(() => {
+      this.stompSvc.done('init');
+      this.subscription = this.stompSvc.subscribe('/topic/user', this.conversionUpload);
     });
   }
 
   /**
    * Load the map with key of uuid
    */
-  public loadMetadataMap() {
-    this.metadataList.forEach((e) => {
-      this.metadataMap.set(e.uuid, e);
+  public loadDashboard() {
+    this.showLoader.emit(true);
+    this.metadataSvc.getMetadata(this.userSvc.getCurrentUser()).subscribe((response) => {
+      this.showLoader.emit(false);
+      let list: any;
+      list = response;
+      list.forEach((e) => {
+        // e.status = 'uploading'; /* TEST */
+        this.metadataMap.set(e.uuid, e);
+      });
+    }, (error) => {
+      console.error(JSON.stringify(error));
     });
   }
 
@@ -86,29 +85,24 @@ export class AudioComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Upload File Event
+   * Picked File Event
    */
   public addPickedFile(file, template) {
-    // Generate UUID
-
     this.fileTypeConvertFrom = this.getFileExtension(file[0].name);
-    this.modalRef = this.modalService.show(template);
-
+    this.modalRef = this.modalSvc.show(template);
     this.file = file;
   }
 
   /**
-   * Continue with file conversion
+   * Start File Conversion
    */
-  public continueConversion() {
-
+  public startConversion() {
     if (!this.fileTypeConvertTo) {
       console.error('File to conversion is null');
       return;
     }
-
     this.modalRef.hide();
-    const uuid = this.generateUUID();
+    const uuid = this.utilsSvc.generateUUID();
     const name = this.file[0].name;
     const convertFrom = this.getFileExtension(this.file[0].name).toUpperCase();
     const convertTo = this.fileTypeConvertTo;
@@ -120,37 +114,16 @@ export class AudioComponent implements OnInit, OnDestroy {
       conversionTo: convertTo,
       uploadComplete: false,
       conversionComplete: false,
-      incrementValue: 0
+      uploadProgress: 0,
+      convertProgress: 0
     };
+    this.metadataMap.set(metadata.uuid, metadata);
+    this.metadataSvc.addMetadata(this.userSvc.getCurrentUser(), metadata).subscribe((response) => {
 
-    // Add to dashboard
-    this.addToDashboard(metadata);
-
-    // Add to metadata table in db
-    this.persistMetadata(metadata);
-
-    // Check if file already exists first
-    // Start the file upload
-    this.uploadFile(this.file[0], uuid);
-  }
-
-  /**
-   * Persist metadata
-   */
-  public persistMetadata(metadata: any) {
-    this.metadataService.addMetadata(this.userService.getCurrentUser(), metadata).subscribe((response) => {
-      console.log(JSON.stringify(response));
     }, (error) => {
       console.error(JSON.stringify(error));
     });
-  }
-
-  /**
-   * Add new file metadata to dashboard
-   */
-  public addToDashboard(metadata: any) {
-    this.metadataList.push(metadata);
-    this.loadMetadataMap();
+    this.uploadFile(this.file[0], uuid);
   }
 
   /**
@@ -161,88 +134,48 @@ export class AudioComponent implements OnInit, OnDestroy {
     form.append('file', file);
     this.http
       .withUploadProgressListener(progress => {
-        this.setValue(uuid, progress.percentage, 'upload');
-        if (progress.percentage === 100) {
-          this.setUploadComplete(uuid);
-        }
+        this.updateUploadProgress(uuid, progress.percentage);
       })
       .post('http://localhost:8080/file-upload/' + uuid, form)
-      .subscribe((response) => {
-        console.log(response);
+      .subscribe((response) => { /* Response */
       });
   }
 
   /**
-   * Download File
+   * Update Upload Progress
    */
-  public downloadFile(uuid) {
-    console.log('Downloading: ' + uuid);
-    const url = window.URL.createObjectURL('http://localhost:8080/file-download/' + uuid);
-    window.open(url);
-    // this.httpClient
-    //   .get('http://localhost:8080/file-download/' + uuid)
-    //   .subscribe((response) => {
-    //     console.log(response);
-    //   });
-  }
-
-  /**
-   * Set meta data to complete
-   */
-  public setUploadComplete(uuid) {
-    const metadata = this.metadataMap.get(uuid);
-    metadata.uploadComplete = true;
-    this.metadataService.updateMetadata(uuid, metadata).subscribe((response) => {
-
-    });
-  }
-
-  /**
-   * Set meta data to complete
-   */
-  public setConversionComplete(uuid) {
-    const metadata = this.metadataMap.get(uuid);
-    metadata.conversionComplete = true;
-    this.metadataService.updateMetadata(uuid, metadata).subscribe((response) => {
-
-    });
-  }
-
-  /**
-   * Add 1 to the progress bar
-   */
-  public setValue(uuid, value, action) {
+  public updateUploadProgress(uuid, progress) {
     const val = this.metadataMap.get(uuid);
-    val.uploadComplete = false;
-    val.incrementValue = value;
-    val.action = action;
-    console.log(val.incrementValue);
-    if (val.incrementValue === 100) {
+    val.uploadProgress = progress;
+    val.status = 'uploading';
+    if (progress === 100) {
       val.uploadComplete = true;
-      return;
+      this.metadataSvc.updateMetadata(uuid, val).subscribe((response) => {
+        /* Response */
+      }, (e) => console.log(JSON.stringify(e)));
     }
   }
 
   /**
-   * Selected
+   * Update Convert Progress
    */
-  public changeValue($event) {
-    console.log(this.options[$event]);
-    this.fileTypeConvertTo = this.options[$event];
-  }
-
-  /**
-   * Generate UUID
-   */
-  public generateUUID() {
-    function s4() {
-      return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
+  public updateConvertProgress(uuid, progress) {
+    const val = this.metadataMap.get(uuid);
+    val.convertProgress = progress;
+    val.status = 'converting';
+    if (progress === 100) {
+      val.conversionComplete = true;
+      val.status = 'complete';
+      this.metadataSvc.updateMetadata(uuid, val).subscribe((response) => {
+        /* Response */
+      }, (e) => console.log(JSON.stringify(e)));
     }
-
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   }
+
+  // Update Conversion
+  public conversionUpload = (data) => {
+    this.updateConvertProgress(data.uuid, data.progress);
+  };
 
   /**
    * Get file extension
@@ -251,24 +184,34 @@ export class AudioComponent implements OnInit, OnDestroy {
     return filename.substring(filename.lastIndexOf('.') + 1, filename.length) || filename;
   }
 
-  // response
-  public response = (data) => {
-      this.setValue(data.uuid, data.progress, data.action);
+  /**
+   * Convert Map to Array
+   */
+  public getValues() {
+    return Array.from(this.metadataMap.values());
   }
 
   /**
-   * On Destroy
+   * File Type Selected
+   */
+  public changeFileType($event) {
+    this.fileTypeConvertTo = this.fileTypeOptions[$event];
+  }
+
+  /**
+   * File Quality Selected
+   */
+  public changeFileQuality($event) {
+    console.log(this.fileQualityOptions[$event]);
+  }
+
+  /**
+   * On Destroy Unsubscribe from Web Socket
    */
   ngOnDestroy(): void {
-
-    // unsubscribe
     this.subscription.unsubscribe();
-
-    // disconnect
-    this.stomp.disconnect().then(() => {
-      console.log('Connection closed');
+    this.stompSvc.disconnect().then(() => {
     });
-
   }
 
 }

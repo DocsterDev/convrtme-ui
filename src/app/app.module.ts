@@ -28,6 +28,8 @@ import {ModalModule} from 'ngx-bootstrap';
 import {YoutubeComponent} from './container/content/youtube/youtube.component';
 import { StompService } from 'ng2-stomp-service';
 import {WebsocketService} from './service/websocket.service';
+import {UtilsService} from './service/utils.service';
+import { LoaderComponent } from './common/loader/loader.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,8 @@ import {WebsocketService} from './service/websocket.service';
     VideoComponent,
     AudioComponent,
     TileComponent,
-    YoutubeComponent
+    YoutubeComponent,
+    LoaderComponent
   ],
   imports: [
     FormsModule,
@@ -56,7 +59,7 @@ import {WebsocketService} from './service/websocket.service';
     DropdownModule,
     ModalModule.forRoot()
   ],
-  providers: [MetadataService, UserService, StompService],
+  providers: [MetadataService, UserService, StompService, UtilsService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

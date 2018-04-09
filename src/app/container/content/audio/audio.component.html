@@ -1,31 +1,47 @@
 <ng-template #template>
-  <div class="modal-header">
-    <h4 class="c-font-avenir c-color c-bold c-font-avenir c-normal pull-left Pt(0.5)">Convert File</h4>
-    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <div class="row Pb(1)">
-      <div class="col">
-        <div class="text-center c-font-avenir c-accent-color c-bold c-smaller">You’re about to add a new audio file ({{fileTypeConvertFrom}}) to
-          convert. What format would you like to convert it to?
+    <div class="modal-header">
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row Pb(2)">
+        <div class="col">
+          <div class="text-center c-font-avenir c-accent-color c-bold c-small">You’re about to add a new audio file
+            ({{fileTypeConvertFrom.toUpperCase()}}) to
+            convert. What format would you like to convert it to?
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <span class="c-font-avenir c-color c-small c-black" style="font-size: 10px;">File Type</span>
+        </div>
+      </div>
+      <div class="row Pb(1)">
+        <div class="col">
+          <ng-dropdown [selected]="1" [options]="fileTypeOptions" (onchange)="changeFileType($event)"></ng-dropdown>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <span class="c-font-avenir c-color c-small c-black" style="font-size: 10px;">File Quality</span>
+        </div>
+      </div>
+      <div class="row Pb(2)">
+        <div class="col">
+          <ng-dropdown [selected]="1" [options]="fileQualityOptions"
+                       (onchange)="changeFileQuality($event)"></ng-dropdown>
+        </div>
+      </div>
+      <div class="row Pt(2)">
+        <div class="col">
+          <div (click)="startConversion()" style="margin-left:auto;margin-right:auto;"
+               class="button c-font-circular c-bold c-smaller">Convert
+          </div>
         </div>
       </div>
     </div>
-    <div class="row Py(1)">
-      <div class="col">
-        <ng-dropdown [selected]="1" [options]="options" (onchange)="changeValue($event)"></ng-dropdown>
-      </div>
-    </div>
-    <div class="row Py(1)">
-      <div class="col">
-        <div (click)="continueConversion()" style="margin-left:auto;margin-right:auto;"
-             class="button c-font-circular c-bold c-smaller">Convert
-        </div>
-      </div>
-    </div>
-  </div>
 </ng-template>
 
 <file-drop [customstyle]="''" (onFileDrop)="addDroppedFile($event)" [class.over]="'hover-over'">
@@ -34,7 +50,8 @@
     <div class="col" style="align-self: center">
       <div class="row align-content-center">
         <div class="col">
-          <input type="file" name="file" id="file1" class="input-file" (change)="addPickedFile(fileUpload1.files, template)"
+          <input type="file" name="file" id="file1" class="input-file"
+                 (change)="addPickedFile(fileUpload1.files, template)"
                  #fileUpload1/>
           <label class="secondary-button c-font-circular c-bold c-smaller force-center" for="file1">Upload a
             file</label>
@@ -45,14 +62,13 @@
 </file-drop>
 <div class="row Mb(2)">
 
-  <div *ngFor="let tile of metadataList" class="col">
+  <div *ngFor="let tile of getValues()" class="col">
     <app-tile [title]="tile.title" [conversionFrom]="tile.conversionFrom" [conversionTo]="tile.conversionTo">
-      <div [ngSwitch]="tile.uploadComplete === true">
-        <div *ngSwitchCase="false">
-          <div class="row Pt(1.5)">
+        <div *ngIf="tile.status === 'uploading'">
+          <div class="row Pt(1)">
             <div class="col">
               <circle-progress
-                [percent]="tile.incrementValue"
+                [percent]="tile.uploadProgress"
                 [radius]="65"
                 [space]="-10"
                 [outerStrokeWidth]="10"
@@ -73,15 +89,44 @@
               ></circle-progress>
             </div>
           </div>
-          <!--<div class="row">-->
-          <!--<div class="col">-->
-          <!--<div style="margin-left:auto;margin-right:auto;" class="c-light c-smaller"-->
-          <!--(click)="increment(tile.uuid)">Converting-->
-          <!--</div>-->
-          <!--</div>-->
-          <!--</div>-->
+          <div class="row">
+            <div class="col">
+              <div style="margin-left:auto;margin-right:auto; font-size: 10px;" class="c-font-avenir c-black c-color">Uploading</div>
+            </div>
+          </div>
         </div>
-        <div *ngSwitchCase="true">
+        <div *ngIf="tile.status === 'converting'">
+          <div class="row Pt(1)">
+            <div class="col">
+              <circle-progress
+                [percent]="tile.convertProgress"
+                [radius]="65"
+                [space]="-10"
+                [outerStrokeWidth]="10"
+                [innerStrokeWidth]="10"
+                [outerStrokeColor]="'#DF6E7D'"
+                [innerStrokeColor]="'#fafafa'"
+                [showInnerStroke]="true"
+                [animation]="false"
+                [showUnits]="true"
+                [showBackground]="false"
+                [showSubtitle]="false"
+                [units]="'%'"
+                [unitsFontSize]="26"
+                [titleFontSize]="26"
+                [titleColor]="'#4c6085'"
+                [subtitleColor]="'#4c6085'"
+                [unitsColor]="'#4c6085'"
+              ></circle-progress>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div style="margin-left:auto;margin-right:auto; font-size: 10px;" class="c-font-avenir c-black c-color">Converting</div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="tile.uploadComplete && tile.conversionComplete">
           <div class="row My(1)">
             <div class="col">
               <div class="c-light c-smaller"><img src="assets/img/svg/ic-check.svg"></div>
@@ -89,12 +134,12 @@
           </div>
           <div class="row">
             <div class="col">
-              <div (click)="downloadFile(tile.uuid)" style="margin-left:auto;margin-right:auto;" class="button c-font-circular c-bold c-smaller">Download
+              <div style="margin-left:auto;margin-right:auto;"
+                   class="button c-font-circular c-bold c-smaller">Download
               </div>
             </div>
           </div>
         </div>
-      </div>
     </app-tile>
   </div>
   <div class="col">

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'app-content',
@@ -6,6 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./content.component.sass']
 })
 export class ContentComponent implements OnInit {
+
+  @Output()
+  showLoader: EventEmitter<boolean> = new EventEmitter();
 
   constructor() { }
 
