@@ -119,20 +119,20 @@ export class AudioComponent implements OnInit, OnDestroy {
     }, (error) => {
       console.error(JSON.stringify(error));
     });
-    this.uploadFile(this.file[0], uuid);
+    this.uploadFile(this.file[0], uuid, this.userSvc.getCurrentUser());
   }
 
   /**
    * Upload File
    */
-  public uploadFile(file, uuid) {
+  public uploadFile(file, uuid, user) {
     const form = new FormData();
     form.append('file', file);
     this.http
       .withUploadProgressListener(progress => {
         this.updateUploadProgress(uuid, progress.percentage);
       })
-      .post('http://localhost:8080/file-upload/' + uuid, form)
+      .post('http://localhost:8080/users/' + user + '/upload/' + uuid, form)
       .subscribe((response) => { /* Response */
       });
   }
