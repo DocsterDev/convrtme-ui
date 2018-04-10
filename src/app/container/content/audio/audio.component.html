@@ -44,26 +44,26 @@
   </div>
 </ng-template>
 
-<file-drop [customstyle]="''" (onFileDrop)="addDroppedFile($event)" [class.over]="'hover-over'">
-  <!--(onFileOver)=" " (onFileLeave)=" "-->
-  <div class="row dashed-border no-select align-content-center">
-    <div class="col" style="align-self: center">
-      <div class="row align-content-center">
-        <div class="col">
-          <input type="file" name="file" id="file1" class="input-file"
-                 (change)="addPickedFile(fileUpload1.files, template)"
-                 #fileUpload1/>
-          <label class="secondary-button c-font-circular c-bold c-smaller force-center" for="file1">Upload a
-            file</label>
-        </div>
-      </div>
-    </div>
-  </div>
-</file-drop>
 <div *ngIf="showLoader" class="Mt(3)">
   <app-loader></app-loader>
 </div>
 <div *ngIf="!showLoader">
+  <file-drop [customstyle]="''" (onFileDrop)="addDroppedFile($event)" [class.over]="'hover-over'">
+    <!--(onFileOver)=" " (onFileLeave)=" "-->
+    <div class="row dashed-border no-select align-content-center">
+      <div class="col" style="align-self: center">
+        <div class="row align-content-center">
+          <div class="col">
+            <input type="file" name="file" id="file1" class="input-file"
+                   (change)="addPickedFile(fileUpload1.files, template)"
+                   #fileUpload1/>
+            <label class="secondary-button c-font-circular c-bold c-smaller force-center" for="file1">Upload a
+              file</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </file-drop>
   <div class="row Mb(2)" style="justify-content: flex-start !important;">
     <div *ngFor="let tile of getValues()" class="col">
       <app-tile [title]="tile.title" [conversionFrom]="tile.conversionFrom" [conversionTo]="tile.conversionTo">
