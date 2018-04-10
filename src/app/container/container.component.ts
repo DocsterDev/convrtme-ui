@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-container',
@@ -7,10 +7,8 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class ContainerComponent implements OnInit {
 
-  @Input()
-  public showLoader = true;
-
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
   }

@@ -26,10 +26,9 @@ import {FormsModule} from '@angular/forms';
 import {DropdownModule} from 'ng-custom-select';
 import {ModalModule} from 'ngx-bootstrap';
 import {YoutubeComponent} from './container/content/youtube/youtube.component';
-import { StompService } from 'ng2-stomp-service';
-import {WebsocketService} from './service/websocket.service';
+import {StompService} from 'ng2-stomp-service';
 import {UtilsService} from './service/utils.service';
-import { LoaderComponent } from './common/loader/loader.component';
+import {LoaderComponent} from './common/loader/loader.component';
 
 @NgModule({
   declarations: [

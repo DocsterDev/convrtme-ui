@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-side-nav',
@@ -8,23 +7,17 @@ import {Router} from '@angular/router';
 })
 export class SideNavComponent implements OnInit {
 
-  public active;
+  public navOptions = [
+    {display: 'Audio', value: 'app/audio'},
+    {display: 'Video', value: 'app/video'},
+    {display: 'YouTube', value: 'app/youtube'}
+  ];
 
-  public navOptions = [{display: 'Audio', value: 'audio'}, {display: 'Video', value: 'video'}, {display: 'YouTube', value: 'youtube'}];
-
-  constructor(private router: Router) {
+  constructor() {
   }
 
   ngOnInit() {
 
-  }
-
-  public navigate(value) {
-    console.log('Navigating to index: ' + value);
-    // Navigate to target
-    // this.active = value;
-    this.active = value;
-    this.router.navigate(['app', value]);
   }
 
 }

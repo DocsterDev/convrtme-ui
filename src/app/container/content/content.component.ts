@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-content',
@@ -7,10 +7,8 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 })
 export class ContentComponent implements OnInit {
 
-  @Output()
-  showLoader: EventEmitter<boolean> = new EventEmitter();
-
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
   }

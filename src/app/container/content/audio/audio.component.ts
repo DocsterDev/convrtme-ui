@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UploadEvent, UploadFile} from 'ngx-file-drop';
 import {ProgressHttp} from 'angular-progress-http';
 import {MetadataService} from '../../../service/metadata.service';
@@ -15,9 +15,6 @@ import {UtilsService} from '../../../service/utils.service';
 })
 export class AudioComponent implements OnInit, OnDestroy {
 
-  @Output()
-  showLoader: EventEmitter<boolean> = new EventEmitter();
-
   private metadataMap = new Map();
   public files: UploadFile[] = [];
   modalRef: BsModalRef;
@@ -27,6 +24,7 @@ export class AudioComponent implements OnInit, OnDestroy {
   public file;
   public fileTypeConvertTo;
   private subscription: any;
+  public showLoader;
 
   constructor(private httpClient: Http,
               private http: ProgressHttp,
@@ -38,9 +36,7 @@ export class AudioComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // Connect To Web Socket on Startup
     this.connectWebSocket();
-    // Load Dashboard for User
     this.loadDashboard();
   }
 
@@ -63,9 +59,9 @@ export class AudioComponent implements OnInit, OnDestroy {
    * Load the map with key of uuid
    */
   public loadDashboard() {
-    this.showLoader.emit(true);
+    this.showLoader = true;
     this.metadataSvc.getMetadata(this.userSvc.getCurrentUser()).subscribe((response) => {
-      this.showLoader.emit(false);
+      this.showLoader = false;
       let list: any;
       list = response;
       list.forEach((e) => {
@@ -175,7 +171,7 @@ export class AudioComponent implements OnInit, OnDestroy {
   // Update Conversion
   public conversionUpload = (data) => {
     this.updateConvertProgress(data.uuid, data.progress);
-  };
+  }
 
   /**
    * Get file extension
