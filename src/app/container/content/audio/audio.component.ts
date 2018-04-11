@@ -133,14 +133,20 @@ export class AudioComponent implements OnInit, OnDestroy {
       .withUploadProgressListener(progress => {
         this.updateUploadProgress(metadata.uuid, progress.percentage);
       })
-      .post('http://localhost:8080/users/' + this.userSvc.getCurrentUser() + '/metadata/' + metadata.uuid + '/upload', form, {params: {title: metadata.title, convertTo: metadata.conversionTo, convertFrom: metadata.conversionFrom}})
+      .post('http://localhost:8080/users/' + this.userSvc.getCurrentUser() + '/metadata/' + metadata.uuid + '/upload', form, {
+        params: {
+          title: metadata.title,
+          convertTo: metadata.conversionTo,
+          convertFrom: metadata.conversionFrom
+        }
+      })
       .subscribe((response) => {
-          this.httpClient.post('http://localhost:8080/users/' + this.userSvc.getCurrentUser() + '/metadata/' + metadata.uuid + '/convert', null)
-            .subscribe((resp) => {
-              let meta: any;
-              meta = resp.json();
-              this.metadataMap.set(meta.uuid, meta);
-            }, (error) => JSON.stringify(error));
+        this.httpClient.post('http://localhost:8080/users/' + this.userSvc.getCurrentUser() + '/metadata/' + metadata.uuid + '/convert', null)
+          .subscribe((resp) => {
+            let meta: any;
+            meta = resp.json();
+            this.metadataMap.set(meta.uuid, meta);
+          }, (error) => JSON.stringify(error));
       });
   }
 
