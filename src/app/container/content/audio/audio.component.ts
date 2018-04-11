@@ -61,13 +61,12 @@ export class AudioComponent implements OnInit, OnDestroy {
   public loadDashboard() {
     this.showLoader = true;
     this.metadataSvc.getMetadata(this.userSvc.getCurrentUser()).subscribe((response) => {
-      this.showLoader = false;
       let list: any;
       list = response;
       list.forEach((e) => {
-        // e.status = 'uploading'; /* TEST */
         this.metadataMap.set(e.uuid, e);
       });
+      this.showLoader = false;
     }, (error) => {
       console.error(JSON.stringify(error));
     });
@@ -98,6 +97,13 @@ export class AudioComponent implements OnInit, OnDestroy {
       return;
     }
     this.modalRef.hide();
+    this.uploadFile(this.file[0], this.createMetadata());
+  }
+
+  /**
+   * createMetadata
+   */
+  public createMetadata() {
     const uuid = this.utilsSvc.generateUUID();
     const name = this.file[0].name;
     const convertFrom = this.getFileExtension(this.file[0].name).toUpperCase();
@@ -114,26 +120,27 @@ export class AudioComponent implements OnInit, OnDestroy {
       convertProgress: 0
     };
     this.metadataMap.set(metadata.uuid, metadata);
-    this.metadataSvc.addMetadata(this.userSvc.getCurrentUser(), metadata).subscribe((response) => {
-
-    }, (error) => {
-      console.error(JSON.stringify(error));
-    });
-    this.uploadFile(this.file[0], uuid, this.userSvc.getCurrentUser());
+    return metadata;
   }
 
   /**
    * Upload File
    */
-  public uploadFile(file, uuid, user) {
+  public uploadFile(file, metadata) {
     const form = new FormData();
     form.append('file', file);
     this.http
       .withUploadProgressListener(progress => {
-        this.updateUploadProgress(uuid, progress.percentage);
+        this.updateUploadProgress(metadata.uuid, progress.percentage);
       })
-      .post('http://localhost:8080/users/' + user + '/upload/' + uuid, form)
-      .subscribe((response) => { /* Response */
+      .post('http://localhost:8080/users/' + this.userSvc.getCurrentUser() + '/metadata/' + metadata.uuid + '/upload', form, {params: {title: metadata.title, convertTo: metadata.conversionTo, convertFrom: metadata.conversionFrom}})
+      .subscribe((response) => {
+          this.httpClient.post('http://localhost:8080/users/' + this.userSvc.getCurrentUser() + '/metadata/' + metadata.uuid + '/convert', null)
+            .subscribe((resp) => {
+              let meta: any;
+              meta = resp.json();
+              this.metadataMap.set(meta.uuid, meta);
+            }, (error) => JSON.stringify(error));
       });
   }
 
@@ -144,12 +151,6 @@ export class AudioComponent implements OnInit, OnDestroy {
     const val = this.metadataMap.get(uuid);
     val.uploadProgress = progress;
     val.status = 'uploading';
-    if (progress === 100) {
-      val.uploadComplete = true;
-      this.metadataSvc.updateMetadata(uuid, val).subscribe((response) => {
-        /* Response */
-      }, (e) => console.log(JSON.stringify(e)));
-    }
   }
 
   /**
@@ -160,11 +161,7 @@ export class AudioComponent implements OnInit, OnDestroy {
     val.convertProgress = progress;
     val.status = 'converting';
     if (progress === 100) {
-      val.conversionComplete = true;
       val.status = 'complete';
-      this.metadataSvc.updateMetadata(uuid, val).subscribe((response) => {
-        /* Response */
-      }, (e) => console.log(JSON.stringify(e)));
     }
   }
 
