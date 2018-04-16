@@ -8,19 +8,19 @@ export class MetadataService {
   }
 
   public addMetadata(user: string, metadata: any) {
-    return this.http.post('http://localhost:8080/users/' + user + '/metadata', metadata);
+    return this.http.post('http://jeff-staging.mynetgear.com:8080/users/' + user + '/metadata', metadata);
   }
 
   public getMetadata(user: string) {
-    return this.http.get('http://localhost:8080/users/' + user + '/metadata');
+    return this.http.get('http://jeff-staging.mynetgear.com:8080/users/' + user + '/metadata');
   }
 
   public updateMetadata(user: string, metadata: any) {
-    return this.http.put('http://localhost:8080/users/' + user + '/metadata/' + metadata.uuid, metadata);
+    return this.http.put('http://jeff-staging.mynetgear.com:8080/users/' + user + '/metadata/' + metadata.uuid, metadata);
   }
 
   public deleteMetadata(user: string, uuid: string) {
-    this.http.delete('http://localhost:8080/users/' + user + '/metadata/' + uuid);
+    this.http.delete('http://jeff-staging.mynetgear.com:8080/users/' + user + '/metadata/' + uuid);
   }
 
 }

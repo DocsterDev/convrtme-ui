@@ -45,7 +45,7 @@ export class AudioComponent implements OnInit, OnDestroy {
    */
   connectWebSocket() {
     this.stompSvc.configure({
-      host: 'http://localhost:8080/websocket-example',
+      host: 'http://jeff-staging.mynetgear.com:8080/websocket-example',
       debug: false,
       queue: {'init': false}
     });
@@ -133,7 +133,7 @@ export class AudioComponent implements OnInit, OnDestroy {
       .withUploadProgressListener(progress => {
         this.updateUploadProgress(metadata.uuid, progress.percentage);
       })
-      .post('http://localhost:8080/users/' + this.userSvc.getCurrentUser() + '/metadata/' + metadata.uuid + '/upload', form, {
+      .post('http://jeff-staging.mynetgear.com:8080/users/' + this.userSvc.getCurrentUser() + '/metadata/' + metadata.uuid + '/upload', form, {
         params: {
           title: metadata.title,
           convertTo: metadata.conversionTo,
@@ -141,7 +141,7 @@ export class AudioComponent implements OnInit, OnDestroy {
         }
       })
       .subscribe((response) => {
-        this.httpClient.post('http://localhost:8080/users/' + this.userSvc.getCurrentUser() + '/metadata/' + metadata.uuid + '/convert', null)
+        this.httpClient.post('http://jeff-staging.mynetgear.com:8080/users/' + this.userSvc.getCurrentUser() + '/metadata/' + metadata.uuid + '/convert', null)
           .subscribe((resp) => {
             let meta: any;
             meta = resp.json();
