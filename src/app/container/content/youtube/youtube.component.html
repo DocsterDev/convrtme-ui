@@ -1,3 +1,30 @@
-<p>
-  youtube works!
-</p>
+<div *ngIf="showLoader" class="Mt(3)">
+  <app-loader></app-loader>
+</div>
+<div *ngIf="!showLoader" class="Mt(3)">
+  <div class="content">
+    <div class="flex-box">
+      <div class="social-container"></div>
+      <div [ngSwitch]="contentList.length > 0" class="results-container Pt(0.25)" infiniteScroll (scrolled)="onScroll()">
+        <div class="margin-wrapper flex-box">
+          <div *ngSwitchCase="true">
+            <app-search-card class="item" *ngFor="let content of contentList" (addVideo)="onAddVideoEvent($event)" [content]="content"></app-search-card>
+          </div>
+          <div *ngSwitchCase="false" class="Py(2) Px(2) empty-content t-large t-light">Looks like you don't have anything
+            here<br> Try searching, idiot.
+          </div>
+        </div>
+      </div>
+      <div class="trending-container">
+        <div [ngSwitch]="videoList.length > 0">
+          <div class="margin-wrapper flex-box">
+            <div *ngSwitchCase="true">
+              <app-queue-card class="item" *ngFor="let video of videoList" (deleteVideo)="onDeleteVideoEvent($event)" [video]="video"></app-queue-card>
+            </div>
+            <div *ngSwitchCase="false" class="Py(2) Px(2) empty-content t-large t-light">Add a video to see download progress here</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

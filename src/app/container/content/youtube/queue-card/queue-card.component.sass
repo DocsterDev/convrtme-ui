@@ -1,0 +1,31 @@
+@import variables
+
+.queue-card--item
+  height: 90px
+  width: 100%
+  min-width: 350px
+  max-width: 550px
+  background: $colorWhite
+  &:hover
+    cursor: pointer !important
+    background: #fbfbfb
+  &:hover #control
+    visibility: visible
+
+  .image
+    //width: 33%
+    width: 150px
+    max-height: 90px
+    float: left
+  .flex-box
+    height: 100%
+    align-items: center
+  .body
+    flex: 1 1 auto
+  #control
+    visibility: hidden
+    .control-item
+      border-radius: 50%
+      &:hover
+        cursor: pointer
+        transform: scale(1.1)
