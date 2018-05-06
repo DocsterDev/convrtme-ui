@@ -18,7 +18,7 @@ export class AudioComponent implements OnInit, OnDestroy {
   private metadataMap = new Map();
   public files: UploadFile[] = [];
   modalRef: BsModalRef;
-  public fileTypeOptions = ['Select', 'MP3', 'FLAC', 'WAV'];
+  public fileTypeOptions = ['Select', 'OGG', 'MP3', 'FLAC', 'WAV'];
   public fileQualityOptions = ['Select', 'Good', 'Better', 'Best'];
   public fileTypeConvertFrom;
   public file;
