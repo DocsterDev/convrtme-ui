@@ -1,7 +1,7 @@
-import {Component, OnDestroy, OnInit} from "@angular/core";
-import {Subscription} from "rxjs/Subscription";
-import {ViewService} from "../../services/view.service";
-import {VideoService} from "../../services/video.service";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Subscription} from 'rxjs/Subscription';
+import {ViewService} from '../../services/view.service';
+import {VideoService} from '../../services/video.service';
 import {UserService} from "../../services/user.service";
 import {WebSocketService} from '../../services/web-socket.service';
 import { Howl } from 'howler';
