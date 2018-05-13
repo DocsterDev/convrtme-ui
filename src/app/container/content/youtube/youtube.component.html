@@ -1,18 +1,16 @@
 <div *ngIf="showLoader" class="Mt(3)">
   <app-loader></app-loader>
 </div>
-<div *ngIf="!showLoader" class="Mt(3)">
+<div *ngIf="!showLoader">
   <div class="content">
     <div class="flex-box">
       <div class="social-container"></div>
       <div [ngSwitch]="videoList.length > 0" class="results-container Pt(0.25)">
-        <div class="margin-wrapper flex-box">
+        <div class="flex-box">
           <div *ngSwitchCase="true">
             <app-search-card class="item" *ngFor="let video of videoList" (addVideo)="onAddVideoEvent($event)" [video]="video"></app-search-card>
           </div>
-          <div *ngSwitchCase="false" class="Py(2) Px(2) empty-content c-large c-light">Looks like you don't have anything
-            here<br> Try searching, idiot.
-          </div>
+          <div *ngSwitchCase="false"><app-loader></app-loader></div>
         </div>
       </div>
     </div>
