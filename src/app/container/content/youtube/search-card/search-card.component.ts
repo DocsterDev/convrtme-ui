@@ -9,7 +9,7 @@ import * as moment from 'moment';
 export class SearchCardComponent implements OnInit {
 
   @Input()
-  content: any;
+  video: any;
 
   @Output()
   addVideo = new EventEmitter<any>();
@@ -21,15 +21,15 @@ export class SearchCardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.lastUpdated = moment(this.content.timestamp);
+    this.lastUpdated = moment(this.video.timestamp);
   }
 
   /**
    * Fire event content selected to be added
    */
-  selectContent(content) {
-    console.log(content.videoId);
-    this.addVideo.emit(content);
+  selectContent(video) {
+    console.log(video.videoId);
+    this.addVideo.emit(video);
   }
 
 }

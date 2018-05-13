@@ -10,7 +10,7 @@ export class YouTubeQueryService {
    * Get search results
    */
   getSearchResults(query: string) {
-    return this.http.get('http://localhost:8081/api/youtube/query', {
+    return this.http.get('http://localhost:8080/api/youtube/query', {
       params: {
         q: query
       }

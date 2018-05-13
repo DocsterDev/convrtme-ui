@@ -29,11 +29,11 @@ import {YoutubeComponent} from './container/content/youtube/youtube.component';
 import {StompService} from 'ng2-stomp-service';
 import {UtilsService} from './service/utils.service';
 import {LoaderComponent} from './common/loader/loader.component';
-import {QueueCardComponent} from './container/content/youtube/queue-card/queue-card.component';
 import {SearchCardComponent} from './container/content/youtube/search-card/search-card.component';
 import {VideoService} from './service/video.service';
 import {ViewService} from './service/view.service';
 import {QueryService} from './service/query.service';
+import {YouTubeQueryService} from './service/youtube-query.service';
 
 @NgModule({
   declarations: [
@@ -50,7 +50,6 @@ import {QueryService} from './service/query.service';
     TileComponent,
     YoutubeComponent,
     LoaderComponent,
-    QueueCardComponent,
     SearchCardComponent
   ],
   imports: [
@@ -65,7 +64,7 @@ import {QueryService} from './service/query.service';
     DropdownModule,
     ModalModule.forRoot()
   ],
-  providers: [MetadataService, UserService, StompService, UtilsService, VideoService, YoutubeComponent, ViewService, QueryService],
+  providers: [MetadataService, UserService, StompService, UtilsService, VideoService, YoutubeComponent, ViewService, QueryService, YouTubeQueryService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

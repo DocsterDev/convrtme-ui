@@ -1,39 +1,44 @@
-import { Component, OnInit } from '@angular/core';
-import {MetadataService} from '../../../service/metadata.service';
-import {UserService} from '../../../service/user.service';
-import {VideoService} from '../../../service/video.service';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs/Subscription';
-import {ViewService} from '../../../service/view.service';
+import {YouTubeQueryService} from '../../../service/youtube-query.service';
 
 @Component({
   selector: 'app-youtube',
   templateUrl: './youtube.component.html',
   styleUrls: ['./youtube.component.sass']
 })
-export class YoutubeComponent implements OnInit {
+export class YoutubeComponent implements OnInit, OnDestroy {
 
   public showLoader;
   public contentList = [];
   public videoList = [];
   subscription: Subscription;
 
-  constructor(private metadataSvc: MetadataService,
-              private userSvc: UserService,
-              private videoService: VideoService,
-              private viewService: ViewService) {}
+  constructor(private youtubeQueryService: YouTubeQueryService) {}
 
   ngOnInit() {
-    this.loadDashboard();
 
     // Subscribe to video list
-    this.videoService.getUserVideos(this.userSvc.getCurrentUser()).subscribe((response) => {
-      this.videoList = response.json();
-    }, (error) => {
-      console.log(JSON.stringify(error));
-    });
+    // this.videoService.getUserVideos(this.userSvc.getCurrentUser()).subscribe((response) => {
+    //   this.videoList = response.json();
+    // }, (error) => {
+    //   console.log(JSON.stringify(error));
+    // });
+
     // Subscribe to the observable for the service response
-    this.subscription = this.viewService.getResultList().subscribe((response) => {
-      this.loadIncrementally(response.json(), this.contentList);
+    // this.subscription = this.viewService.getResultList().subscribe((response) => {
+    //   this.loadIncrementally(response.json(), this.contentList);
+    // }, (error) => {
+    //   console.error(JSON.stringify(error));
+    // });
+    /**
+     * TESTING DEVELOPMENT ONLY
+     */
+    this.youtubeQueryService.getSearchResults('green day').subscribe((response) => {
+      console.log(JSON.stringify(response));
+      // const resp = response;
+      this.videoList = response.json();
+      this.loadIncrementally(response.json(), this.videoList);
     }, (error) => {
       console.error(JSON.stringify(error));
     });
@@ -52,18 +57,12 @@ export class YoutubeComponent implements OnInit {
 
   }
 
-  /**
-   * Load the map with key of uuid
-   */
-  public loadDashboard() {
-    this.showLoader = true;
-    this.metadataSvc.getMetadata(this.userSvc.getCurrentUser()).subscribe((response) => {
-      let list: any;
-      list = response;
-      this.showLoader = false;
-    }, (error) => {
-      console.error(JSON.stringify(error));
-    });
+  public onAddVideoEvent($event) {
+    console.log('Adding Video ' + $event);
+  }
+
+  ngOnDestroy () {
+    // this.youtubeQueryService.unsubscribe();
   }
 
 }

@@ -10,7 +10,7 @@ export class QueryService {
    * Get search query results
    */
   getQuery(query: string) {
-    return this.http.get('http://localhost:8081/api/predict', {
+    return this.http.get('http://localhost:8080/api/predict', {
       params: {
         q: query
       }
