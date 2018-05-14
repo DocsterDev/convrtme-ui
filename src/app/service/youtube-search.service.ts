@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {YouTubeQueryService} from "./youtube-query.service";
+import {YoutubeAutoCompleteService} from './youtube-auto-complete.service';
 
 @Injectable()
-export class ViewService {
-  constructor(private youTubeQueryService: YouTubeQueryService) {
+export class YoutubeSearchService {
+  constructor(private youTubeQueryService: YoutubeAutoCompleteService) {
   }
 
   private resultList = new Subject<any>();

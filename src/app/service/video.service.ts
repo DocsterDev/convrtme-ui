@@ -40,11 +40,4 @@ export class VideoService {
     });
   }
 
-  /**
-   * Download video
-   */
-  downloadUserVideo(videoId: string) {
-    return this.http.get('http://localhost:8080/api/videos/' + videoId + '/download');
-  }
-
 }

@@ -12,7 +12,7 @@ export class SearchCardComponent implements OnInit {
   video: any;
 
   @Output()
-  addVideo = new EventEmitter<any>();
+  selected = new EventEmitter<any>();
 
   lastUpdated;
 
@@ -28,8 +28,7 @@ export class SearchCardComponent implements OnInit {
    * Fire event content selected to be added
    */
   selectContent(video) {
-    console.log(video.videoId);
-    this.addVideo.emit(video);
+    this.selected.emit(video);
   }
 
 }
