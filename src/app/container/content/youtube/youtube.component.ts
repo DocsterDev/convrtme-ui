@@ -21,7 +21,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.viewService.search('green day');
+    this.viewService.search('mgtow sandman');
 
     // Subscribe to the observable for the service response
     this.subscription = this.viewService.getResultList().subscribe((response) => {
