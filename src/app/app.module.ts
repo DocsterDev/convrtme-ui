@@ -35,6 +35,7 @@ import {YoutubeSearchService} from './service/youtube-search.service';
 import {QueryService} from './service/query.service';
 import {YoutubeAutoCompleteService} from './service/youtube-auto-complete.service';
 import {YoutubeDownloadService} from './service/youtube-download.service';
+import {AutoCompleteService} from "./service/autocomplete.service";
 
 @NgModule({
   declarations: [
@@ -65,7 +66,7 @@ import {YoutubeDownloadService} from './service/youtube-download.service';
     DropdownModule,
     ModalModule.forRoot()
   ],
-  providers: [MetadataService, UserService, StompService, UtilsService, VideoService, QueryService, YoutubeSearchService, YoutubeDownloadService, YoutubeAutoCompleteService],
+  providers: [MetadataService, UserService, StompService, UtilsService, VideoService, YoutubeSearchService, YoutubeDownloadService, YoutubeAutoCompleteService, AutoCompleteService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

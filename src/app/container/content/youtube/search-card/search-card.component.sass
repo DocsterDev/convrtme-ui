@@ -2,15 +2,16 @@
 
 .search-card--item
   height: 90px
-  width: 100%
   min-width: 350px
   max-width: 550px
   background: $colorWhite
+  &:hover .indicator
+    visibility: visible
   &:hover
-    background: #f7f7f7
     cursor: pointer
+  &:hover .title
+    // color: $secondaryBtnColor !important
   .image
-    //width: 33%
     width: 150px
     max-height: 90px
     float: left
@@ -19,4 +20,13 @@
     align-items: center
   .body
     flex: 1 1 auto
+    .title
+      color: $textColor
+  .indicator
+    visibility: hidden
+    transition: transform 0.075s ease
+    transform-origin: center
+    transform-style: preserve-3D
+    &:hover
+      transform: scale(1.1)
 

@@ -9,14 +9,23 @@
   align-items: stretch
   background: $colorWhite
   overflow-y: hidden
+  border-left: 3px solid $tabHoverColor
   .flex-box
     height: 100%
 
 .results-container
-  flex: 2 2 auto
-  border-left: 1px solid $colorLightGray
-  border-right: 1px solid $colorLightGray
+  width: 50%
+  flex: 0 0 auto
   overflow-y: scroll
+  border-right: 3px dashed $tabHoverColor
+  @media all and (max-width: $breakpointSmallDevice)
+    border: 0
+
+.playlist-container
+  width: 50%
+  flex: 0 0 auto
+  overflow-y: scroll
+  //border-right: 3px dashed $tabHoverColor
   @media all and (max-width: $breakpointSmallDevice)
     border: 0
 
