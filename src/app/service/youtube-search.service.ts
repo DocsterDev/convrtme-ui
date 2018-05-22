@@ -1,20 +1,31 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {YoutubeAutoCompleteService} from './youtube-auto-complete.service';
+import {Http} from "@angular/http";
 
 @Injectable()
 export class YoutubeSearchService {
-  constructor(private youTubeQueryService: YoutubeAutoCompleteService) {
+  constructor(private http: Http) {
   }
 
   private resultList = new Subject<any>();
 
   /**
+   * Get search results
+   */
+  getServiceObservable(query: string) {
+    return this.http.get('http://localhost:8080/api/youtube/search', {
+      params: {
+        q: query
+      }
+    });
+  }
+
+  /**
    * Search via passed in query
    */
   search(query: string) {
-    this.youTubeQueryService.getSearchResults(query).subscribe((response) => {
+    this.getServiceObservable(query).subscribe((response) => {
       this.resultList.next(response);
     }, (error) => {
       console.log(error);

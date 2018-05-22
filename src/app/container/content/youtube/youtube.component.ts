@@ -1,9 +1,9 @@
 import {Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {Subscription} from "rxjs/Subscription";
-import {YoutubeSearchService} from "../../../service/youtube-search.service";
 import {YoutubeDownloadService} from "../../../service/youtube-download.service";
 import {AutoCompleteService} from "../../../service/autocomplete.service";
 import {Howl, Howler} from 'howler';
+import {YoutubeSearchService} from "../../../service/youtube-search.service";
 
 @Component({
   selector: 'app-youtube',
@@ -23,25 +23,23 @@ export class YoutubeComponent implements OnInit, OnDestroy {
 
   public showLoader;
   public videoList = [];
-  subscription: Subscription;
+  private subscription: Subscription;
   private timeout;
   private sound;
+  private activeComp: any;
 
   @ViewChild('queryInput')
   queryInput: ElementRef;
 
   constructor(private autoCompleteService: AutoCompleteService,
-              private viewService: YoutubeSearchService,
+              private youtubeSearchService: YoutubeSearchService,
               private youtubeDownloadService: YoutubeDownloadService) {}
 
   ngOnInit() {
-
-    this.viewService.search('sandman mgtow');
-
+    this.youtubeSearchService.search('sandman mgtow');
     // Subscribe to the observable for the service response
-    this.subscription = this.viewService.getResultList().subscribe((response) => {
+    this.subscription = this.youtubeSearchService.getResultList().subscribe((response) => {
       this.loadIncrementally(response.json(), this.videoList);
-      console.log('BRO: ' + this.videoList.length);
     }, (error) => {
       console.error(JSON.stringify(error));
     });
@@ -61,19 +59,21 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   }
 
   public handleSelect($event) {
+    if (this.activeComp) {
+      this.activeComp.nowPlaying = false;
+    }
+    $event.nowPlaying = true;
+    this.activeComp = $event;
+    if (this.sound) {
+      this.sound.stop();
+    }
     this.youtubeDownloadService.downloadUserVideo($event.videoId).subscribe((response) => {
       const body = response.json();
-      console.log(JSON.stringify(body.url));
-      // Setup the new Howl.
-      if (this.sound) {
-        this.sound.stop();
-      }
       this.sound = new Howl({
         src: [body.url],
         html5: true
       });
       this.sound.play();
-      console.log(this.videoList[0].nowPlaying);
     }, (error) => {
       console.error(JSON.stringify(error));
     });
@@ -84,7 +84,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
    */
   handleQueryLookup() {
     clearTimeout(this.timeout);
-
     this.timeout = setTimeout(() => {
       this.autoCompleteService.getAutoComplete(this.searchQuery).subscribe((response) => {
           const searchResults = response.json();
@@ -95,7 +94,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
           } else {
             this.toggleQueryContainer = false;
           }
-
         }, (error) =>
           console.error(JSON.stringify(error))
       );
@@ -125,7 +123,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   handleSubmitSearch() {
     this.videoList = [];
     this.toggleQueryContainer = false;
-    this.viewService.search(this.searchQuery);
+    this.youtubeSearchService.search(this.searchQuery);
     this.searchQuery = '';
   }
 
