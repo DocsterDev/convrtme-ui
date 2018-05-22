@@ -32,10 +32,9 @@ import {LoaderComponent} from './common/loader/loader.component';
 import {SearchCardComponent} from './container/content/youtube/search-card/search-card.component';
 import {VideoService} from './service/video.service';
 import {YoutubeSearchService} from './service/youtube-search.service';
-import {QueryService} from './service/query.service';
 import {YoutubeAutoCompleteService} from './service/youtube-auto-complete.service';
 import {YoutubeDownloadService} from './service/youtube-download.service';
-import {AutoCompleteService} from "./service/autocomplete.service";
+import {AutoCompleteService} from './service/autocomplete.service';
 
 @NgModule({
   declarations: [

@@ -11,6 +11,9 @@ export class SearchCardComponent implements OnInit {
   @Input()
   video: any;
 
+  @Input()
+  nowPlaying: boolean;
+
   @Output()
   selected = new EventEmitter<any>();
 

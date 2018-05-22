@@ -1,10 +1,9 @@
-import {Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Subscription} from 'rxjs/Subscription';
-import {YoutubeAutoCompleteService} from '../../../service/youtube-auto-complete.service';
-import {YoutubeSearchService} from '../../../service/youtube-search.service';
-import {YoutubeDownloadService} from '../../../service/youtube-download.service';
-import {QueryService} from "../../../service/query.service";
+import {Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild} from "@angular/core";
+import {Subscription} from "rxjs/Subscription";
+import {YoutubeSearchService} from "../../../service/youtube-search.service";
+import {YoutubeDownloadService} from "../../../service/youtube-download.service";
 import {AutoCompleteService} from "../../../service/autocomplete.service";
+import {Howl, Howler} from 'howler';
 
 @Component({
   selector: 'app-youtube',
@@ -26,6 +25,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   public videoList = [];
   subscription: Subscription;
   private timeout;
+  private sound;
 
   @ViewChild('queryInput')
   queryInput: ElementRef;
@@ -61,7 +61,17 @@ export class YoutubeComponent implements OnInit, OnDestroy {
 
   public handleSelect($event) {
     this.youtubeDownloadService.downloadUserVideo($event.videoId).subscribe((response) => {
-      console.log(JSON.stringify(response));
+      const body = response.json();
+      console.log(JSON.stringify(body.url));
+      // Setup the new Howl.
+      if (this.sound) {
+        this.sound.stop();
+      }
+      this.sound = new Howl({
+        src: [body.url],
+        html5: true
+      });
+      this.sound.play();
     }, (error) => {
       console.error(JSON.stringify(error));
     });
@@ -104,6 +114,16 @@ export class YoutubeComponent implements OnInit, OnDestroy {
    */
   handleQueryItemClick(item) {
     this.toggleQueryContainer = false;
+    this.searchQuery = '';
+  }
+
+  /**
+   * Handle submitted search
+   */
+  handleSubmitSearch() {
+    this.videoList = [];
+    this.toggleQueryContainer = false;
+    this.viewService.search(this.searchQuery);
     this.searchQuery = '';
   }
 
