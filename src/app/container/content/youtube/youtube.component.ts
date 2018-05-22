@@ -41,6 +41,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     // Subscribe to the observable for the service response
     this.subscription = this.viewService.getResultList().subscribe((response) => {
       this.loadIncrementally(response.json(), this.videoList);
+      console.log('BRO: ' + this.videoList.length);
     }, (error) => {
       console.error(JSON.stringify(error));
     });
@@ -72,6 +73,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
         html5: true
       });
       this.sound.play();
+      console.log(this.videoList[0].nowPlaying);
     }, (error) => {
       console.error(JSON.stringify(error));
     });

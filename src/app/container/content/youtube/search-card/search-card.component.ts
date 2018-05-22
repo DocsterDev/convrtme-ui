@@ -31,6 +31,7 @@ export class SearchCardComponent implements OnInit {
    * Fire event content selected to be added
    */
   selectContent(video) {
+    this.nowPlaying = true;
     this.selected.emit(video);
   }
 
