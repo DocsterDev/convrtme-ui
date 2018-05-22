@@ -26,7 +26,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
   private timeout;
   private sound;
-  private activeComp: any;
+  public activeComponent: number = null;
 
   @ViewChild('queryInput')
   queryInput: ElementRef;
@@ -58,12 +58,8 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     list.push(component);
   }
 
-  public handleSelect($event) {
-    if (this.activeComp) {
-      this.activeComp.nowPlaying = false;
-    }
-    $event.nowPlaying = true;
-    this.activeComp = $event;
+  public handleSelect($event, index: number) {
+    this.activeComponent = index;
     if (this.sound) {
       this.sound.stop();
     }
