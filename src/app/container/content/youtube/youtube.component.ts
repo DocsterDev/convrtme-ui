@@ -80,12 +80,17 @@ export class YoutubeComponent implements OnInit, OnDestroy {
    */
   handleQueryLookup() {
     clearTimeout(this.timeout);
+    if (this.searchQuery === '') {
+      this.toggleQueryContainer = false;
+      this.queryItems = [];
+      return;
+    }
     this.timeout = setTimeout(() => {
       this.autoCompleteService.getAutoComplete(this.searchQuery).subscribe((response) => {
           const searchResults = response.json();
-          if (response.ok && this.searchQuery !== '') {
+          if (response.ok) {
             this.queryItems = [];
-            searchResults.forEach((e) => this.queryItems.push(e));
+            searchResults[1].forEach((e) => this.queryItems.push(e));
             this.toggleQueryContainer = true;
           } else {
             this.toggleQueryContainer = false;
@@ -110,7 +115,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
    */
   handleQueryItemClick(item) {
     this.toggleQueryContainer = false;
-    this.searchQuery = '';
+    this.searchQuery = item;
   }
 
   /**

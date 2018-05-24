@@ -21,8 +21,7 @@
         </form>
         <div *ngIf="toggleQueryContainer" class="search-content">
           <div *ngFor="let item of queryItems" (click)="handleQueryItemClick(item)">
-            <div class="Px(1) Pt(1) t-regular2">{{item.key}}</div>
-            <div class="Px(1) Pb(1) t-regular t-light">{{item.value}}</div>
+            <div class="Px(1) Py(0.5) t-regular2">{{item}}</div>
           </div>
         </div>
       </div>
