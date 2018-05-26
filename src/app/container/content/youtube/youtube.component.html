@@ -1,5 +1,3 @@
-
-
 <div *ngIf="showLoader" class="Mt(3)">
   <app-loader></app-loader>
 </div>
@@ -18,7 +16,7 @@
                  spellcheck="false"
                  autocomplete="off"
                  placeholder="Search"
-                 #queryInput/>
+                 #searchInput/>
           <button type="submit" style="display:none">hidden submit</button>
         </form>
         <div *ngIf="showPredictionsContainer" class="search-content">
@@ -35,7 +33,7 @@
       <div [ngSwitch]="videoList.length > 0" class="results-container Pt(0.25)">
         <div class="flex-box">
           <div *ngSwitchCase="true">
-            <app-search-card class="item" *ngFor="let video of videoList; let i = index" (selected)="handleSelect($event, i)" [video]="video" [nowPlaying]="activeComponent === i"></app-search-card>
+            <app-search-card class="item" *ngFor="let video of videoList; let i = index" (selected)="handlePredictionSelect($event, i)" [video]="video" [nowPlaying]="activeComponent === i"></app-search-card>
           </div>
           <div *ngSwitchCase="false">
             <app-loader></app-loader>

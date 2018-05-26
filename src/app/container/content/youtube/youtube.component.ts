@@ -24,8 +24,13 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   private activeSound: Howler;
   private activeSoundComponent: number = null;
 
-  @ViewChild('queryInput')
-  queryInput: ElementRef;
+  @ViewChild('searchInput')
+  public searchInput: ElementRef;
+
+  static updateComponent(component, index, list) {
+    component.index = index;
+    list.push(component);
+  }
 
   constructor(private youtubeAutoCompleteService: YoutubeAutoCompleteService,
               private youtubeSearchService: YoutubeSearchService,
@@ -45,16 +50,11 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   private loadIncrementally(data, list) {
     data.forEach((e, index) => {
       const delay = Math.floor((Math.random() * 1400));
-      setTimeout(this.updateComponent, delay, e, index, list);
+      setTimeout(YoutubeComponent.updateComponent, delay, e, index, list);
     });
   }
 
-  private updateComponent(component, index, list) {
-    component.index = index;
-    list.push(component);
-  }
-
-  public handleSelect($event, index: number) {
+  public handlePredictionSelect($event, index: number) {
     this.togglePlayFooter = false;
     this.activeSoundComponent = index;
     if (this.activeSound) {
@@ -68,13 +68,12 @@ export class YoutubeComponent implements OnInit, OnDestroy {
         html5: true
       });
       this.activeSound.play();
-      // });
     }, (error) => {
       console.log(error.message);
     });
   }
 
-  handleAutoCompleteLookup(searchQuery) {
+  public handleAutoCompleteLookup(searchQuery) {
     clearTimeout(this.predictionsTimeout);
     if (searchQuery === '') {
       this.showPredictionsContainer = false;
@@ -93,15 +92,12 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   }
 
   @HostListener('window:click') onClick() {
-    if (this.showPredictionsContainer && this.queryInput.nativeElement !== document.activeElement) {
+    if (this.showPredictionsContainer && this.searchInput.nativeElement !== document.activeElement) {
       this.showPredictionsContainer = false;
     }
   }
 
-  /**
-   * Handle submitted search
-   */
-  handleSubmitSearch(searchQuery) {
+  public handleSubmitSearch(searchQuery) {
     this.videoList = [];
     console.log('Search query: ' + searchQuery);
     this.showPredictionsContainer = false;

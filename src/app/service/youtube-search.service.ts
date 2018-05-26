@@ -10,9 +10,6 @@ export class YoutubeSearchService {
 
   private resultList = new Subject<any>();
 
-  /**
-   * Get search results
-   */
   getServiceObservable(query: string) {
     return this.http.get('http://localhost:8080/api/youtube/search', {
       params: {
@@ -21,9 +18,6 @@ export class YoutubeSearchService {
     });
   }
 
-  /**
-   * Search via passed in query
-   */
   search(query: string) {
     this.getServiceObservable(query).subscribe((response) => {
       this.resultList.next(response);
@@ -32,11 +26,7 @@ export class YoutubeSearchService {
     });
   }
 
-  clearResultList () {
-    this.resultList.next();
-  }
-
-  getResultList (): Observable<any> {
+  getResultList(): Observable<any> {
     return this.resultList.asObservable();
   }
 
