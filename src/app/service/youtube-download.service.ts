@@ -5,18 +5,19 @@ import {HttpClient} from '@angular/common/http';
 export class YoutubeDownloadService {
 
   static findNewBadge(video: any) {
-    video.badges.forEach((e) => {
-      if (e.metadataBadgeRenderer.label === 'NEW') {
-        return true;
-      }
-    });
+    if (video.badges && video.badges.length > 0) {
+      video.badges.forEach((e) => {
+        if (e.metadataBadgeRenderer.label === 'NEW') {
+          return true;
+        }
+      });
+    }
     return false;
   }
 
   constructor(private http: HttpClient) { }
 
   downloadVideo(videoId: string, video: any) {
-    console.log(JSON.stringify(video));
     const videoInfo = {
       id: videoId,
       title: video.title.simpleText,
