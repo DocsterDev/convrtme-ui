@@ -1,10 +1,4 @@
-<div (click)="this.showNotificationHeader = false" [ngClass]="{'open-notification-header': this.showNotificationHeader}" class="fixed-top notification-header">
-  <div class="row align-items-center h-100">
-    <div class="col">
-      <div class="c-font-circular c-smaller c-regular">{{message}}</div>
-    </div>
-  </div>
-</div>
+
 
 <div *ngIf="showLoader" class="Mt(3)">
   <app-loader></app-loader>
@@ -13,22 +7,23 @@
   <div class="content" style="padding-bottom:110px">
     <div class="flex-box Py(1)">
       <div class="search">
-        <form name="search" (submit)="handleSubmitSearch()" >
+        <form name="search" (submit)="handleSubmitSearch(searchQuery)" >
           <input [(ngModel)]="searchQuery"
-                 (ngModelChange)="handleQueryLookup()"
-                 name="search-input"
-                 class="header-search-box"
+                 (ngModelChange)="handleAutoCompleteLookup(searchQuery)"
+                 name="q"
+                 class="header-search-box c-font-circular c-bold"
                  placeholder=""
                  autocorrect="off"
                  autocapitalize="off"
                  spellcheck="false"
                  autocomplete="off"
+                 placeholder="Search"
                  #queryInput/>
           <button type="submit" style="display:none">hidden submit</button>
         </form>
-        <div *ngIf="toggleQueryContainer" class="search-content">
-          <div *ngFor="let item of queryItems" (click)="handleQueryItemClick(item)">
-            <div class="Px(1) Py(0.5) t-regular2">{{item}}</div>
+        <div *ngIf="showPredictionsContainer" class="search-content">
+          <div *ngFor="let prediction of predictions" (click)="handleSubmitSearch(prediction)">
+            <div class="Px(1) Py(0.5) t-regular2">{{prediction}}</div>
           </div>
         </div>
       </div>

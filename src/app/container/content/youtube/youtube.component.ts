@@ -1,9 +1,9 @@
-import {Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild} from "@angular/core";
-import {Subscription} from "rxjs/Subscription";
-import {YoutubeDownloadService} from "../../../service/youtube-download.service";
-import {AutoCompleteService} from "../../../service/autocomplete.service";
+import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Subscription} from 'rxjs/Subscription';
+import {YoutubeDownloadService} from '../../../service/youtube-download.service';
 import {Howl, Howler} from 'howler';
-import {YoutubeSearchService} from "../../../service/youtube-search.service";
+import {YoutubeSearchService} from '../../../service/youtube-search.service';
+import {YoutubeAutoCompleteService} from '../../../service/youtube-autocomplete.service';
 
 @Component({
   selector: 'app-youtube',
@@ -12,39 +12,30 @@ import {YoutubeSearchService} from "../../../service/youtube-search.service";
 })
 export class YoutubeComponent implements OnInit, OnDestroy {
 
-  @Input()
-  searchQuery;
-
-  @Input()
-  queryItems = [];
-
-  @Input()
-  toggleQueryContainer = false;
-
+  public showPredictionsContainer: boolean;
+  public predictions: Array<string>;
+  public searchQuery: string;
   public togglePlayFooter = false;
-
-  public showLoader;
+  public showLoader: boolean;
   public videoList = [];
-  private subscription: Subscription;
-  private timeout;
-  private sound;
-  public activeComponent: number = null;
 
-  public showNotificationHeader = false;
-  public message: string;
+  private searchResultsSubscription: Subscription;
+  private predictionsTimeout;
+  private activeSound: Howler;
+  private activeSoundComponent: number = null;
 
   @ViewChild('queryInput')
   queryInput: ElementRef;
 
-  constructor(private autoCompleteService: AutoCompleteService,
+  constructor(private youtubeAutoCompleteService: YoutubeAutoCompleteService,
               private youtubeSearchService: YoutubeSearchService,
-              private youtubeDownloadService: YoutubeDownloadService) {}
+              private youtubeDownloadService: YoutubeDownloadService) {
+  }
 
   ngOnInit() {
-    this.youtubeSearchService.search('sandman mgtow');
-    // Subscribe to the observable for the service response
-    this.subscription = this.youtubeSearchService.getResultList().subscribe((response) => {
-      this.loadIncrementally(response.json(), this.videoList);
+    this.youtubeSearchService.search('mgtow');
+    this.searchResultsSubscription = this.youtubeSearchService.getResultList().subscribe((searchResults) => {
+      this.loadIncrementally(searchResults, this.videoList);
     }, (error) => {
       console.error(JSON.stringify(error));
     });
@@ -64,83 +55,62 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   }
 
   public handleSelect($event, index: number) {
-    this.showNotificationHeader = false;
     this.togglePlayFooter = false;
-    this.activeComponent = index;
-    if (this.sound) {
-      this.sound.stop();
+    this.activeSoundComponent = index;
+    if (this.activeSound) {
+      this.activeSound.stop();
     }
     this.youtubeDownloadService.downloadUserVideo($event.videoId).subscribe((response) => {
-      const body = response.json();
       this.togglePlayFooter = true;
-      this.showNotificationHeader = false;
-      this.message = '';
-      this.sound = new Howl({
-        src: [body.url],
+      console.log('Is audio file only: ' + response.audioOnly);
+      this.activeSound = new Howl({
+        src: [response.url],
         html5: true
       });
-      this.sound.play();
+      this.activeSound.play();
+      // });
     }, (error) => {
-      this.showNotificationHeader = true;
-      this.message = error.json().message;
+      console.log(error.message);
     });
   }
 
-  /**
-   * Handle query input text change
-   */
-  handleQueryLookup() {
-    clearTimeout(this.timeout);
-    if (this.searchQuery === '') {
-      this.toggleQueryContainer = false;
-      this.queryItems = [];
+  handleAutoCompleteLookup(searchQuery) {
+    clearTimeout(this.predictionsTimeout);
+    if (searchQuery === '') {
+      this.showPredictionsContainer = false;
+      this.predictions = [];
       return;
     }
-    this.timeout = setTimeout(() => {
-      this.autoCompleteService.getAutoComplete(this.searchQuery).subscribe((response) => {
-          const searchResults = response.json();
-          if (response.ok) {
-            this.queryItems = [];
-            searchResults[1].forEach((e) => this.queryItems.push(e));
-            this.toggleQueryContainer = true;
-          } else {
-            this.toggleQueryContainer = false;
-          }
+    this.predictionsTimeout = setTimeout(() => {
+      this.youtubeAutoCompleteService.getAutoComplete(searchQuery).subscribe((autoCompleteResponse) => {
+          this.predictions = [];
+          autoCompleteResponse[1].forEach((e) => this.predictions.push(e));
+          this.showPredictionsContainer = true;
         }, (error) =>
           console.error(JSON.stringify(error))
       );
     });
   }
 
-  /**
-   * Close search item container on outside click
-   */
   @HostListener('window:click') onClick() {
-    if (this.toggleQueryContainer && this.queryInput.nativeElement !== document.activeElement) {
-      this.toggleQueryContainer = false;
+    if (this.showPredictionsContainer && this.queryInput.nativeElement !== document.activeElement) {
+      this.showPredictionsContainer = false;
     }
-  }
-
-  /**
-   * Handle query item clicked
-   */
-  handleQueryItemClick(item) {
-    this.toggleQueryContainer = false;
-    this.searchQuery = item;
   }
 
   /**
    * Handle submitted search
    */
-  handleSubmitSearch() {
+  handleSubmitSearch(searchQuery) {
     this.videoList = [];
-    this.toggleQueryContainer = false;
-    this.youtubeSearchService.search(this.searchQuery);
+    console.log('Search query: ' + searchQuery);
+    this.showPredictionsContainer = false;
+    this.youtubeSearchService.search(searchQuery);
     this.searchQuery = '';
   }
 
-  ngOnDestroy () {
-    this.subscription.unsubscribe();
+  ngOnDestroy() {
+    this.searchResultsSubscription.unsubscribe();
   }
 
 }

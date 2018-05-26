@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {Http} from '@angular/http';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable()
-export class AutoCompleteService {
-  constructor(private http: Http) {
+export class YoutubeAutoCompleteService {
+  constructor(private http: HttpClient) {
   }
 
   getAutoComplete(input: string) {

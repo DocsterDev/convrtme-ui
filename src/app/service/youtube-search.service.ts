@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {Http} from "@angular/http";
+import {HttpClient} from '@angular/common/http';
 
 @Injectable()
 export class YoutubeSearchService {
-  constructor(private http: Http) {
+  constructor(private http: HttpClient) {
   }
 
   private resultList = new Subject<any>();
