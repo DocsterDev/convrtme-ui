@@ -40,10 +40,7 @@ export class AudioComponent implements OnInit, OnDestroy {
     this.loadDashboard();
   }
 
-  /**
-   * Connect to Web Socket
-   */
-  connectWebSocket() {
+  public connectWebSocket() {
     this.stompSvc.configure({
       host: 'http://localhost:8080/websocket-example',
       debug: false,
@@ -55,9 +52,6 @@ export class AudioComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Load the map with key of uuid
-   */
   public loadDashboard() {
     this.showLoader = true;
     this.metadataSvc.getMetadata(this.userSvc.getCurrentUser()).subscribe((response) => {
@@ -67,30 +61,19 @@ export class AudioComponent implements OnInit, OnDestroy {
         this.metadataMap.set(e.uuid, e);
       });
       this.showLoader = false;
-    }, (error) => {
-      console.error(JSON.stringify(error));
     });
   }
 
-  /**
-   * Dropped File Event
-   */
   public addDroppedFile(event: UploadEvent) {
     this.files = event.files;
   }
 
-  /**
-   * Picked File Event
-   */
   public addPickedFile(file, template) {
     this.fileTypeConvertFrom = this.getFileExtension(file[0].name);
     this.modalRef = this.modalSvc.show(template);
     this.file = file;
   }
 
-  /**
-   * Start File Conversion
-   */
   public startConversion() {
     if (!this.fileTypeConvertTo) {
       console.error('File to conversion is null');
@@ -100,15 +83,11 @@ export class AudioComponent implements OnInit, OnDestroy {
     this.uploadFile(this.file[0], this.createMetadata());
   }
 
-  /**
-   * createMetadata
-   */
   public createMetadata() {
     const uuid = this.utilsSvc.generateUUID();
     const name = this.file[0].name;
     const convertFrom = this.getFileExtension(this.file[0].name).toUpperCase();
     const convertTo = this.fileTypeConvertTo;
-    // Build metadata object
     const metadata = {
       uuid: uuid,
       title: name,
@@ -123,9 +102,6 @@ export class AudioComponent implements OnInit, OnDestroy {
     return metadata;
   }
 
-  /**
-   * Upload File
-   */
   public uploadFile(file, metadata) {
     const form = new FormData();
     form.append('file', file);
@@ -146,22 +122,16 @@ export class AudioComponent implements OnInit, OnDestroy {
             let meta: any;
             meta = resp.json();
             this.metadataMap.set(meta.uuid, meta);
-          }, (error) => JSON.stringify(error));
+          });
       });
   }
 
-  /**
-   * Update Upload Progress
-   */
   public updateUploadProgress(uuid, progress) {
     const val = this.metadataMap.get(uuid);
     val.uploadProgress = progress;
     val.status = 'uploading';
   }
 
-  /**
-   * Update Convert Progress
-   */
   public updateConvertProgress(uuid, progress) {
     const val = this.metadataMap.get(uuid);
     val.convertProgress = progress;
@@ -171,42 +141,26 @@ export class AudioComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Update Conversion
   public conversionUpload = (data) => {
     this.updateConvertProgress(data.uuid, data.progress);
   }
 
-  /**
-   * Get file extension
-   */
   public getFileExtension(filename: string) {
     return filename.substring(filename.lastIndexOf('.') + 1, filename.length) || filename;
   }
 
-  /**
-   * Convert Map to Array
-   */
   public getValues() {
     return Array.from(this.metadataMap.values());
   }
 
-  /**
-   * File Type Selected
-   */
   public changeFileType($event) {
     this.fileTypeConvertTo = this.fileTypeOptions[$event];
   }
 
-  /**
-   * File Quality Selected
-   */
   public changeFileQuality($event) {
     console.log(this.fileQualityOptions[$event]);
   }
 
-  /**
-   * On Destroy Unsubscribe from Web Socket
-   */
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
     this.stompSvc.disconnect().then(() => {

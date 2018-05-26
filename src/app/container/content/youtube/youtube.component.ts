@@ -4,6 +4,7 @@ import {YoutubeDownloadService} from '../../../service/youtube-download.service'
 import {Howl, Howler} from 'howler';
 import {YoutubeSearchService} from '../../../service/youtube-search.service';
 import {YoutubeAutoCompleteService} from '../../../service/youtube-autocomplete.service';
+import {AudioPlayerService} from "../../../global/audio-player/audio-player.service";
 
 @Component({
   selector: 'app-youtube',
@@ -34,43 +35,16 @@ export class YoutubeComponent implements OnInit, OnDestroy {
 
   constructor(private youtubeAutoCompleteService: YoutubeAutoCompleteService,
               private youtubeSearchService: YoutubeSearchService,
-              private youtubeDownloadService: YoutubeDownloadService) {
+              private youtubeDownloadService: YoutubeDownloadService,
+              private audioPlayerService: AudioPlayerService) {
   }
 
   ngOnInit() {
     this.youtubeSearchService.search('mgtow');
     this.searchResultsSubscription = this.youtubeSearchService.getResultList().subscribe((searchResults) => {
       this.loadIncrementally(searchResults, this.videoList);
-    }, (error) => {
-      console.error(JSON.stringify(error));
     });
 
-  }
-
-  private loadIncrementally(data, list) {
-    data.forEach((e, index) => {
-      const delay = Math.floor((Math.random() * 1400));
-      setTimeout(YoutubeComponent.updateComponent, delay, e, index, list);
-    });
-  }
-
-  public handlePredictionSelect($event, index: number) {
-    this.togglePlayFooter = false;
-    this.activeSoundComponent = index;
-    if (this.activeSound) {
-      this.activeSound.stop();
-    }
-    this.youtubeDownloadService.downloadUserVideo($event.videoId).subscribe((response) => {
-      this.togglePlayFooter = true;
-      console.log('Is audio file only: ' + response.audioOnly);
-      this.activeSound = new Howl({
-        src: [response.url],
-        html5: true
-      });
-      this.activeSound.play();
-    }, (error) => {
-      console.log(error.message);
-    });
   }
 
   public handleAutoCompleteLookup(searchQuery) {
@@ -85,9 +59,39 @@ export class YoutubeComponent implements OnInit, OnDestroy {
           this.predictions = [];
           autoCompleteResponse[1].forEach((e) => this.predictions.push(e));
           this.showPredictionsContainer = true;
-        }, (error) =>
-          console.error(JSON.stringify(error))
-      );
+        });
+    });
+  }
+
+  public handlePredictionSelect($event, index: number) {
+    this.togglePlayFooter = false;
+    this.activeSoundComponent = index;
+    if (this.activeSound) {
+      this.activeSound.stop();
+    }
+    this.youtubeDownloadService.downloadVideo($event.videoId, $event).subscribe((videoResponse) => {
+      this.togglePlayFooter = true;
+      console.log('Is audio file only: ' + videoResponse.videoInfo.audio);
+      this.activeSound = new Howl({
+        src: [videoResponse.source],
+        html5: true
+      });
+      this.audioPlayerService.triggerNowPlaying(videoResponse.videoInfo.title);
+      this.activeSound.play();
+    });
+  }
+
+  public handleSubmitSearch(searchQuery) {
+    this.videoList = [];
+    this.showPredictionsContainer = false;
+    this.youtubeSearchService.search(searchQuery);
+    this.searchQuery = '';
+  }
+
+  private loadIncrementally(data, list) {
+    data.forEach((e, index) => {
+      const delay = Math.floor((Math.random() * 1400));
+      setTimeout(YoutubeComponent.updateComponent, delay, e, index, list);
     });
   }
 
@@ -95,14 +99,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     if (this.showPredictionsContainer && this.searchInput.nativeElement !== document.activeElement) {
       this.showPredictionsContainer = false;
     }
-  }
-
-  public handleSubmitSearch(searchQuery) {
-    this.videoList = [];
-    console.log('Search query: ' + searchQuery);
-    this.showPredictionsContainer = false;
-    this.youtubeSearchService.search(searchQuery);
-    this.searchQuery = '';
   }
 
   ngOnDestroy() {

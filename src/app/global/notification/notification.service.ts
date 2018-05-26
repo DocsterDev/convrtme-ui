@@ -1,11 +1,24 @@
-import {ErrorHandler, Injectable} from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
+
+// export class Notification {
+//
+//   constructor(
+//     public message: string,
+//     public type: string) {}
+//
+// }
 
 @Injectable()
 export class NotificationService {
 
-  public showNotificationHeader = false;
-  public message: string;
+  public notificationEmitter$: EventEmitter<any>;
 
-  constructor() { }
+  constructor() {
+    this.notificationEmitter$ = new EventEmitter();
+  }
+
+  public showNotification (message: string): void {
+    this.notificationEmitter$.emit(message);
+  }
 
 }

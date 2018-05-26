@@ -17,9 +17,8 @@ import {appRoutes} from './app.routes';
 import {TileComponent} from './common/tile/tile.component';
 import {NgCircleProgressModule} from 'ng-circle-progress';
 import {FileDropModule} from 'ngx-file-drop';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {ProgressHttpModule} from 'angular-progress-http';
-import {HttpModule} from '@angular/http';
 import {MetadataService} from './service/metadata.service';
 import {UserService} from './service/user.service';
 import {FormsModule} from '@angular/forms';
@@ -34,7 +33,12 @@ import {VideoService} from './service/video.service';
 import {YoutubeSearchService} from './service/youtube-search.service';
 import {YoutubeDownloadService} from './service/youtube-download.service';
 import {NotificationComponent} from './global/notification/notification.component';
-import {YoutubeAutoCompleteService} from "./service/youtube-autocomplete.service";
+import {YoutubeAutoCompleteService} from './service/youtube-autocomplete.service';
+import {GlobalHttpInterceptor} from './global/http-interceptor/global-http-interceptor';
+import {HttpModule} from '@angular/http';
+import {NotificationService} from './global/notification/notification.service';
+import { AudioPlayerComponent } from './global/audio-player/audio-player.component';
+import {AudioPlayerService} from "./global/audio-player/audio-player.service";
 
 @NgModule({
   declarations: [
@@ -52,7 +56,8 @@ import {YoutubeAutoCompleteService} from "./service/youtube-autocomplete.service
     YoutubeComponent,
     LoaderComponent,
     SearchCardComponent,
-    NotificationComponent
+    NotificationComponent,
+    AudioPlayerComponent,
   ],
   imports: [
     FormsModule,
@@ -66,7 +71,23 @@ import {YoutubeAutoCompleteService} from "./service/youtube-autocomplete.service
     DropdownModule,
     ModalModule.forRoot()
   ],
-  providers: [MetadataService, UserService, StompService, UtilsService, VideoService, YoutubeSearchService, YoutubeDownloadService, YoutubeAutoCompleteService],
+  providers: [
+    MetadataService,
+    UserService,
+    StompService,
+    UtilsService,
+    VideoService,
+    YoutubeSearchService,
+    YoutubeDownloadService,
+    YoutubeAutoCompleteService,
+    NotificationService,
+    AudioPlayerService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: GlobalHttpInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

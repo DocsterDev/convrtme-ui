@@ -1,10 +1,9 @@
 import {Injectable} from '@angular/core';
-import {Subject} from 'rxjs/Subject';
-import {Http} from '@angular/http';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable()
 export class VideoService {
-  constructor(private http: Http) {
+  constructor(private http: HttpClient) {
   }
 
   /**
