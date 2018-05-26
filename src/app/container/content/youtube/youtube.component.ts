@@ -21,12 +21,17 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   @Input()
   toggleQueryContainer = false;
 
+  public togglePlayFooter = false;
+
   public showLoader;
   public videoList = [];
   private subscription: Subscription;
   private timeout;
   private sound;
   public activeComponent: number = null;
+
+  public showNotificationHeader = false;
+  public message: string;
 
   @ViewChild('queryInput')
   queryInput: ElementRef;
@@ -59,19 +64,25 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   }
 
   public handleSelect($event, index: number) {
+    this.showNotificationHeader = false;
+    this.togglePlayFooter = false;
     this.activeComponent = index;
     if (this.sound) {
       this.sound.stop();
     }
     this.youtubeDownloadService.downloadUserVideo($event.videoId).subscribe((response) => {
       const body = response.json();
+      this.togglePlayFooter = true;
+      this.showNotificationHeader = false;
+      this.message = '';
       this.sound = new Howl({
         src: [body.url],
         html5: true
       });
       this.sound.play();
     }, (error) => {
-      console.error(JSON.stringify(error));
+      this.showNotificationHeader = true;
+      this.message = error.json().message;
     });
   }
 
@@ -126,6 +137,13 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     this.toggleQueryContainer = false;
     this.youtubeSearchService.search(this.searchQuery);
     this.searchQuery = '';
+  }
+
+  /**
+   * Toggle play footer
+   */
+  handleTogglePlayFooter(){
+    this.togglePlayFooter = !this.togglePlayFooter;
   }
 
   ngOnDestroy () {

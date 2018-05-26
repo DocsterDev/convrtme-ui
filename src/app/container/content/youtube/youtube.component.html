@@ -1,8 +1,15 @@
+<div [ngClass]="{'open-notification-header': this.showNotificationHeader}" class="fixed-top notification-header">
+  <div class="row align-items-center h-100">
+    <div class="col">
+      <div class="c-font-circular c-smaller c-regular">{{message}}</div>
+    </div>
+  </div>
+</div>
+
 <div *ngIf="showLoader" class="Mt(3)">
   <app-loader></app-loader>
 </div>
 <div *ngIf="!showLoader">
-
   <div class="content" style="padding-bottom:110px">
     <div class="flex-box Py(1)">
       <div class="search">
@@ -44,4 +51,10 @@
   </div>
 </div>
 
-<div class="fixed-bottom Py(2) elevation-8dp" style="background: #fff; height:100px">Beooooo</div>
+<div (click)="handleTogglePlayFooter()" [ngClass]="{'open-play-footer': this.togglePlayFooter}" class="fixed-bottom elevation-8dp play-footer">
+  <div class="row align-items-center h-100">
+    <div class="col">
+      <div class="c-font-circular c-smaller c-regular">Video Info Here</div>
+    </div>
+  </div>
+</div>
