@@ -4,7 +4,7 @@ import {YoutubeDownloadService} from '../../../service/youtube-download.service'
 import {Howl, Howler} from 'howler';
 import {YoutubeSearchService} from '../../../service/youtube-search.service';
 import {YoutubeAutoCompleteService} from '../../../service/youtube-autocomplete.service';
-import {AudioPlayerService} from "../../../global/audio-player/audio-player.service";
+import {AudioPlayerService} from '../../../global/audio-player/audio-player.service';
 
 @Component({
   selector: 'app-youtube',
@@ -16,7 +16,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   public showPredictionsContainer: boolean;
   public predictions: Array<string>;
   public searchQuery: string;
-  public togglePlayFooter = false;
   public showLoader: boolean;
   public videoList = [];
 
@@ -64,19 +63,17 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   }
 
   public handlePredictionSelect($event, index: number) {
-    this.togglePlayFooter = false;
+    this.audioPlayerService.triggerHide();
     this.activeSoundComponent = index;
     if (this.activeSound) {
       this.activeSound.stop();
     }
     this.youtubeDownloadService.downloadVideo($event.videoId, $event).subscribe((videoResponse) => {
-      this.togglePlayFooter = true;
-      console.log('Is audio file only: ' + videoResponse.videoInfo.audio);
+      this.audioPlayerService.triggerNowPlaying(videoResponse.videoInfo.title);
       this.activeSound = new Howl({
         src: [videoResponse.source],
         html5: true
       });
-      this.audioPlayerService.triggerNowPlaying(videoResponse.videoInfo.title);
       this.activeSound.play();
     });
   }

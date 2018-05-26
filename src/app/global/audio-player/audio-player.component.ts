@@ -20,6 +20,11 @@ export class AudioPlayerComponent implements OnInit {
       this.name = e;
     });
 
+    this.audioPlayerService.triggerHideEmitter$.subscribe(() => {
+      this.showNowPlayingBar = false;
+      this.name = '';
+    });
+
   }
 
 }
