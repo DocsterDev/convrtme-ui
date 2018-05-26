@@ -1,4 +1,4 @@
-<div [ngClass]="{'open-notification-header': this.showNotificationHeader}" class="fixed-top notification-header">
+<div (click)="this.showNotificationHeader = false" [ngClass]="{'open-notification-header': this.showNotificationHeader}" class="fixed-top notification-header">
   <div class="row align-items-center h-100">
     <div class="col">
       <div class="c-font-circular c-smaller c-regular">{{message}}</div>
@@ -51,7 +51,7 @@
   </div>
 </div>
 
-<div (click)="handleTogglePlayFooter()" [ngClass]="{'open-play-footer': this.togglePlayFooter}" class="fixed-bottom elevation-8dp play-footer">
+<div [ngClass]="{'open-play-footer': this.togglePlayFooter}" class="fixed-bottom elevation-8dp play-footer">
   <div class="row align-items-center h-100">
     <div class="col">
       <div class="c-font-circular c-smaller c-regular">Video Info Here</div>

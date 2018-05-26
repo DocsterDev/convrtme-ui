@@ -139,13 +139,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     this.searchQuery = '';
   }
 
-  /**
-   * Toggle play footer
-   */
-  handleTogglePlayFooter(){
-    this.togglePlayFooter = !this.togglePlayFooter;
-  }
-
   ngOnDestroy () {
     this.subscription.unsubscribe();
   }
