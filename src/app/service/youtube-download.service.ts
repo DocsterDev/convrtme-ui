@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import moment = require("moment");
 
 @Injectable()
 export class YoutubeDownloadService {
@@ -18,11 +19,16 @@ export class YoutubeDownloadService {
   constructor(private http: HttpClient) { }
 
   downloadVideo(video: any) {
+    let duration = video.thumbnailOverlays[0].thumbnailOverlayTimeStatusRenderer.text.simpleText
+
     const videoInfo = {
       id: video.videoId,
       title: video.title.simpleText,
       owner: video.ownerText.runs[0].text,
       viewCount: video.shortViewCountText.simpleText,
+      publishedTimeAgo: video.publishedTimeText.simpleText,
+      duration: moment(duration, 'HH:mm:ss').diff(moment().startOf('day'), 'seconds'),
+      currentTime: moment(),
       newUpload: YoutubeDownloadService.findNewBadge(video)
     };
     // const videoInfo = {
