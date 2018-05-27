@@ -1,16 +1,16 @@
-<div class="search-card text-left Py(0.25)" (click)="selectContent(video)">
+<div class="search-card Py(0.25)" (click)="selectContent(video)">
   <div class="row">
     <div class="col">
-        <img class="image Mend(0.5)" style="float:left;" [src]="thumbnail"/>
-        <div class="Mt(0.25)">
+        <img class="image Mend(0.5) float-left" [src]="thumbnail"/>
+        <div class="text-left Mt(0.25)" style="max-height: 90px !important">
           <div class="c-font-circular c-small c-regular" [ngClass]="{'title-color': nowPlaying}">{{title}}</div>
           <div class="Pt(0.25)"></div>
-          <div class="c-font-circular c-small c-light subtitle-color">{{owner}}</div>
-          <div class="c-font-circular c-small c-light subtitle-color">{{viewCount}} | {{duration}} | {{publishTimeAgo}}
+          <div class="c-font-circular text-truncate c-small c-light subtitle-color">{{owner}}</div>
+          <div class="c-font-circular text-truncate c-small c-light subtitle-color">{{viewCount}} | {{duration}} | {{publishTimeAgo}}
           </div>
         </div>
     </div>
-    <div class="col-md-1" style="float:left;">
+    <div class="col-md-1 float-left">
       <div class="indicator Py(0.5) Px(1.5) d-none d-md-block"><img src="/assets/img/svg/ic-plus-playlist.svg"></div>
       <!--<div class="indicator Py(0.5) Px(0.5)"><img src="/assets/img/svg/ic-play-playlist.svg"></div>-->
     </div>
