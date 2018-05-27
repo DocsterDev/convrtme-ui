@@ -80,9 +80,12 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       this.activeSound.stop();
     }
     this.youtubeDownloadService.downloadVideo($event.videoId, $event).subscribe((videoResponse) => {
-      this.audioPlayerService.triggerNowPlaying(videoResponse.videoInfo);
+      let video: any;
+      video = videoResponse;
+
+      this.audioPlayerService.triggerNowPlaying(video.videoInfo);
       this.activeSound = new Howl({
-        src: [videoResponse.source],
+        src: [video.source],
         html5: true
       });
       this.activeSound.play();

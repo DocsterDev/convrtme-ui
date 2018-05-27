@@ -10,10 +10,14 @@ export class AudioPlayerComponent implements OnInit {
 
   public showNowPlayingBar: boolean;
   public video: any;
+  public isPlaying: boolean;
+  public progress: number;
 
   constructor(private audioPlayerService: AudioPlayerService) { }
 
   ngOnInit() {
+
+    this.progress = 1;
 
     this.audioPlayerService.triggerNowPlayingEmitter$.subscribe((e) => {
       this.showNowPlayingBar = true;
@@ -25,6 +29,14 @@ export class AudioPlayerComponent implements OnInit {
       this.video = null;
     });
 
+  }
+
+  public seekNext () {
+    this.progress++;
+  }
+
+  public seekPrev () {
+    this.progress--;
   }
 
 }

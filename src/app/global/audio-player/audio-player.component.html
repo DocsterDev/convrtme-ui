@@ -1,20 +1,41 @@
 <div [ngClass]="{'open-now-playing-bar': showNowPlayingBar}" class="fixed-bottom elevation-8dp now-playing-bar">
-    <div class="row align-items-center text-center h-50">
-      <div class="col">
-      </div>
-      <div class="col">
-        <div class="row">
-          <div class="col"><div class="c-font-circular c-accent-color c-small c-bold">1</div></div>
-          <div class="col"><div class="c-font-circular c-accent-color c-small c-bold">2</div></div>
-          <div class="col"><div class="c-font-circular c-accent-color c-small c-bold">3</div></div>
+  <div class="row align-items-center text-center">
+    <div class="col">
+    </div>
+    <div class="col">
+      <div class="row My(0.5)">
+        <div class="col">
+          <div (click)="seekPrev()" class="playback-action P(0.25)"><img src="/assets/img/svg/ic-skip-previous.svg"></div>
+        </div>
+        <div class="col">
+          <div *ngIf="!isPlaying" class="playback-action P(0.25)"><img src="/assets/img/svg/ic-play-arrow.svg"></div>
+          <div *ngIf="isPlaying" class="playback-action P(0.25)"><img src="/assets/img/svg/ic-pause.svg"></div>
+        </div>
+        <div class="col">
+          <div (click)="seekNext()" class="playback-action P(0.25)"><img src="/assets/img/svg/ic-skip-next.svg"></div>
         </div>
       </div>
-      <div class="col">
+    </div>
+    <div class="col">
+    </div>
+  </div>
+  <div class="row align-items-center text-center">
+    <div class="col">
+      <div class="c-font-circular c-accent-color c-small c-bold">{{video.title}}</div>
+    </div>
+  </div>
+  <div class="row align-items-center text-center Mt(0.5)">
+    <div class="col">
+      <div class="c-font-circular c-accent-color c-smallest c-bold" style="opacity: 0.5;">1:30 / 3:08</div>
+    </div>
+  </div>
+  <div class="row align-items-center text-center">
+    <div class="col"></div>
+    <div class="col">
+      <div class="playback-seek-bar ">
+        <div [ngStyle]="{'width': progress + '%'}" class="playback-seek-bar-progress"></div>
       </div>
     </div>
-    <div class="row align-items-center text-center">
-      <div class="col">
-        <div class="c-font-circular c-accent-color c-small c-bold">{{video.title}}</div>
-      </div>
+    <div class="col"></div>
   </div>
 </div>
