@@ -1,51 +1,12 @@
 @import variables
 
-.content
-  position: absolute
-  top: 0
-  left: 0
-  width: 100%
-  //height: 100%
-  align-items: stretch
-  background: $colorWhite
-  overflow-y: hidden
-  border-left: 3px solid $tabHoverColor
-  .flex-box
-    height: 100%
-
-.results-container
-  width: 100%
-  flex: 0 0 auto
-  overflow-y: scroll
-  border-right: 3px dashed $tabHoverColor
-  @media all and (max-width: $breakpointSmallDevice)
-    border: 0
-
-.playlist-container
-  width: 50%
-  flex: 0 0 auto
-  overflow-y: scroll
-  //border-right: 3px dashed $tabHoverColor
-  @media all and (max-width: $breakpointSmallDevice)
-    border: 0
-
-.empty-content
-  margin-top: -$navHeaderHeight*2 !important
-  align-self: center
-  text-align: center
-  margin-left: 120px
-
 .text-box
-  //font: 400 18px $fontCircular
   border: 2px solid $textColorLight
   color: $textColorLight !important
   border-radius: 100px
-  width: 260px
   padding: 10px 17px
   text-shadow: 0 0 0 $textColorLight
   -webkit-text-fill-color: transparent
-  align-self: center
-  justify-self: center
 
 .header-search-box
   @extend .text-box

@@ -22,15 +22,16 @@
 .playback-action
   transform: scale(1)
   transform-origin: center
-  -webkit-transition: transform 0.05s ease
-  transition: transform 0.05s ease
+  transform-style: preserve-3D
+  -webkit-transition: transform 0.08s ease
+  transition: transform 0.08s ease
   &:hover
-    transform: scale(1.08)
+    transform: scale(1.1)
     cursor: pointer
 
 
 .playback-seek-bar
-  width: 100%
+  width: 90%
   height: 5px
   background-color: $playbackSeekBackground
   .playback-seek-bar-progress

@@ -6,7 +6,8 @@ import {Injectable} from '@angular/core';
 @Injectable()
 export class GlobalHttpInterceptor implements HttpInterceptor {
 
-  constructor(private notificationService: NotificationService) {}
+  constructor(private notificationService: NotificationService) {
+  }
 
   intercept(request: HttpRequest<any>, next: HttpHandler) {
 
@@ -22,13 +23,18 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
         // On service response success
       },
       err => {
-        console.log(err.status);
-        if (err.status === 500) {
-          this.notificationService.showNotification(err.error.message);
+
+        switch (err.status) {
+          case 0: {
+            this.notificationService.showNotification('Yikes! It looks like youre not connected to the internet or our servers are down.');
+            break;
+          }
+          default: {
+            this.notificationService.showNotification(err.error.message);
+            break;
+          }
         }
-        if (err.status === 0) {
-          this.notificationService.showNotification('Yikes! It looks like youre not connected to the internet or our servers are down.');
-        }
+
       }
     );
   }

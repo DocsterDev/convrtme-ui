@@ -63,8 +63,9 @@ export class AudioPlayerComponent implements OnInit {
   public playMedia(video) {
     let self = this;
     if (this.video) {
-      this.showNowPlayingBar = false;
+      this.isPlaying = false;
     } else {
+      this.isPlaying = true;
       this.showNowPlayingBar = true;
     }
     if (this.activeSound) {
@@ -73,6 +74,7 @@ export class AudioPlayerComponent implements OnInit {
     this.youtubeDownloadService.downloadVideo(video).subscribe((videoResponse) => {
       this.video = videoResponse;
       this.videoInfo = this.video.videoInfo;
+      this.isPlaying = true;
       this.activeSound = new Howl({
         src: [this.video.source],
         html5: true,
