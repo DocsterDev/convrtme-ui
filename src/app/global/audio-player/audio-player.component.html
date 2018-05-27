@@ -8,8 +8,8 @@
           <div (click)="seekPrev()" class="playback-action P(0.25)"><img src="/assets/img/svg/ic-skip-previous.svg"></div>
         </div>
         <div class="col">
-          <div *ngIf="!isPlaying" class="playback-action P(0.25)"><img src="/assets/img/svg/ic-play-arrow.svg"></div>
-          <div *ngIf="isPlaying" class="playback-action P(0.25)"><img src="/assets/img/svg/ic-pause.svg"></div>
+          <div (click)="play()" *ngIf="!isPlaying" class="playback-action P(0.25)"><img src="/assets/img/svg/ic-play-arrow.svg"></div>
+          <div (click)="pause()" *ngIf="isPlaying" class="playback-action P(0.25)"><img src="/assets/img/svg/ic-pause.svg"></div>
         </div>
         <div class="col">
           <div (click)="seekNext()" class="playback-action P(0.25)"><img src="/assets/img/svg/ic-skip-next.svg"></div>
@@ -21,7 +21,7 @@
   </div>
   <div class="row align-items-center text-center">
     <div class="col">
-      <div class="c-font-circular c-accent-color c-small c-bold">{{video.title}}</div>
+      <div class="c-font-circular c-accent-color c-small c-bold">{{video.videoInfo.title}}</div>
     </div>
   </div>
   <div class="row align-items-center text-center Mt(0.5)">

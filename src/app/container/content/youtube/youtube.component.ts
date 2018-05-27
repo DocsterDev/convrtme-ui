@@ -34,26 +34,19 @@ export class YoutubeComponent implements OnInit, OnDestroy {
 
   constructor(private youtubeAutoCompleteService: YoutubeAutoCompleteService,
               private youtubeSearchService: YoutubeSearchService,
-              private youtubeDownloadService: YoutubeDownloadService,
               private audioPlayerService: AudioPlayerService) {
   }
 
   ngOnInit() {
     this.showLoader = false;
-    // this.youtubeSearchService.search('mgtow');
+    this.youtubeSearchService.search('mgtow');
     this.searchResultsSubscription = this.youtubeSearchService.getResultList().subscribe((searchResults) => {
       this.loadIncrementally(searchResults, this.videoList);
     });
 
-    const video = {
-      id: '_jIoDZPQg_0',
-      title: 'Test Video Title',
-      owner: 'Jeff Sapia',
-      viewCount: '12M',
-      newUpload: true
-    };
 
-    this.audioPlayerService.triggerNowPlaying(video);
+
+    // this.audioPlayerService.triggerNowPlaying(video);
 
   }
 
@@ -73,23 +66,8 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     });
   }
 
-  public handlePredictionSelect($event, index: number) {
-    this.audioPlayerService.triggerHide();
-    this.activeSoundComponent = index;
-    if (this.activeSound) {
-      this.activeSound.stop();
-    }
-    this.youtubeDownloadService.downloadVideo($event.videoId, $event).subscribe((videoResponse) => {
-      let video: any;
-      video = videoResponse;
-
-      this.audioPlayerService.triggerNowPlaying(video.videoInfo);
-      this.activeSound = new Howl({
-        src: [video.source],
-        html5: true
-      });
-      this.activeSound.play();
-    });
+  public handleVideoSelect($video) {
+    this.audioPlayerService.triggerNowPlaying($video);
   }
 
   public handleSubmitSearch(searchQuery) {

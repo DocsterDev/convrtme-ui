@@ -17,15 +17,22 @@ export class YoutubeDownloadService {
 
   constructor(private http: HttpClient) { }
 
-  downloadVideo(videoId: string, video: any) {
+  downloadVideo(video: any) {
+    // const videoInfo = {
+    //   id: video.videoId,
+    //   title: video.title.simpleText,
+    //   owner: video.ownerText.runs[0].text,
+    //   viewCount: video.shortViewCountText.simpleText,
+    //   newUpload: YoutubeDownloadService.findNewBadge(video)
+    // };
     const videoInfo = {
-      id: videoId,
-      title: video.title.simpleText,
-      owner: video.ownerText.runs[0].text,
-      viewCount: video.shortViewCountText.simpleText,
-      newUpload: YoutubeDownloadService.findNewBadge(video)
-    }
-    return this.http.post('http://localhost:8080/api/youtube/videos/' + videoId + '/download', videoInfo);
+      id: '_jIoDZPQg_0',
+      title: 'Test Video Title',
+      owner: 'Jeff Sapia',
+      viewCount: '12M',
+      newUpload: true
+    };
+    return this.http.post('http://localhost:8080/api/youtube/videos/' + videoInfo.id + '/download', videoInfo);
   }
 
 

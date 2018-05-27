@@ -33,7 +33,7 @@
       <div [ngSwitch]="videoList.length > 0" class="results-container Pt(0.25)">
         <div class="flex-box">
           <div *ngSwitchCase="true">
-            <app-search-card class="item" *ngFor="let video of videoList; let i = index" (selected)="handlePredictionSelect($event, i)" [video]="video" [nowPlaying]="activeComponent === i"></app-search-card>
+            <app-search-card class="item" *ngFor="let video of videoList; let i = index" (selected)="handleVideoSelect($event, i)" [video]="video" [nowPlaying]="activeComponent === i"></app-search-card>
           </div>
           <div *ngSwitchCase="false">
             <app-loader></app-loader>
