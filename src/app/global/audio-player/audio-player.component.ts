@@ -21,6 +21,11 @@ export class AudioPlayerComponent implements OnInit {
 
   private activeSound: Howler;
 
+  static formatTime (seconds) {
+    // return moment.utc(seconds * 1000).format('HH:mm:ss');
+    return moment.utc(seconds * 1000).format('mm:ss');
+  }
+
   constructor(private audioPlayerService: AudioPlayerService,
               private youtubeDownloadService: YoutubeDownloadService) {
   }
@@ -28,7 +33,7 @@ export class AudioPlayerComponent implements OnInit {
   ngOnInit() {
 
     this.progress = '1';
-    this.isPlaying = false
+    this.isPlaying = false;
 
     this.audioPlayerService.triggerNowPlayingEmitter$.subscribe(($event) => {
       this.playMedia($event);
@@ -61,7 +66,6 @@ export class AudioPlayerComponent implements OnInit {
   }
 
   public playMedia(video) {
-    let self = this;
     if (this.video) {
       this.isPlaying = false;
     } else {
@@ -80,34 +84,33 @@ export class AudioPlayerComponent implements OnInit {
         html5: true,
         onplay: () => {
           this.isPlaying = true;
-          this.duration = this.formatTime(this.activeSound.duration());
-          requestAnimationFrame(self.step.bind(self));
+          this.duration = AudioPlayerComponent.formatTime(this.activeSound.duration());
           this.showNowPlayingBar = true;
+          requestAnimationFrame(this.step.bind(this));
         },
         onpause: () => {
           this.isPlaying = false;
+        },
+        onplayerror: (e) => {
+          console.log(e);
+        },
+        onloaderror: (e) => {
+          console.log(e);
         }
       });
       this.activeSound.play();
-    });
-  }
-
-  private formatTime (seconds) {
-    //return moment.utc(seconds*1000).format('HH:mm:ss');
-    return moment.utc(seconds*1000).format('mm:ss');
+    }, (err) => this.showNowPlayingBar = false);
   }
 
   private step () {
-    const self = this;
-
     // Determine our current seek position.
-    let seek = this.activeSound.seek() || 0;
-    this.timer = self.formatTime(Math.round(seek));
+    const seek = this.activeSound.seek() || 0;
+    this.timer = AudioPlayerComponent.formatTime(Math.round(seek));
     this.progress = (((seek / this.activeSound.duration()) * 100) || 0);
 
     // If the sound is still playing, continue stepping.
     if (this.activeSound.playing()) {
-      requestAnimationFrame(self.step.bind(self));
+      requestAnimationFrame(this.step.bind(this));
     }
   }
 
