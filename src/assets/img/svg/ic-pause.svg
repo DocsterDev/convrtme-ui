@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="12px" height="14px" viewBox="0 0 12 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="13px" height="15px" viewBox="0 0 13 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
-    <title>Shape</title>
+    <title>pause</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Artboard" transform="translate(-970.000000, -980.000000)" fill="#13C4A3">
-            <g id="pause" transform="translate(970.000000, 980.000000)">
-                <path d="M0,14 L4,14 L4,0 L0,0 L0,14 L0,14 Z M8,0 L8,14 L12,14 L12,0 L8,0 L8,0 Z" id="Shape"></path>
+        <g id="Artboard" transform="translate(-970.000000, -979.000000)" fill="#13C4A3">
+            <g id="pause" transform="translate(970.000000, 979.000000)">
+                <path d="M0,15 L4,15 L4,0 L0,0 L0,15 L0,15 Z M9,0 L9,15 L13,15 L13,0 L9,0 L9,0 Z" id="Shape"></path>
             </g>
         </g>
     </g>

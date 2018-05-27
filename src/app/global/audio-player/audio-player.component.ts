@@ -18,6 +18,7 @@ export class AudioPlayerComponent implements OnInit {
   ngOnInit() {
 
     this.progress = 1;
+    this.isPlaying = true;
 
     this.audioPlayerService.triggerNowPlayingEmitter$.subscribe((e) => {
       this.showNowPlayingBar = true;
