@@ -39,6 +39,7 @@ import {HttpModule} from '@angular/http';
 import {NotificationService} from './global/notification/notification.service';
 import { AudioPlayerComponent } from './global/audio-player/audio-player.component';
 import {AudioPlayerService} from "./global/audio-player/audio-player.service";
+import {MomentModule} from "angular2-moment";
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import {AudioPlayerService} from "./global/audio-player/audio-player.service";
     HttpModule,
     ProgressHttpModule,
     DropdownModule,
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    MomentModule
   ],
   providers: [
     MetadataService,

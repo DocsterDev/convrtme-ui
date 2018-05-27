@@ -22,7 +22,13 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
         // On service response success
       },
       err => {
-        this.notificationService.showNotification(err.error.message);
+        console.log(err.status);
+        if (err.status === 500) {
+          this.notificationService.showNotification(err.error.message);
+        }
+        if (err.status === 0) {
+          this.notificationService.showNotification('Yikes! It looks like youre not connected to the internet or our servers are down.');
+        }
       }
     );
   }

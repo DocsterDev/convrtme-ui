@@ -21,8 +21,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
 
   private searchResultsSubscription: Subscription;
   private predictionsTimeout;
-  private activeSound: Howler;
-  private activeSoundComponent: number = null;
 
   @ViewChild('searchInput')
   public searchInput: ElementRef;
@@ -43,11 +41,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     this.searchResultsSubscription = this.youtubeSearchService.getResultList().subscribe((searchResults) => {
       this.loadIncrementally(searchResults, this.videoList);
     });
-
-
-
-    // this.audioPlayerService.triggerNowPlaying(video);
-
   }
 
   public handleAutoCompleteLookup(searchQuery) {

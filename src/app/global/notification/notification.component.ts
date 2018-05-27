@@ -24,7 +24,7 @@ export class NotificationComponent implements OnInit {
       this.notificationTimeout = setTimeout(() => {
         this.showNotificationHeader = false;
         this.message = '';
-      }, 1500);
+      }, 3000);
     });
 
   }
