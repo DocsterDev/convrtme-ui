@@ -11,12 +11,12 @@ export class AudioPlayerService {
     this.triggerHideEmitter$ = new EventEmitter();
   }
 
-  public triggerNowPlaying(name: string): void {
-    this.triggerNowPlayingEmitter$.emit(name);
+  public triggerNowPlaying(video: any): void {
+    this.triggerNowPlayingEmitter$.emit(video);
   }
 
-  public triggerHide(name: string): void {
-    this.triggerHideEmitter$.emit(name);
+  public triggerHide(): void {
+    this.triggerHideEmitter$.emit();
   }
 
 }

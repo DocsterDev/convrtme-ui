@@ -1,7 +1,20 @@
 <div [ngClass]="{'open-now-playing-bar': showNowPlayingBar}" class="fixed-bottom elevation-8dp now-playing-bar">
-  <div class="row align-items-center text-center h-100">
-    <div class="col">
-      <div class="c-font-circular c-smaller c-regular">{{name}}</div>
+    <div class="row align-items-center text-center h-50">
+      <div class="col">
+      </div>
+      <div class="col">
+        <div class="row">
+          <div class="col"><div class="c-font-circular c-accent-color c-small c-bold">1</div></div>
+          <div class="col"><div class="c-font-circular c-accent-color c-small c-bold">2</div></div>
+          <div class="col"><div class="c-font-circular c-accent-color c-small c-bold">3</div></div>
+        </div>
+      </div>
+      <div class="col">
+      </div>
     </div>
+    <div class="row align-items-center text-center">
+      <div class="col">
+        <div class="c-font-circular c-accent-color c-small c-bold">{{video.title}}</div>
+      </div>
   </div>
 </div>

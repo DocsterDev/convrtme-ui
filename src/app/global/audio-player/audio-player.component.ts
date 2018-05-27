@@ -9,7 +9,7 @@ import {AudioPlayerService} from './audio-player.service';
 export class AudioPlayerComponent implements OnInit {
 
   public showNowPlayingBar: boolean;
-  public name: string;
+  public video: any;
 
   constructor(private audioPlayerService: AudioPlayerService) { }
 
@@ -17,12 +17,12 @@ export class AudioPlayerComponent implements OnInit {
 
     this.audioPlayerService.triggerNowPlayingEmitter$.subscribe((e) => {
       this.showNowPlayingBar = true;
-      this.name = e;
+      this.video = e;
     });
 
     this.audioPlayerService.triggerHideEmitter$.subscribe(() => {
       this.showNowPlayingBar = false;
-      this.name = '';
+      this.video = null;
     });
 
   }

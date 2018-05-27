@@ -9,27 +9,23 @@ import * as moment from 'moment';
 export class SearchCardComponent implements OnInit {
 
   @Input()
-  video: any;
+  public video: any;
 
   @Input()
-  nowPlaying: boolean;
+  public nowPlaying: boolean;
 
   @Output()
-  selected = new EventEmitter<any>();
+  public selected = new EventEmitter<any>();
 
-  lastUpdated;
+  public lastUpdated;
 
   constructor() {
-
   }
 
   ngOnInit() {
     this.lastUpdated = moment(this.video.timestamp);
   }
 
-  /**
-   * Fire event content selected to be added
-   */
   selectContent(video) {
     this.selected.emit(video);
   }
