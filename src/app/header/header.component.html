@@ -1,18 +1,18 @@
-<div class="row align-items-center c-font-circular c-bold c-smaller c-light flex-nowrap">
-  <div class="col strict-width Mstart(0.5) Py(1)">
+<div class="row no-gutters align-items-center c-font-circular c-bold c-smaller c-light flex-nowrap">
+  <div class="col strict-width Mstart(1) Py(1)">
     <img class="Py(0.25)" src="assets/img/svg/ic-logo2.svg">
   </div>
   <div class="col-6 d-none d-md-block">
-    <div class="row text-center no-select strict-width-tab flex-nowrap">
+    <div class="row no-gutters text-center no-select strict-width-tab flex-nowrap">
       <div class="col-2 tab-text" *ngFor="let option of navOptions" (click)="navigate(option.index)">
         <div class="Py(1)">{{option.display}}</div>
       </div>
     </div>
   </div>
   <div class="col d-none d-md-block">
-    <div class="row align-items-center no-select flex-nowrap justify-content-end">
+    <div class="row no-gutters align-items-center no-select flex-nowrap justify-content-end">
       <div class="col" style="max-width: 150px">
-        <div align="right" class="button c-font-circular c-bold c-smaller" (click)="onSignUp()">Sign Up</div>
+        <div align="right" class="button" (click)="onSignUp()">Sign Up</div>
       </div>
       <div class="col text-right Py(1)" style="max-width: 135px" (click)="onLogIn()">
         <span class="tab-text">

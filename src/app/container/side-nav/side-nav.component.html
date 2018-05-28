@@ -1,7 +1,7 @@
 <div class="text-left c-font-circular c-bold c-small no-select">
-  <div *ngFor="let option of navOptions" routerLinkActive="active" class="row tab-text no-outline Py(1)"
+  <div *ngFor="let option of navOptions" routerLinkActive="active" class="row no-gutters tab-text no-outline Py(1)"
        routerLink="{{option.value}}">
-    <div class="col Mstart(0.5)">
+    <div class="col Mstart(1)">
       {{option.display}}
     </div>
   </div>

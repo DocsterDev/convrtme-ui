@@ -1,4 +1,4 @@
-<div class="row align-content-center justify-content-center Pb(2)">
+<div class="row align-content-center no-gutters Pb(2)">
   <div class="col-md"></div>
   <div class="col">
     <form name="search" (submit)="handleSubmitSearch(searchQuery)">
@@ -23,12 +23,12 @@
   <div class="col-md"></div>
 </div>
 
-<div class="row">
+<div class="row no-gutters Px(0.5)">
   <div class="col">
     <app-search-card *ngFor="let video of videoList; let i = index" (selected)="handleVideoSelect($event, i)"
                      [video]="video"></app-search-card>
   </div>
-  <div class="col-auto"></div>
+  <div class="col-md"></div>
 </div>
 
 <!--<div class="content" style="padding-bottom:110px">-->
