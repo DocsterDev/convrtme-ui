@@ -37,7 +37,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.showLoader = false;
-    this.youtubeSearchService.search('mgtow');
+    this.youtubeSearchService.search('mgtow sandman');
     this.searchResultsSubscription = this.youtubeSearchService.getResultList().subscribe((searchResults) => {
       this.loadIncrementally(searchResults, this.videoList);
     });
