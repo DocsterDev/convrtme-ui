@@ -23,27 +23,26 @@
   <div class="col-md"></div>
 </div>
 
-<div class="row no-gutters Pt(1) Pb(1.5) Px(2)">
-  <div class="col Mend(1)"><div class="c-accent-color text-left c-bold c-smaller">Search Results</div></div>
-  <div class="col Mend(1)"><div class="c-accent-color text-left c-bold c-smaller">Playlist</div></div>
-  <div class="col"><div class="c-accent-color text-left c-bold c-smaller">Recommended</div></div>
+<div class="row no-gutters Pt(1) Pb(1.5) Px(1)">
+  <div class="col Mx(1)"><div class="c-accent-color text-left c-bold c-smaller">Search Results</div></div>
+  <div class="col Mx(1)"><div class="c-accent-color text-left c-bold c-smaller">Playlist</div></div>
+  <div class="col Mx(1)"><div class="c-accent-color text-left c-bold c-smaller">Recommended</div></div>
 </div>
 
-<div class="row no-gutters Px(2)">
-  <div class="col Mend(1)">
+<div class="row no-gutters Px(1)">
+  <div class="col Mx(1)">
     <app-search-card *ngFor="let video of videoList; let i = index" (selected)="handleVideoSelect($event, i)" [video]="video"></app-search-card>
   </div>
-  <div class="col-md Mend(1)">
+  <div class="col-md Mx(1)">
     <div class="row no-gutters dashed-border no-select align-content-center">
       <div class="col" style="align-self: center">
         <div class="row no-gutters align-content-center">
           <div class="col">
             <div class="c-font-circular c-bold c-smaller">Add Videos Here</div>
-
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="col-md"></div>
+  <div class="col-md Mx(1)"></div>
 </div>

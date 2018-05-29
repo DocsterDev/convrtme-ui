@@ -23,6 +23,10 @@ export class AudioPlayerComponent implements OnInit {
 
   public isLoading: boolean;
 
+  private responseTimeout;
+
+  private timeoutActive: boolean;
+
   static formatTime (seconds) {
     // return moment.utc(seconds * 1000).format('HH:mm:ss');
     return moment.utc(seconds * 1000).format('mm:ss');
@@ -68,41 +72,59 @@ export class AudioPlayerComponent implements OnInit {
   }
 
   public playMedia(video) {
-    this.showNowPlayingBar = true;
-    // if (this.video) {
-    //   this.isPlaying = false;
-    // } else {
-    //   this.isPlaying = true;
-    // }
+    clearTimeout(this.responseTimeout);
+    this.showNowPlayingBar = false;
+    if (this.video) {
+      this.isPlaying = false;
+    } else {
+      this.isPlaying = true;
+    }
     if (this.activeSound) {
       this.activeSound.stop();
     }
+    this.timeoutActive = true;
     this.isLoading = true;
+    this.responseTimeout = setTimeout(() => {
+      this.timeoutActive = false;
+      this.loadNewSound();
+      this.isLoading = false;
+      this.showNowPlayingBar = true;
+    }, 400);
     this.youtubeDownloadService.downloadVideo(video).subscribe((videoResponse) => {
       this.video = videoResponse;
       this.videoInfo = this.video.videoInfo;
-      this.activeSound = new Howl({
-        src: [this.video.source],
-        html5: true,
-        onplay: () => {
-          this.isLoading = false;
-          this.isPlaying = true;
-          this.duration = AudioPlayerComponent.formatTime(this.activeSound.duration());
-          this.showNowPlayingBar = true;
-          requestAnimationFrame(this.step.bind(this));
-        },
-        onpause: () => {
-          this.isPlaying = false;
-        },
-        onplayerror: (e) => {
-          console.log(e);
-        },
-        onloaderror: (e) => {
-          console.log(e);
-        }
-      });
-      this.activeSound.play();
+      this.isLoading = false;
+      if (this.timeoutActive == false) {
+        this.loadNewSound();
+        this.showNowPlayingBar = true;
+      }
     }, (err) => { this.showNowPlayingBar = false; this.isLoading = false; });
+  }
+
+  private loadNewSound () {
+    this.activeSound = new Howl({
+      src: [this.video.source],
+      html5: true,
+      onplay: () => {
+        this.duration = AudioPlayerComponent.formatTime(this.activeSound.duration());
+        this.isPlaying = true;
+        this.showNowPlayingBar = true;
+        requestAnimationFrame(this.step.bind(this));
+      },
+      onpause: () => {
+        this.isPlaying = false;
+      },
+      onplayerror: (e) => {
+        console.log(e);
+      },
+      onloaderror: (e) => {
+        console.log(e);
+      },
+      onend: () => {
+        this.isPlaying = false;
+      }
+    });
+    this.activeSound.play();
   }
 
   private step () {

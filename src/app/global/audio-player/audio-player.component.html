@@ -1,9 +1,4 @@
 <div [ngClass]="{'open-now-playing-bar': showNowPlayingBar}" class="fixed-bottom elevation-16dp now-playing-bar">
-    <div *ngIf="isLoading" class="row text-center Py(2)">
-      <div class="col">
-        <app-loader></app-loader>
-      </div>
-  </div>
   <div *ngIf="!isLoading">
     <div class="row align-items-center text-center">
       <div class="col-md">
