@@ -1,44 +1,16 @@
 <div class="search-card Py(0.25)" (click)="selectContent(video)">
-  <div class="row no-gutters">
+  <div class="row no-gutters align-items-center">
     <div class="col">
         <img class="image Mend(0.5) float-left" [src]="thumbnail"/>
         <div class="text-left Mt(0.25)" style="max-height: 90px !important">
-          <div class="c-font-circular c-small c-regular" [ngClass]="{'title-color': nowPlaying}">{{title}}</div>
+          <div class="c-font-circular text-truncate c-smaller c-light c-secondary-accent-color" [ngClass]="{'title-color': nowPlaying}">{{title}}</div>
           <div class="Pt(0.25)"></div>
-          <div class="c-font-circular text-truncate c-small c-light subtitle-color">{{owner}}</div>
-          <div class="c-font-circular text-truncate c-small c-light subtitle-color">{{viewCount}} | {{duration}} | {{publishTimeAgo}}
-          </div>
+          <div class="c-font-circular text-truncate c-smaller c-light subtitle-color">{{owner}}</div>
+          <div class="c-font-circular text-truncate c-smaller c-light subtitle-color">{{publishTimeAgo}}</div>
         </div>
     </div>
-    <div class="col-md-1 float-left">
-      <div class="indicator Py(0.5) Px(1.5) d-none d-md-block"><img src="/assets/img/svg/ic-plus-playlist.svg"></div>
-      <!--<div class="indicator Py(0.5) Px(0.5)"><img src="/assets/img/svg/ic-play-playlist.svg"></div>-->
-    </div>
+    <!--<div class="col-md-1">-->
+      <!--<div class="indicator Mstart(0.25)"><img src="/assets/img/svg/ic-plus-playlist.svg"></div>-->
+    <!--</div>-->
   </div>
 </div>
-
-<!--<div class="search-item c-font-circular" (click)="selectContent(video)">-->
-<!--<div class="row justify-content-start">-->
-<!--<div class="col">-->
-<!--<img class="image" [src]="video.thumbnail.thumbnails[0].url"/>-->
-<!--</div>-->
-<!--<div class="col">-->
-<!--<div class="row align-items-start">-->
-<!--<div class="col">-->
-<!--<div class="c-small c-regular text-left" [ngClass]="{'title': nowPlaying}">{{video.title.simpleText}}</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--<div class="row align-items-end">-->
-<!--<div class="col">-->
-<!--<div class="subtitle c-small c-light text-left">{{video.ownerText.runs[0].text}}</div>-->
-<!--<div class="subtitle c-small c-light text-left">{{video.shortViewCountText.simpleText}}</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--<div class="col-md">-->
-<!--<div class="indicator Py(0.5) Px(1.5)"><img src="/assets/img/svg/ic-plus-playlist.svg"></div>-->
-<!--&lt;!&ndash;<div class="indicator Py(0.5) Px(0.5)"><img src="/assets/img/svg/ic-play-playlist.svg"></div>&ndash;&gt;-->
-<!--</div>-->
-<!--</div>-->
-
-<!--</div>-->
