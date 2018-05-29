@@ -21,6 +21,8 @@ export class AudioPlayerComponent implements OnInit {
 
   private activeSound: Howler;
 
+  public isLoading: boolean;
+
   static formatTime (seconds) {
     // return moment.utc(seconds * 1000).format('HH:mm:ss');
     return moment.utc(seconds * 1000).format('mm:ss');
@@ -66,23 +68,24 @@ export class AudioPlayerComponent implements OnInit {
   }
 
   public playMedia(video) {
-    if (this.video) {
-      this.isPlaying = false;
-    } else {
-      this.isPlaying = true;
-      this.showNowPlayingBar = true;
-    }
+    this.showNowPlayingBar = true;
+    // if (this.video) {
+    //   this.isPlaying = false;
+    // } else {
+    //   this.isPlaying = true;
+    // }
     if (this.activeSound) {
       this.activeSound.stop();
     }
+    this.isLoading = true;
     this.youtubeDownloadService.downloadVideo(video).subscribe((videoResponse) => {
       this.video = videoResponse;
       this.videoInfo = this.video.videoInfo;
-      this.isPlaying = true;
       this.activeSound = new Howl({
         src: [this.video.source],
         html5: true,
         onplay: () => {
+          this.isLoading = false;
           this.isPlaying = true;
           this.duration = AudioPlayerComponent.formatTime(this.activeSound.duration());
           this.showNowPlayingBar = true;
@@ -99,16 +102,14 @@ export class AudioPlayerComponent implements OnInit {
         }
       });
       this.activeSound.play();
-    }, (err) => this.showNowPlayingBar = false);
+    }, (err) => { this.showNowPlayingBar = false; this.isLoading = false; });
   }
 
   private step () {
-    // Determine our current seek position.
     const seek = this.activeSound.seek() || 0;
     this.timer = AudioPlayerComponent.formatTime(Math.round(seek));
     this.progress = (((seek / this.activeSound.duration()) * 100) || 0);
 
-    // If the sound is still playing, continue stepping.
     if (this.activeSound.playing()) {
       requestAnimationFrame(this.step.bind(this));
     }
