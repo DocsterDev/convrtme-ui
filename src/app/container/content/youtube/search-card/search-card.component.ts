@@ -24,6 +24,7 @@ export class SearchCardComponent implements OnInit {
   public publishTimeAgo: string;
 
   public nowPlaying: boolean;
+  public nowLoading: boolean;
 
   public lastUpdated;
 
@@ -33,9 +34,9 @@ export class SearchCardComponent implements OnInit {
   ngOnInit() {
     this.lastUpdated = moment(this.video.timestamp);
     this.mapVideoInfo();
-    this.nowPlaying = true;
     this.audioPlayerService.triggerNowPlayingEmitter$.subscribe((e) => {
         if (e.videoId === this.videoId) {
+          this.nowLoading = false;
           console.log('Boom video started playing videoId: ' + e.videoId);
           this.nowPlaying = true;
         } else {
@@ -46,6 +47,7 @@ export class SearchCardComponent implements OnInit {
   }
 
   selectContent(video) {
+    this.nowLoading = true;
     this.selected.emit(video);
   }
 
