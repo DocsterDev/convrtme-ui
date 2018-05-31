@@ -1,6 +1,9 @@
 @import variables
 
 .search-card
+  opacity: 1
+  transform: scale(1)
+  transition: opacity, transform 100ms ease
   min-width: 300px
   max-width: 550px
   &:hover .indicator
@@ -21,4 +24,13 @@
     transform-style: preserve-3D
     &:hover
       transform: scale(1.1)
+
+.now-playing
+  transform: scale(1.1)
+
+.not-playing
+  opacity: 0.5
+  &:hover
+    transform: scale(1.02)
+    opacity: 0.7
 

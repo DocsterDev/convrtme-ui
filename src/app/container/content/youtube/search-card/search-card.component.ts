@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import * as moment from 'moment';
+import {AudioPlayerService} from "../../../../global/audio-player/audio-player.service";
 
 @Component({
   selector: 'app-search-card',
@@ -11,12 +12,10 @@ export class SearchCardComponent implements OnInit {
   @Input()
   public video: any;
 
-  @Input()
-  public nowPlaying: boolean;
-
   @Output()
   public selected = new EventEmitter<any>();
 
+  private videoId: string;
   public title: string;
   public thumbnail: string;
   public owner: string;
@@ -24,14 +23,26 @@ export class SearchCardComponent implements OnInit {
   public duration: string;
   public publishTimeAgo: string;
 
+  public nowPlaying: boolean;
+
   public lastUpdated;
 
-  constructor() {
+  constructor(private audioPlayerService: AudioPlayerService) {
   }
 
   ngOnInit() {
     this.lastUpdated = moment(this.video.timestamp);
     this.mapVideoInfo();
+    this.nowPlaying = true;
+    this.audioPlayerService.triggerNowPlayingEmitter$.subscribe((e) => {
+        if (e.videoId === this.videoId) {
+          console.log('Boom video started playing videoId: ' + e.videoId);
+          this.nowPlaying = true;
+        } else {
+          this.nowPlaying = false;
+        }
+    });
+
   }
 
   selectContent(video) {
@@ -39,6 +50,7 @@ export class SearchCardComponent implements OnInit {
   }
 
   public mapVideoInfo() {
+    this.videoId = this.video.videoId;
     this.title = this.video.title.simpleText;
     this.thumbnail = this.video.thumbnail.thumbnails[0].url;
     this.owner = this.video.ownerText.runs[0].text;

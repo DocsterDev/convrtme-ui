@@ -1,4 +1,4 @@
-<div class="search-card Py(0.25)" (click)="selectContent(video)">
+<div class="search-card Py(0.25)" [ngClass]="{'now-playing': nowPlaying, 'not-playing': !nowPlaying}" (click)="selectContent(video)">
   <div class="row no-gutters align-items-center">
     <div class="col">
         <img class="image Mend(0.5) float-left" [src]="thumbnail"/>

@@ -24,12 +24,12 @@
 </div>
 
 <div class="row no-gutters Pt(1) Pb(1.5) Px(1)">
-  <div class="col Mx(1)"><div class="c-accent-color text-left c-bold c-smaller">Search Results</div></div>
-  <div class="col Mx(1)"><div class="c-accent-color text-left c-bold c-smaller">Playlist</div></div>
-  <div class="col Mx(1)"><div class="c-accent-color text-left c-bold c-smaller">Recommended</div></div>
+  <div class="col-md d-none d-md-block Mx(1)"><div class="c-accent-color text-left c-bold c-smaller">Search Results</div></div>
+  <div class="col-md d-none d-md-block Mx(1)"><div class="c-accent-color text-left c-bold c-smaller">Playlist</div></div>
+  <div class="col-md d-none d-md-block Mx(1)"><div class="c-accent-color text-left c-bold c-smaller">Recommended</div></div>
 </div>
 
-<div class="row no-gutters Px(1)">
+<div class="row no-gutters Px(0.5)">
   <div class="col Mx(1)">
     <app-search-card *ngFor="let video of videoList; let i = index" (selected)="handleVideoSelect($event, i)" [video]="video"></app-search-card>
   </div>
