@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import moment = require('moment');
+import {ConfigService} from "./config.service";
 
 @Injectable()
 export class YoutubeDownloadService {
@@ -16,7 +17,7 @@ export class YoutubeDownloadService {
     return false;
   }
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private config: ConfigService) { }
 
   downloadVideo(video: any) {
     const duration = video.thumbnailOverlays[0].thumbnailOverlayTimeStatusRenderer.text.simpleText;
@@ -32,7 +33,7 @@ export class YoutubeDownloadService {
       newUpload: YoutubeDownloadService.findNewBadge(video)
     };
 
-    return this.http.post('http://localhost:8080/api/youtube/videos/' + videoInfo.id + '/download', videoInfo);
+    return this.http.post(this.config.getAddress() + '/api/youtube/videos/' + videoInfo.id + '/download', videoInfo);
   }
 
 

@@ -2,16 +2,17 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {HttpClient} from '@angular/common/http';
+import {ConfigService} from "./config.service";
 
 @Injectable()
 export class YoutubeSearchService {
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private config: ConfigService) {
   }
 
   private resultList = new Subject<any>();
 
   getServiceObservable(query: string) {
-    return this.http.get('http://localhost:8080/api/youtube/search', {
+    return this.http.get(this.config.getAddress() + '/api/youtube/search', {
       params: {
         q: query
       }

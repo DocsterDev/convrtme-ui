@@ -40,6 +40,7 @@ import {NotificationService} from './global/notification/notification.service';
 import { AudioPlayerComponent } from './global/audio-player/audio-player.component';
 import {AudioPlayerService} from "./global/audio-player/audio-player.service";
 import {MomentModule} from "angular2-moment";
+import {ConfigService} from "./service/config.service";
 
 @NgModule({
   declarations: [
@@ -84,6 +85,7 @@ import {MomentModule} from "angular2-moment";
     YoutubeAutoCompleteService,
     NotificationService,
     AudioPlayerService,
+    ConfigService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: GlobalHttpInterceptor,

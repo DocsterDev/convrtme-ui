@@ -7,6 +7,7 @@ import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 import {Http} from '@angular/http';
 import {StompService} from 'ng2-stomp-service/index';
 import {UtilsService} from '../../../service/utils.service';
+import {ConfigService} from "../../../service/config.service";
 
 @Component({
   selector: 'app-audio',
@@ -32,7 +33,8 @@ export class AudioComponent implements OnInit, OnDestroy {
               private userSvc: UserService,
               private modalSvc: BsModalService,
               private stompSvc: StompService,
-              private utilsSvc: UtilsService) {
+              private utilsSvc: UtilsService,
+              private config: ConfigService) {
   }
 
   ngOnInit() {
@@ -42,7 +44,7 @@ export class AudioComponent implements OnInit, OnDestroy {
 
   public connectWebSocket() {
     this.stompSvc.configure({
-      host: 'http://localhost:8080/websocket-example',
+      host: this.config.getAddress() + '/websocket-example',
       debug: false,
       queue: {'init': false}
     });
@@ -109,7 +111,7 @@ export class AudioComponent implements OnInit, OnDestroy {
       .withUploadProgressListener(progress => {
         this.updateUploadProgress(metadata.uuid, progress.percentage);
       })
-      .post('http://localhost:8080/users/' + this.userSvc.getCurrentUser() + '/metadata/' + metadata.uuid + '/upload', form, {
+      .post(this.config.getAddress() + '/users/' + this.userSvc.getCurrentUser() + '/metadata/' + metadata.uuid + '/upload', form, {
         params: {
           title: metadata.title,
           convertTo: metadata.conversionTo,
@@ -117,7 +119,7 @@ export class AudioComponent implements OnInit, OnDestroy {
         }
       })
       .subscribe((response) => {
-        this.httpClient.post('http://localhost:8080/users/' + this.userSvc.getCurrentUser() + '/metadata/' + metadata.uuid + '/convert', null)
+        this.httpClient.post(this.config.getAddress() + '/users/' + this.userSvc.getCurrentUser() + '/metadata/' + metadata.uuid + '/convert', null)
           .subscribe((resp) => {
             let meta: any;
             meta = resp.json();
