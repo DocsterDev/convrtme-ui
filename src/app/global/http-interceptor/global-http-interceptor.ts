@@ -26,11 +26,11 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
 
         switch (err.status) {
           case 0: {
-            this.notificationService.showNotification('Yikes! It looks like youre not connected to the internet or our servers are down.');
+            this.notificationService.showNotification({type: 'error', message: 'Yikes! It looks like youre not connected to the internet or our servers are down.'});
             break;
           }
           default: {
-            this.notificationService.showNotification(err.error.message);
+            this.notificationService.showNotification({type: 'error', message: err.error.message});
             break;
           }
         }

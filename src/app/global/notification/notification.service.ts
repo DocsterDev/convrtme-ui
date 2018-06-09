@@ -17,8 +17,8 @@ export class NotificationService {
     this.notificationEmitter$ = new EventEmitter();
   }
 
-  public showNotification (message: string): void {
-    this.notificationEmitter$.emit(message);
+  public showNotification (notification): void {
+    this.notificationEmitter$.emit(notification);
   }
 
 }

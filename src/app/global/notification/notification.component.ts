@@ -10,6 +10,7 @@ export class NotificationComponent implements OnInit {
 
   public showNotificationHeader: boolean;
   public message: string;
+  public type: string;
   private notificationTimeout;
 
   constructor(private notificationService: NotificationService) {
@@ -17,10 +18,11 @@ export class NotificationComponent implements OnInit {
 
   ngOnInit() {
 
-    this.notificationService.notificationEmitter$.subscribe((message) => {
+    this.notificationService.notificationEmitter$.subscribe((notification) => {
       clearTimeout(this.notificationTimeout);
       this.showNotificationHeader = true;
-      this.message = message;
+      this.message = notification.message;
+      this.type = notification.type;
       this.notificationTimeout = setTimeout(() => {
         this.showNotificationHeader = false;
         this.message = '';

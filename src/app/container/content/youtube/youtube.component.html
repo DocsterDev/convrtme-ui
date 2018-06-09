@@ -1,11 +1,12 @@
 <div class="row align-content-center no-gutters Pb(1)">
   <div class="col-md"></div>
   <div class="col">
+    <div class="position-relative">
     <form name="search" (submit)="handleSubmitSearch(searchQuery)">
       <input [(ngModel)]="searchQuery"
              (ngModelChange)="handleAutoCompleteLookup(searchQuery)"
              name="q"
-             class="header-search-box c-font-circular c-bold"
+             class="header-search-box c-smaller c-font-circular c-bold Px(1)"
              autocorrect="off"
              autocapitalize="off"
              spellcheck="false"
@@ -14,6 +15,10 @@
              #searchInput/>
       <button type="submit" style="display:none">hidden submit</button>
     </form>
+      <div class="position-absolute" style="right: 17px; top: 12px">
+        <img src="assets/img/svg/ic-search.svg" />
+      </div>
+    </div>
     <div *ngIf="showPredictionsContainer" class="search-content">
       <div *ngFor="let prediction of predictions" (click)="handleSubmitSearch(prediction)">
         <div class="Px(1) Py(0.5) t-regular2">{{prediction}}</div>
@@ -23,17 +28,13 @@
   <div class="col-md"></div>
 </div>
 
-<div class="row no-gutters Pt(1) Pb(1.5) Px(0.5)">
-  <div class="col-md d-none d-md-block Mx(1)"><div class="c-accent-color text-left c-bold c-smaller">Search Results</div></div>
-  <div class="col-md d-none d-md-block Mx(1)"><div class="c-accent-color text-left c-bold c-smaller">Playlist</div></div>
-  <div class="col-md d-none d-md-block Mx(1)"><div class="c-accent-color text-left c-bold c-smaller">Recommended</div></div>
-</div>
-
 <div class="row no-gutters Px(0.5)">
   <div class="col Mx(1)">
+    <div class="c-accent-color text-left c-bold c-smaller">Search Results</div>
     <app-search-card *ngFor="let video of videoList; let i = index" (selected)="handleVideoSelect($event, i)" [video]="video"></app-search-card>
   </div>
   <div class="col-md Mx(1)">
+    <div class="c-accent-color text-left c-bold c-smaller Pb(0.25)">Playlist</div>
     <div class="row no-gutters dashed-border no-select align-content-center">
       <div class="col" style="align-self: center">
         <div class="row no-gutters align-content-center">
@@ -44,5 +45,7 @@
       </div>
     </div>
   </div>
-  <div class="col-md Mx(1)"></div>
+  <div class="col-md Mx(1)">
+    <div class="c-accent-color text-left c-bold c-smaller Pb(0.25)">Recommended</div>
+  </div>
 </div>
