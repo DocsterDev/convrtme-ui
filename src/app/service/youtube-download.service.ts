@@ -25,7 +25,7 @@ export class YoutubeDownloadService {
     const videoInfo = {
       id: video.videoId,
       title: video.title.simpleText,
-      owner: video.ownerText.runs[0].text,
+      owner: video.shortBylineText.runs[0].text,
       viewCount: video.shortViewCountText.simpleText,
       publishedTimeAgo: video.publishedTimeText.simpleText,
       duration: moment(duration, 'HH:mm:ss').diff(moment().startOf('day'), 'seconds'),

@@ -55,7 +55,7 @@ export class SearchCardComponent implements OnInit {
     this.videoId = this.video.videoId;
     this.title = this.video.title.simpleText;
     this.thumbnail = this.video.thumbnail.thumbnails[0].url;
-    this.owner = this.video.ownerText.runs[0].text;
+    this.owner = this.video.shortBylineText.runs[0].text;
     this.viewCount = this.video.shortViewCountText.simpleText;
     this.duration = this.video.thumbnailOverlays[0].thumbnailOverlayTimeStatusRenderer.text.simpleText;
     this.publishTimeAgo = this.video.publishedTimeText.simpleText;
