@@ -1,9 +1,8 @@
 <div class="text-left c-font-circular c-bold c-smaller no-select">
-  <div *ngFor="let option of navOptions" routerLinkActive="active" class="row no-gutters tab-text no-outline Py(1)"
+  <div *ngFor="let option of navOptions" routerLinkActive="active" #rla="routerLinkActive" class="row no-gutters tab-text no-outline Py(1)"
        routerLink="{{option.value}}">
     <div class="col text-center">
-      <!--{{option.display}}-->
-      <img [src]="'assets/img/svg/' + option.icon" />
+      <img src="assets/img/svg/{{ rla.isActive ? option.activeIcon : option.icon}}" />
     </div>
   </div>
 </div>
