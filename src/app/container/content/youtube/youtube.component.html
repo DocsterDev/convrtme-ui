@@ -19,7 +19,7 @@
         <img src="assets/img/svg/ic-search.svg" />
       </div>
     </div>
-    <div *ngIf="showPredictionsContainer" class="search-content">
+    <div *ngIf="showPredictionsContainer" class="search-content c-font-circular c-light Mb(1)">
       <div *ngFor="let prediction of predictions" (click)="handleSubmitSearch(prediction)">
         <div class="Px(1) Py(0.5) t-regular2">{{prediction}}</div>
       </div>

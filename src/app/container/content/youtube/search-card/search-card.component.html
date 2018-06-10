@@ -1,12 +1,12 @@
 <div class="search-card Py(0.25)" [ngClass]="{'now-playing': nowPlaying, 'now-loading': nowLoading}" (click)="selectContent(video)">
   <div class="row no-gutters align-items-center">
     <div class="col">
-        <img class="image Mend(0.5) float-left" [src]="thumbnail"/>
-        <div class="text-left Mt(0.25)" style="max-height: 90px !important">
-          <div class="c-font-circular text-truncate c-smaller c-light" [ngClass]="{'c-secondary-accent-color': nowPlaying}">{{title}}</div>
+        <img class="image Mend(0.5) float-left" [src]="video.thumbnailUrl"/>
+        <div class="text-left c-font-circular text-truncate c-smaller c-light Mt(0.25)" [ngClass]="{'c-secondary-accent-color': nowPlaying}" style="max-height: 90px !important">
+          <div>{{video.title}}</div>
           <div class="Pt(0.25)"></div>
-          <div class="c-font-circular text-truncate c-smaller c-light subtitle-color">{{owner}}</div>
-          <div class="c-font-circular text-truncate c-smaller c-light subtitle-color">{{publishTimeAgo}}</div>
+          <div class="subtitle-color" [ngClass]="{'c-secondary-accent-color': nowPlaying}">{{video.owner}}</div>
+          <div class="subtitle-color" [ngClass]="{'c-secondary-accent-color': nowPlaying}">{{video.publishedTimeAgo}}</div>
         </div>
     </div>
     <!--<div class="col-md-1">-->

@@ -1,6 +1,5 @@
 import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/Subscription';
-import {YoutubeDownloadService} from '../../../service/youtube-download.service';
 import {Howl, Howler} from 'howler';
 import {YoutubeSearchService} from '../../../service/youtube-search.service';
 import {YoutubeAutoCompleteService} from '../../../service/youtube-autocomplete.service';
