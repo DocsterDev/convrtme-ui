@@ -19,6 +19,8 @@ export class AudioPlayerComponent implements OnInit {
   public duration: string;
   public timer: string;
 
+  private videoIdStr: string;
+
   private activeSound: Howler;
 
   public isLoading: boolean;
