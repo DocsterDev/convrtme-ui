@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 export class ConfigService {
 
   //private host = 'jeff-staging.mynetgear.com';
-  private host = '192.168.0.15';
+  private host = 'localhost';
   private port = '8080';
 
   constructor() { }
