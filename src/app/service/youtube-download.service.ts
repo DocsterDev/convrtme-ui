@@ -32,7 +32,6 @@ export class YoutubeDownloadService {
       currentTime: moment(),
       newUpload: YoutubeDownloadService.findNewBadge(video)
     };
-
     return this.http.post(this.config.getAddress() + '/api/youtube/videos/' + videoInfo.id + '/download', videoInfo);
   }
 

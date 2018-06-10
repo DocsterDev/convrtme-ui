@@ -23,15 +23,12 @@ export class AudioPlayerComponent implements OnInit {
 
   public isLoading: boolean;
 
-  private responseTimeout;
-
   private timeoutActive: boolean;
 
   private videoServiceSub;
   private videoServiceLock: boolean;
 
   static formatTime (seconds) {
-    // return moment.utc(seconds * 1000).format('HH:mm:ss');
     return moment.utc(seconds * 1000).format('m:ss');
   }
 
@@ -40,22 +37,18 @@ export class AudioPlayerComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.progress = '0';
     this.isPlaying = false;
-
     this.audioPlayerService.triggerNowPlayingEmitter$.subscribe(($event) => {
+      console.log('KJBJHBJHBJ' + JSON.stringify($event));
       this.playMedia($event);
     });
-
   }
 
   public toggle() {
     if (!this.isPlaying) {
-      this.isPlaying = true;
       this.activeSound.play();
     } else {
-      this.isPlaying = false;
       this.activeSound.pause();
     }
   }
@@ -79,24 +72,18 @@ export class AudioPlayerComponent implements OnInit {
       this.videoServiceSub.unsubscribe();
       console.log('Cancelling current service call');
     }
+    this.audioPlayerService.triggerToggleLoading({video: video, toggle: true});
     this.showNowPlayingBar = false;
     this.progress = '0';
-    if (this.video) {
-      this.isPlaying = false;
-    } else {
-      this.isPlaying = true;
-      this.showNowPlayingBar = true;
-    }
     if (this.activeSound) {
       this.activeSound.stop();
     }
-    this.timeoutActive = true;
     this.isLoading = true;
-    this.videoServiceLock = true;
+    this.isPlaying = false;
+    console.log('BROOO');
     this.videoServiceSub = this.youtubeDownloadService.downloadVideo(video).subscribe((videoResponse) => {
       this.video = videoResponse;
       this.videoInfo = this.video.videoInfo;
-      this.isLoading = false;
       this.activeSound = new Howl({
         src: [this.video.source],
         html5: true,
@@ -104,6 +91,9 @@ export class AudioPlayerComponent implements OnInit {
           this.duration = AudioPlayerComponent.formatTime(this.activeSound.duration());
           this.isPlaying = true;
           this.showNowPlayingBar = true;
+          this.isLoading = false;
+          this.audioPlayerService.triggerNowPlaying(this.video);
+          this.audioPlayerService.triggerToggleLoading({video: this.video, toggle: false});
           requestAnimationFrame(this.step.bind(this));
         },
         onpause: () => {
@@ -117,12 +107,13 @@ export class AudioPlayerComponent implements OnInit {
         },
         onend: () => {
           this.isPlaying = false;
+        },
+        onload: () => {
+          this.isLoading = false;
         }
       });
       this.activeSound.play();
-      this.showNowPlayingBar = true;
-    }, () => { this.showNowPlayingBar = false; this.isLoading = false; },
-      () => this.videoServiceLock = false);
+    }, () => { this.showNowPlayingBar = false; this.isLoading = false; });
   }
 
   private step () {

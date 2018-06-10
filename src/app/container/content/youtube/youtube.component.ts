@@ -15,7 +15,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   public showPredictionsContainer: boolean;
   public predictions: Array<string>;
   public searchQuery: string;
-  public showLoader: boolean;
   public videoList = [];
 
   private searchResultsSubscription: Subscription;
@@ -35,8 +34,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.showLoader = false;
-    this.youtubeSearchService.search('mgtow sandman');
+    this.youtubeSearchService.search('joe rogan');
     this.searchResultsSubscription = this.youtubeSearchService.getResultList().subscribe((searchResults) => {
       this.loadIncrementally(searchResults, this.videoList);
     });
