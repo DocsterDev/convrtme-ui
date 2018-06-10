@@ -31,7 +31,7 @@
 <div class="row no-gutters Px(0.5)">
   <div class="col Mx(1)">
     <div class="c-accent-color text-left c-bold c-smaller Pb(0.25)">Search Results</div>
-    <app-search-card *ngFor="let video of videoList; let i = index" (selected)="handleVideoSelect($event, i)" [video]="video"></app-search-card>
+    <app-search-card *ngFor="let video of videoList" (selected)="handleVideoSelect($event)" [video]="video"></app-search-card>
   </div>
   <div class="col-md Mx(1)">
     <div class="c-accent-color text-left c-bold c-smaller Pb(0.5)">Playlist</div>

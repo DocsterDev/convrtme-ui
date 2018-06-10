@@ -14,9 +14,6 @@ export class SearchCardComponent implements OnInit {
 
   @Output()
   public selected = new EventEmitter<any>();
-
-  private videoId: string;
-
   public nowPlaying: boolean;
   public nowLoading: boolean;
 
@@ -34,7 +31,7 @@ export class SearchCardComponent implements OnInit {
         }
     });
     this.audioPlayerService.triggerToggleLoadingEmitter$.subscribe((e) => {
-      if (e.video.videoId === this.video.videoId) {
+      if (e.videoId === this.video.videoId) {
         this.nowLoading = e.toggle;
       }
     });

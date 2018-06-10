@@ -22,9 +22,6 @@ export class AudioPlayerComponent implements OnInit {
   private activeSound: Howler;
 
   public isLoading: boolean;
-
-  private timeoutActive: boolean;
-
   private videoServiceSub;
   private videoServiceLock: boolean;
 
@@ -40,7 +37,6 @@ export class AudioPlayerComponent implements OnInit {
     this.progress = '0';
     this.isPlaying = false;
     this.audioPlayerService.triggerNowPlayingEmitter$.subscribe(($event) => {
-      console.log('KJBJHBJHBJ' + JSON.stringify($event));
       this.playMedia($event);
     });
   }
@@ -71,8 +67,10 @@ export class AudioPlayerComponent implements OnInit {
     if (this.videoServiceSub && this.videoServiceLock === true) {
       this.videoServiceSub.unsubscribe();
       console.log('Cancelling current service call');
+      return;
     }
-    this.audioPlayerService.triggerToggleLoading({video: video, toggle: true});
+    this.videoServiceLock = true;
+    this.audioPlayerService.triggerToggleLoading({videoId: video.videoId, toggle: true});
     this.showNowPlayingBar = false;
     this.progress = '0';
     if (this.activeSound) {
@@ -80,7 +78,6 @@ export class AudioPlayerComponent implements OnInit {
     }
     this.isLoading = true;
     this.isPlaying = false;
-    console.log('BROOO');
     this.videoServiceSub = this.youtubeDownloadService.downloadVideo(video).subscribe((videoResponse) => {
       this.video = videoResponse;
       this.videoInfo = this.video.videoInfo;
@@ -92,8 +89,8 @@ export class AudioPlayerComponent implements OnInit {
           this.isPlaying = true;
           this.showNowPlayingBar = true;
           this.isLoading = false;
-          this.audioPlayerService.triggerNowPlaying(this.video);
-          this.audioPlayerService.triggerToggleLoading({video: this.video, toggle: false});
+          this.audioPlayerService.triggerToggleLoading({videoId: this.videoInfo.id, toggle: false});
+          this.videoServiceLock = false;
           requestAnimationFrame(this.step.bind(this));
         },
         onpause: () => {
@@ -113,7 +110,9 @@ export class AudioPlayerComponent implements OnInit {
         }
       });
       this.activeSound.play();
-    }, () => { this.showNowPlayingBar = false; this.isLoading = false; });
+    }, () => { this.showNowPlayingBar = false; this.isLoading = false; }, () => {
+      this.videoServiceLock = false;
+    });
   }
 
   private step () {
