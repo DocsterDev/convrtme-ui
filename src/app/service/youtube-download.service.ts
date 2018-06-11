@@ -23,7 +23,7 @@ export class YoutubeDownloadService {
     const duration = video.duration;
 
     const videoInfo = {
-      id: video.videoId,
+      videoId: video.videoId,
       title: video.title,
       owner: video.owner,
       viewCount: video.viewCount,
@@ -32,7 +32,7 @@ export class YoutubeDownloadService {
       currentTime: moment(),
       newUpload: YoutubeDownloadService.findNewBadge(video)
     };
-    return this.http.post(this.config.getAddress() + '/api/youtube/videos/' + videoInfo.id + '/download', videoInfo);
+    return this.http.post(this.config.getAddress() + '/api/youtube/videos/' + videoInfo.videoId + '/download', videoInfo);
   }
 
 

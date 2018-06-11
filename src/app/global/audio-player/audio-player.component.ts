@@ -14,13 +14,10 @@ export class AudioPlayerComponent implements OnInit {
 
   public showNowPlayingBar: boolean;
   public video: any;
-  public videoInfo = {};
   public isPlaying: boolean;
   public progress;
   public duration: string;
   public timer: string;
-
-  private videoIdStr: string;
 
   private activeSound: Howler;
 
@@ -84,7 +81,6 @@ export class AudioPlayerComponent implements OnInit {
     this.isPlaying = false;
     this.videoServiceSub = this.youtubeDownloadService.downloadVideo(video).subscribe((videoResponse) => {
       this.video = videoResponse;
-      this.videoInfo = this.video.videoInfo;
       if (this.video.contentType && this.video.contentType.indexOf('video') > -1) {
         this.notificationService.showNotification({
           type: 'warn', message: 'This is not an audio only stream! File may be huge at ' + this.video.size + '!'
@@ -103,7 +99,7 @@ export class AudioPlayerComponent implements OnInit {
           this.isPlaying = true;
           this.showNowPlayingBar = true;
           this.isLoading = false;
-          this.audioPlayerService.triggerToggleLoading({videoId: this.videoInfo.id, toggle: false});
+          this.audioPlayerService.triggerToggleLoading({videoId: video.videoId, toggle: false});
           this.videoServiceLock = false;
           requestAnimationFrame(this.step.bind(this));
         },
