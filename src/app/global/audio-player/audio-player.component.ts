@@ -3,7 +3,7 @@ import {AudioPlayerService} from './audio-player.service';
 import {Howl, Howler} from 'howler';
 import {YoutubeDownloadService} from '../../service/youtube-download.service';
 import * as moment from 'moment';
-import {NotificationService} from "../notification/notification.service";
+import {NotificationService} from '../notification/notification.service';
 
 @Component({
   selector: 'app-audio-player',
@@ -85,7 +85,6 @@ export class AudioPlayerComponent implements OnInit {
     this.videoServiceSub = this.youtubeDownloadService.downloadVideo(video).subscribe((videoResponse) => {
       this.video = videoResponse;
       this.videoInfo = this.video.videoInfo;
-      console.log(JSON.stringify(this.video.size));
       if (this.video.contentType && this.video.contentType.indexOf('video') > -1) {
         this.notificationService.showNotification({
           type: 'warn', message: 'This is not an audio only stream! File may be huge at ' + this.video.size + '!'

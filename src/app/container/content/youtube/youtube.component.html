@@ -1,6 +1,6 @@
 <div class="row align-content-center no-gutters Pb(1.5)">
   <div class="col-md"></div>
-  <div class="col Px(0.5)">
+  <div class="col Mx(1.5)">
     <div class="position-relative">
     <form name="search" (submit)="handleSubmitSearch(searchQuery)">
       <input [(ngModel)]="searchQuery"
@@ -30,11 +30,11 @@
 
 <div class="row no-gutters Px(0.5)">
   <div class="col Mx(1)">
-    <div class="c-accent-color text-left c-bold c-smaller Pb(0.25)">Search Results</div>
+    <div class="d-none d-md-block c-accent-color text-left c-bold c-smaller Pb(0.25)">Search Results</div>
     <app-search-card *ngFor="let video of videoList" (selected)="handleVideoSelect($event)" [video]="video"></app-search-card>
   </div>
   <div class="col-md Mx(1)">
-    <div class="c-accent-color text-left c-bold c-smaller Pb(0.5)">Playlist</div>
+    <div class="d-none d-md-block c-accent-color text-left c-bold c-smaller Pb(0.5)">Playlist</div>
     <div class="row no-gutters dashed-border no-select align-content-center">
       <div class="col" style="align-self: center">
         <div class="row no-gutters align-content-center">
@@ -46,6 +46,6 @@
     </div>
   </div>
   <div class="col-md Mx(1)">
-    <div class="c-accent-color text-left c-bold c-smaller Pb(0.5)">Recommended</div>
+    <div class="d-none d-md-block c-accent-color text-left c-bold c-smaller Pb(0.5)">Recommended</div>
   </div>
 </div>

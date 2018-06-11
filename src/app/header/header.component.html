@@ -1,6 +1,18 @@
 <div class="row no-gutters align-items-center c-font-circular c-bold c-smaller c-light flex-nowrap">
-  <div class="col strict-width Mstart(1) Py(1)">
-    <img class="Py(0.25)" src="assets/img/svg/ic-logo2.svg">
+  <div class="col d-none d-md-block strict-width Mstart(1) Py(1)">
+    <img class=" Py(0.25)" src="assets/img/svg/ic-logo2.svg">
+  </div>
+  <div class="col-1 d-block d-md-none Mstart(1.5) Py(1)">
+    <img class=" Py(0.25)" src="assets/img/svg/ic-logo-mobile.svg">
+  </div>
+  <div class="col d-block d-md-none">
+    <div class="row c-font-circular c-bold c-smaller no-select">
+      <div *ngFor="let option of navOptionsMobile" routerLinkActive="active" #rla="routerLinkActive" class="col-2 no-outline tab-text-mobile P(1)" routerLink="{{option.value}}">
+        <div class="text-center">
+          <img src="assets/img/svg/{{ rla.isActive ? option.activeIcon : option.icon}}"/>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="col-6 d-none d-md-block">
     <div class="row no-gutters text-center no-select strict-width-tab flex-nowrap">
