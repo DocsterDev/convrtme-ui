@@ -8,7 +8,7 @@ export class YoutubeDownloadService {
 
   static formatDuration (duration) {
     if (duration.length > 5) {
-      return moment(duration, 'h:m:ss').diff(moment().startOf('day'), 'seconds');
+      return moment(duration, 'h:mm:ss').diff(moment().startOf('day'), 'seconds');
     }
     return moment(duration, 'm:ss').diff(moment().startOf('day'), 'seconds');
   }

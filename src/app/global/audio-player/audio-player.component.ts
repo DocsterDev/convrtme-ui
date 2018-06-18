@@ -27,7 +27,7 @@ export class AudioPlayerComponent implements OnInit {
 
   static formatTime (seconds) {
     if (seconds >= 3600) {
-      return moment.utc(seconds * 1000).format('h:m:ss');
+      return moment.utc(seconds * 1000).format('h:mm:ss');
     }
     return moment.utc(seconds * 1000).format('m:ss');
   }
@@ -73,12 +73,7 @@ export class AudioPlayerComponent implements OnInit {
   }
 
   public playMedia(video) {
-    if (this.videoServiceSub && this.videoServiceLock === true) {
-      this.videoServiceSub.unsubscribe();
-      console.log('Cancelling current service call');
-      return;
-    }
-    if (this.videoServiceLock == true) {
+    if (this.videoServiceLock === true) {
       console.log('Cant select another video right now');
       return;
     }
