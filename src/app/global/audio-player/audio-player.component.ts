@@ -14,14 +14,14 @@ export class AudioPlayerComponent implements OnInit {
 
   public showNowPlayingBar: boolean;
   public video: any;
-  public isPlaying: boolean = false;
   public progress;
   public duration: string;
   public timer: string;
 
   private activeSound: Howler;
 
-  public isLoading: boolean;
+  public isLoading: boolean = false;
+  public isPlaying: boolean = false;
   private videoServiceSub;
   private videoServiceLock: boolean = false;
 
@@ -39,8 +39,18 @@ export class AudioPlayerComponent implements OnInit {
 
   ngOnInit() {
     this.progress = '0';
-    this.audioPlayerService.triggerVideoEventEmitter$.subscribe(($event) => {
-      this.playMedia($event);
+    this.audioPlayerService.triggerVideoEventEmitter$.subscribe((e) => {
+      this.playMedia(e);
+    });
+    this.audioPlayerService.triggerTogglePlayingEmitter$.subscribe((e) => {
+      this.isPlaying = false;
+      if (e.toggle === false) {
+        return;
+      }
+      this.isPlaying = true;
+    });
+    this.audioPlayerService.triggerToggleLoadingEmitter$.subscribe((e) => {
+        this.isLoading = e.toggle;
     });
   }
 
@@ -82,9 +92,7 @@ export class AudioPlayerComponent implements OnInit {
     if (this.activeSound) {
       this.activeSound.stop();
     }
-    this.isLoading = true;
     this.audioPlayerService.triggerToggleLoading({videoId: video.videoId, toggle: true});
-    this.isPlaying = false;
     this.audioPlayerService.triggerTogglePlaying({videoId: video.videoId, toggle: false});
     this.videoServiceSub = this.youtubeDownloadService.downloadVideo(video).subscribe(
       (videoResponse) => {
@@ -107,17 +115,13 @@ export class AudioPlayerComponent implements OnInit {
       onplay: () => {
         this.duration = AudioPlayerComponent.formatTime(video.duration);
         this.showNowPlayingBar = true;
-        // this.isLoading = false;
-        // this.audioPlayerService.triggerToggleLoading({videoId: video.videoId, toggle: false});
-        this.isPlaying = true;
         this.audioPlayerService.triggerTogglePlaying({videoId: video.videoId, toggle: true});
         this.videoServiceLock = false;
         requestAnimationFrame(this.step.bind(this));
       },
       onpause: () => {
+        // Leave this as an exception
         this.isPlaying = false;
-        // On pause will still show it highlighted as playing
-        // this.audioPlayerService.triggerNowPlaying({video: $video, toggle: false});
       },
       onplayerror: (e) => {
         console.log(e);
@@ -126,11 +130,9 @@ export class AudioPlayerComponent implements OnInit {
         console.log(e);
       },
       onend: () => {
-        this.isPlaying = false;
         this.audioPlayerService.triggerTogglePlaying({videoId: video.videoId, toggle: false});
       },
       onload: () => {
-        this.isLoading = false;
         this.audioPlayerService.triggerToggleLoading({videoId: video.videoId, toggle: false});
       }
     });
