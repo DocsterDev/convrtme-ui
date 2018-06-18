@@ -6,6 +6,13 @@ import {ConfigService} from './config.service';
 @Injectable()
 export class YoutubeDownloadService {
 
+  static formatDuration (duration) {
+    if (duration.length > 5) {
+      return moment(duration, 'h:m:ss').diff(moment().startOf('day'), 'seconds');
+    }
+    return moment(duration, 'm:ss').diff(moment().startOf('day'), 'seconds');
+  }
+
   static findNewBadge(video: any) {
     if (video.badges && video.badges.length > 0) {
       video.badges.forEach((e) => {
@@ -20,14 +27,13 @@ export class YoutubeDownloadService {
   constructor(private http: HttpClient, private config: ConfigService) { }
 
   downloadVideo(video: any) {
-    const duration = video.duration;
     const videoMetadata = {
       videoId: video.videoId,
       title: video.title,
       owner: video.owner,
       viewCount: video.viewCount,
       publishedTimeAgo: video.publishedTimeAgo,
-      duration: moment(duration, 'HH:mm:ss').diff(moment().startOf('day'), 'seconds'),
+      duration: YoutubeDownloadService.formatDuration(video.duration),
       currentTime: moment(),
       newUpload: YoutubeDownloadService.findNewBadge(video)
     };

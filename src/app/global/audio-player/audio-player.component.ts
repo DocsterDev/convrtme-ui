@@ -26,6 +26,9 @@ export class AudioPlayerComponent implements OnInit {
   private videoServiceLock: boolean;
 
   static formatTime (seconds) {
+    if (seconds >= 3600) {
+      return moment.utc(seconds * 1000).format('h:m:ss');
+    }
     return moment.utc(seconds * 1000).format('m:ss');
   }
 
@@ -83,12 +86,12 @@ export class AudioPlayerComponent implements OnInit {
       this.video = videoResponse;
       if (this.video.contentType && this.video.contentType.indexOf('video') > -1) {
         this.notificationService.showNotification({
-          type: 'warn', message: 'This is not an audio only stream! File may be huge at ' + this.video.size + '!'
+          type: 'warn', message: 'This is not an audio only stream! File may be huge at ' + this.video.length + '!'
         });
       }
       // if (this.video.size && this.video.size > 10000000) {
       //   this.notificationService.showNotification({
-      //     type: 'warn', message: 'This video is over 10MB! It is ' + this.video.size + ' bytes!'
+      //     type: 'warn', message: 'This video is over 10MB! It is ' + this.video.length + ' bytes!'
       //   });
       // }
 
@@ -133,7 +136,7 @@ export class AudioPlayerComponent implements OnInit {
   private step () {
     const seek = this.activeSound.seek() || 0;
     this.timer = AudioPlayerComponent.formatTime(Math.round(seek));
-    this.progress = (((seek / this.activeSound.duration()) * 100) || 0);
+    this.progress = (((seek / this.video.duration) * 100) || 0);
 
     if (this.activeSound.playing()) {
       requestAnimationFrame(this.step.bind(this));
