@@ -91,37 +91,42 @@ export class AudioPlayerComponent implements OnInit {
       //     type: 'warn', message: 'This video is over 10MB! It is ' + this.video.size + ' bytes!'
       //   });
       // }
-      this.activeSound = new Howl({
-        src: [this.video.source],
-        html5: true,
-        onplay: () => {
-          this.duration = AudioPlayerComponent.formatTime(this.activeSound.duration());
-          this.isPlaying = true;
-          this.showNowPlayingBar = true;
-          this.isLoading = false;
-          this.audioPlayerService.triggerToggleLoading({videoId: video.videoId, toggle: false});
-          this.videoServiceLock = false;
-          requestAnimationFrame(this.step.bind(this));
-        },
-        onpause: () => {
-          this.isPlaying = false;
-        },
-        onplayerror: (e) => {
-          console.log(e);
-        },
-        onloaderror: (e) => {
-          console.log(e);
-        },
-        onend: () => {
-          this.isPlaying = false;
-        },
-        onload: () => {
-          this.isLoading = false;
-        }
-      });
-      this.activeSound.play();
+
+         this.buildAudioObject(this.video);
+         this.activeSound.play();
     }, () => { this.showNowPlayingBar = false; this.isLoading = false; }, () => {
       this.videoServiceLock = false;
+    });
+  }
+
+  private buildAudioObject (video) {
+    this.activeSound = new Howl({
+      src: ['http://localhost:8080/api/stream/' + video.videoId],
+      html5: true,
+      onplay: () => {
+        this.duration = AudioPlayerComponent.formatTime(video.duration);
+        this.isPlaying = true;
+        this.showNowPlayingBar = true;
+        this.isLoading = false;
+        this.audioPlayerService.triggerToggleLoading({videoId: video.videoId, toggle: false});
+        this.videoServiceLock = false;
+        requestAnimationFrame(this.step.bind(this));
+      },
+      onpause: () => {
+        this.isPlaying = false;
+      },
+      onplayerror: (e) => {
+        console.log(e);
+      },
+      onloaderror: (e) => {
+        console.log(e);
+      },
+      onend: () => {
+        this.isPlaying = false;
+      },
+      onload: () => {
+        this.isLoading = false;
+      }
     });
   }
 

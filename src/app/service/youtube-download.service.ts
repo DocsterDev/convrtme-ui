@@ -21,8 +21,7 @@ export class YoutubeDownloadService {
 
   downloadVideo(video: any) {
     const duration = video.duration;
-
-    const videoInfo = {
+    const videoMetadata = {
       videoId: video.videoId,
       title: video.title,
       owner: video.owner,
@@ -32,7 +31,7 @@ export class YoutubeDownloadService {
       currentTime: moment(),
       newUpload: YoutubeDownloadService.findNewBadge(video)
     };
-    return this.http.post(this.config.getAddress() + '/api/youtube/videos/' + videoInfo.videoId + '/download', videoInfo);
+    return this.http.post(this.config.getAddress() + '/api/youtube/videos/' + videoMetadata.videoId + '/download', videoMetadata);
   }
 
 
