@@ -43,14 +43,10 @@ export class AudioPlayerComponent implements OnInit {
       this.playMedia(e);
     });
     this.audioPlayerService.triggerTogglePlayingEmitter$.subscribe((e) => {
-      this.isPlaying = false;
-      if (e.toggle === false) {
-        return;
-      }
-      this.isPlaying = true;
+      this.isPlaying = e.toggle;
     });
     this.audioPlayerService.triggerToggleLoadingEmitter$.subscribe((e) => {
-        this.isLoading = e.toggle;
+      this.isLoading = e.toggle;
     });
   }
 
