@@ -3,20 +3,26 @@ import {EventEmitter, Injectable} from '@angular/core';
 @Injectable()
 export class AudioPlayerService {
 
-  public triggerNowPlayingEmitter$: EventEmitter<any>;
-  public triggerToggleLoadingEmitter$: EventEmitter<string>;
+  public triggerTogglePlayingEmitter$: EventEmitter<any>;
+  public triggerToggleLoadingEmitter$: EventEmitter<any>;
+  public triggerVideoEventEmitter$: EventEmitter<any>;
 
   constructor() {
-    this.triggerNowPlayingEmitter$ = new EventEmitter();
+    this.triggerTogglePlayingEmitter$ = new EventEmitter();
     this.triggerToggleLoadingEmitter$ = new EventEmitter();
+    this.triggerVideoEventEmitter$ = new EventEmitter();
   }
 
-  public triggerNowPlaying(video: any): void {
-    this.triggerNowPlayingEmitter$.emit(video);
+  public triggerTogglePlaying(playingConfig: any): void {
+    this.triggerTogglePlayingEmitter$.emit(playingConfig)
   }
 
   public triggerToggleLoading(loadingConfig: any): void {
     this.triggerToggleLoadingEmitter$.emit(loadingConfig);
+  }
+
+  public triggerVideoEvent(video: any): void {
+    this.triggerVideoEventEmitter$.emit(video);
   }
 
 }

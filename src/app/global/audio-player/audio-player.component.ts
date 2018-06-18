@@ -14,7 +14,7 @@ export class AudioPlayerComponent implements OnInit {
 
   public showNowPlayingBar: boolean;
   public video: any;
-  public isPlaying: boolean;
+  public isPlaying: boolean = false;
   public progress;
   public duration: string;
   public timer: string;
@@ -23,7 +23,7 @@ export class AudioPlayerComponent implements OnInit {
 
   public isLoading: boolean;
   private videoServiceSub;
-  private videoServiceLock: boolean;
+  private videoServiceLock: boolean = false;
 
   static formatTime (seconds) {
     if (seconds >= 3600) {
@@ -39,8 +39,7 @@ export class AudioPlayerComponent implements OnInit {
 
   ngOnInit() {
     this.progress = '0';
-    this.isPlaying = false;
-    this.audioPlayerService.triggerNowPlayingEmitter$.subscribe(($event) => {
+    this.audioPlayerService.triggerVideoEventEmitter$.subscribe(($event) => {
       this.playMedia($event);
     });
   }
@@ -73,33 +72,32 @@ export class AudioPlayerComponent implements OnInit {
       console.log('Cancelling current service call');
       return;
     }
+    if (this.videoServiceLock == true) {
+      console.log('Cant select another video right now');
+      return;
+    }
     this.videoServiceLock = true;
-    this.audioPlayerService.triggerToggleLoading({videoId: video.videoId, toggle: true});
     this.showNowPlayingBar = false;
     this.progress = '0';
     if (this.activeSound) {
       this.activeSound.stop();
     }
     this.isLoading = true;
+    this.audioPlayerService.triggerToggleLoading({videoId: video.videoId, toggle: true});
     this.isPlaying = false;
-    this.videoServiceSub = this.youtubeDownloadService.downloadVideo(video).subscribe((videoResponse) => {
-      this.video = videoResponse;
-      if (this.video.contentType && this.video.contentType.indexOf('video') > -1) {
-        this.notificationService.showNotification({
-          type: 'warn', message: 'This is not an audio only stream! File may be huge at ' + this.video.length + '!'
-        });
-      }
-      // if (this.video.size && this.video.size > 10000000) {
-      //   this.notificationService.showNotification({
-      //     type: 'warn', message: 'This video is over 10MB! It is ' + this.video.length + ' bytes!'
-      //   });
-      // }
-
-         this.buildAudioObject(this.video);
-         this.activeSound.play();
-    }, () => { this.showNowPlayingBar = false; this.isLoading = false; }, () => {
-      this.videoServiceLock = false;
-    });
+    this.audioPlayerService.triggerTogglePlaying({videoId: video.videoId, toggle: false});
+    this.videoServiceSub = this.youtubeDownloadService.downloadVideo(video).subscribe(
+      (videoResponse) => {
+        this.video = videoResponse;
+        this.buildAudioObject(this.video);
+        this.activeSound.play();
+      },
+      (error) => {
+        this.showNowPlayingBar = false;
+        this.videoServiceLock = false;
+        this.audioPlayerService.triggerToggleLoading({videoId: video.videoId, toggle: false});
+        this.audioPlayerService.triggerTogglePlaying({videoId: video.videoId, toggle: false});
+      });
   }
 
   private buildAudioObject (video) {
@@ -108,15 +106,18 @@ export class AudioPlayerComponent implements OnInit {
       html5: true,
       onplay: () => {
         this.duration = AudioPlayerComponent.formatTime(video.duration);
-        this.isPlaying = true;
         this.showNowPlayingBar = true;
-        this.isLoading = false;
-        this.audioPlayerService.triggerToggleLoading({videoId: video.videoId, toggle: false});
+        // this.isLoading = false;
+        // this.audioPlayerService.triggerToggleLoading({videoId: video.videoId, toggle: false});
+        this.isPlaying = true;
+        this.audioPlayerService.triggerTogglePlaying({videoId: video.videoId, toggle: true});
         this.videoServiceLock = false;
         requestAnimationFrame(this.step.bind(this));
       },
       onpause: () => {
         this.isPlaying = false;
+        // On pause will still show it highlighted as playing
+        // this.audioPlayerService.triggerNowPlaying({video: $video, toggle: false});
       },
       onplayerror: (e) => {
         console.log(e);
@@ -126,9 +127,11 @@ export class AudioPlayerComponent implements OnInit {
       },
       onend: () => {
         this.isPlaying = false;
+        this.audioPlayerService.triggerTogglePlaying({videoId: video.videoId, toggle: false});
       },
       onload: () => {
         this.isLoading = false;
+        this.audioPlayerService.triggerToggleLoading({videoId: video.videoId, toggle: false});
       }
     });
   }

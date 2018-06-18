@@ -24,11 +24,14 @@ export class SearchCardComponent implements OnInit {
 
   ngOnInit() {
     this.lastUpdated = moment(this.video.timestamp);
-    this.audioPlayerService.triggerNowPlayingEmitter$.subscribe((e) => {
-        this.nowPlaying = false;
-        if (e.videoId === this.video.videoId) {
-          this.nowPlaying = true;
-        }
+    this.audioPlayerService.triggerTogglePlayingEmitter$.subscribe((e) => {
+      this.nowPlaying = false;
+        if (e.toggle === false) {
+        return;
+      }
+      if (e.videoId === this.video.videoId) {
+        this.nowPlaying = true;
+      }
     });
     this.audioPlayerService.triggerToggleLoadingEmitter$.subscribe((e) => {
       if (e.videoId === this.video.videoId) {

@@ -57,7 +57,8 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   }
 
   public handleVideoSelect($video) {
-    this.audioPlayerService.triggerNowPlaying($video);
+    this.audioPlayerService.triggerVideoEvent($video);
+    this.audioPlayerService.triggerToggleLoading({video: $video.videoId, toggle: true});
   }
 
   public handleSubmitSearch(searchQuery) {
