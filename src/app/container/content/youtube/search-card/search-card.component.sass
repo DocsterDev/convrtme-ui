@@ -2,31 +2,21 @@
 
 .search-card
   opacity: 1
-  transform: scale(1)
-  &:hover
-    transform: scale(1)
   transition: opacity, transform 100ms ease
   min-width: 150px
   max-width: 550px
   overflow: hidden
-  &:hover .indicator
+  max-height: 90px
+  &:hover .play-icon
     visibility: visible
   &:hover
     cursor: pointer
-  .image
-    height: 90px
-    width: 160px
+  &:hover .thumbnail
+    opacity: 0.8
   .title-color
     color: $secondaryBtnColor !important
   .subtitle-color
     color: $textColorLight
-  .indicator
-    visibility: hidden
-    transition: transform 0.075s ease
-    transform-origin: center
-    transform-style: preserve-3D
-    &:hover
-      transform: scale(1)
 
 .now-playing
   transform: scale(1)
@@ -38,3 +28,19 @@
 
 .sub-title-op
   opacity: 0.3 !important
+
+.play-icon
+  visibility: hidden
+  color: white
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+
+.thumbnail-container
+  background-color: black
+  max-width: 160px
+
+.thumbnail
+  height: 90px
+  width: 160px
