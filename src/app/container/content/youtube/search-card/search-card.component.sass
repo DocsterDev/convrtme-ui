@@ -9,10 +9,12 @@
   max-height: 90px
   &:hover .play-icon
     visibility: visible
-  &:hover
-    cursor: pointer
+  &:hover .thumbnail-container
+    background-color: black
   &:hover .thumbnail
     opacity: 0.8
+  &:hover
+    cursor: pointer
   .title-color
     color: $secondaryBtnColor !important
   .subtitle-color
@@ -38,8 +40,10 @@
   transform: translate(-50%, -50%)
 
 .thumbnail-container
-  background-color: black
+  background-color: white
   max-width: 160px
+  height: 90px
+  width: 160px
 
 .thumbnail
   height: 90px
