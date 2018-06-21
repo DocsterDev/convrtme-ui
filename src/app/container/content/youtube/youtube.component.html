@@ -47,5 +47,6 @@
   </div>
   <div class="col-md Mx(1)">
     <div class="d-none d-md-block c-accent-color text-left c-bold c-smaller Pb(0.5)">Recommended</div>
+    <app-search-card *ngFor="let video of recommendedList" (selected)="handleRecommendedVideoSelect($event)" [video]="video"></app-search-card>
   </div>
 </div>

@@ -41,6 +41,7 @@ import { AudioPlayerComponent } from './global/audio-player/audio-player.compone
 import {AudioPlayerService} from "./global/audio-player/audio-player.service";
 import {MomentModule} from "angular2-moment";
 import {ConfigService} from "./service/config.service";
+import {YoutubeRecommendedService} from "./service/youtube-recommended.service";
 
 @NgModule({
   declarations: [
@@ -81,6 +82,7 @@ import {ConfigService} from "./service/config.service";
     UtilsService,
     VideoService,
     YoutubeSearchService,
+    YoutubeRecommendedService,
     YoutubeDownloadService,
     YoutubeAutoCompleteService,
     NotificationService,

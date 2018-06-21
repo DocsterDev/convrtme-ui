@@ -4,6 +4,7 @@ import {Howl, Howler} from 'howler';
 import {YoutubeSearchService} from '../../../service/youtube-search.service';
 import {YoutubeAutoCompleteService} from '../../../service/youtube-autocomplete.service';
 import {AudioPlayerService} from '../../../global/audio-player/audio-player.service';
+import {YoutubeRecommendedService} from "../../../service/youtube-recommended.service";
 
 @Component({
   selector: 'app-youtube',
@@ -16,8 +17,10 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   public predictions: Array<string>;
   public searchQuery: string;
   public videoList = [];
+  public recommendedList = [];
 
   private searchResultsSubscription: Subscription;
+  private recommendedResultsSubscription: Subscription;
   private predictionsTimeout;
 
   @ViewChild('searchInput')
@@ -30,6 +33,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
 
   constructor(private youtubeAutoCompleteService: YoutubeAutoCompleteService,
               private youtubeSearchService: YoutubeSearchService,
+              private youtubeRecommendedService: YoutubeRecommendedService,
               private audioPlayerService: AudioPlayerService) {
   }
 
@@ -37,6 +41,10 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     this.youtubeSearchService.search('joe rogan');
     this.searchResultsSubscription = this.youtubeSearchService.getResultList().subscribe((searchResults) => {
       this.loadIncrementally(searchResults, this.videoList);
+    });
+    this.youtubeRecommendedService.recommended('iZ0ln8gKvDI');
+    this.recommendedResultsSubscription = this.youtubeRecommendedService.getResultList().subscribe((recommendedResults) => {
+      this.loadIncrementally(recommendedResults, this.recommendedList);
     });
   }
 
@@ -57,6 +65,11 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   }
 
   public handleVideoSelect($video) {
+    this.audioPlayerService.triggerVideoEvent($video);
+    this.audioPlayerService.triggerToggleLoading({video: $video.videoId, toggle: true});
+  }
+
+  public handleRecommendedVideoSelect($video) {
     this.audioPlayerService.triggerVideoEvent($video);
     this.audioPlayerService.triggerToggleLoading({video: $video.videoId, toggle: true});
   }
