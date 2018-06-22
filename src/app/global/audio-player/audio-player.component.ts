@@ -13,7 +13,7 @@ import {NotificationService} from '../notification/notification.service';
 export class AudioPlayerComponent implements OnInit {
 
   public showNowPlayingBar: boolean;
-  public video: any;
+  public video: any = {};
   public progress;
   public duration: string;
   public timer: string;
