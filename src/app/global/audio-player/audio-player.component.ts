@@ -4,6 +4,7 @@ import {Howl, Howler} from 'howler';
 import {YoutubeDownloadService} from '../../service/youtube-download.service';
 import * as moment from 'moment';
 import {NotificationService} from '../notification/notification.service';
+import {YoutubeRecommendedService} from "../../service/youtube-recommended.service";
 
 @Component({
   selector: 'app-audio-player',
@@ -20,10 +21,10 @@ export class AudioPlayerComponent implements OnInit {
 
   private activeSound: Howler;
 
-  public isLoading: boolean = false;
-  public isPlaying: boolean = false;
+  public isLoading = false;
+  public isPlaying = false;
   private videoServiceSub;
-  private videoServiceLock: boolean = false;
+  private videoServiceLock = false;
 
   static formatTime (seconds) {
     if (seconds >= 3600) {
@@ -34,7 +35,8 @@ export class AudioPlayerComponent implements OnInit {
 
   constructor(private audioPlayerService: AudioPlayerService,
               private youtubeDownloadService: YoutubeDownloadService,
-              private notificationService: NotificationService) {
+              private notificationService: NotificationService,
+              private youtubeRecommendedService: YoutubeRecommendedService) {
   }
 
   ngOnInit() {
@@ -102,12 +104,13 @@ export class AudioPlayerComponent implements OnInit {
   private buildAudioObject (video) {
     this.activeSound = new Howl({
       src: ['http://localhost:8080/api/stream/' + video.videoId],
+      format: ['webm'],
       html5: true,
       onplay: () => {
         this.duration = AudioPlayerComponent.formatTime(video.duration);
         this.showNowPlayingBar = true;
+        this.youtubeRecommendedService.recommended(video.videoId);
         this.audioPlayerService.triggerTogglePlaying({videoId: video.videoId, toggle: true});
-        this.videoServiceLock = false;
         requestAnimationFrame(this.step.bind(this));
       },
       onpause: () => {
@@ -115,10 +118,15 @@ export class AudioPlayerComponent implements OnInit {
         this.isPlaying = false;
       },
       onplayerror: (e) => {
-        console.log(e);
+        this.audioPlayerService.triggerToggleLoading({videoId: video.videoId, toggle: false});
+        this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error playing this video.'});
+        this.videoServiceLock = false;
       },
       onloaderror: (e) => {
-        console.log(e);
+        this.audioPlayerService.triggerToggleLoading({videoId: video.videoId, toggle: false});
+        this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error loading this video.'});
+        this.videoServiceLock = false;
+        this.youtubeRecommendedService.recommended(video.videoId);
       },
       onend: () => {
         this.audioPlayerService.triggerTogglePlaying({videoId: video.videoId, toggle: false});

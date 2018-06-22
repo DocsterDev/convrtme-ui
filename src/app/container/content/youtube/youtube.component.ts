@@ -38,12 +38,14 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.youtubeSearchService.search('joe rogan');
+    this.youtubeSearchService.search('sandman mgtow');
     this.searchResultsSubscription = this.youtubeSearchService.getResultList().subscribe((searchResults) => {
+      if ( searchResults != null ) { this.youtubeRecommendedService.recommended(searchResults[0].videoId); }
+      this.videoList = [];
       this.loadIncrementally(searchResults, this.videoList);
     });
-    this.youtubeRecommendedService.recommended('iZ0ln8gKvDI');
     this.recommendedResultsSubscription = this.youtubeRecommendedService.getResultList().subscribe((recommendedResults) => {
+      this.recommendedList = [];
       this.loadIncrementally(recommendedResults, this.recommendedList);
     });
   }
@@ -75,7 +77,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   }
 
   public handleSubmitSearch(searchQuery) {
-    this.videoList = [];
     this.showPredictionsContainer = false;
     this.youtubeSearchService.search(searchQuery);
     this.searchQuery = '';
