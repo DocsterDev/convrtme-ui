@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import moment = require('moment');
+import * as moment from 'moment';
 import {ConfigService} from './config.service';
 
 @Injectable()
