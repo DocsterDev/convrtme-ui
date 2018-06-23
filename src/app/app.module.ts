@@ -42,6 +42,7 @@ import {AudioPlayerService} from "./global/audio-player/audio-player.service";
 import {MomentModule} from "angular2-moment";
 import {ConfigService} from "./service/config.service";
 import {YoutubeRecommendedService} from "./service/youtube-recommended.service";
+import {PlaylistService} from "./service/playlist.service";
 
 @NgModule({
   declarations: [
@@ -88,6 +89,7 @@ import {YoutubeRecommendedService} from "./service/youtube-recommended.service";
     NotificationService,
     AudioPlayerService,
     ConfigService,
+    PlaylistService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: GlobalHttpInterceptor,

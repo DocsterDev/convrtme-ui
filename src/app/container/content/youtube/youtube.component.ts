@@ -18,6 +18,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   public searchQuery: string;
   public videoList = [];
   public recommendedList = [];
+  public playlist = [];
 
   private searchResultsSubscription: Subscription;
   private recommendedResultsSubscription: Subscription;
