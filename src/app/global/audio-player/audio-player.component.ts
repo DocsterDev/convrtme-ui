@@ -133,6 +133,7 @@ export class AudioPlayerComponent implements OnInit {
       },
       onload: () => {
         this.audioPlayerService.triggerToggleLoading({videoId: video.videoId, toggle: false});
+        this.videoServiceLock = false;
       }
     });
   }
