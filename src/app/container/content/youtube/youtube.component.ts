@@ -1,10 +1,10 @@
 import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/Subscription';
 import {Howl, Howler} from 'howler';
-import {YoutubeSearchService} from '../../../service/youtube-search.service';
-import {YoutubeAutoCompleteService} from '../../../service/youtube-autocomplete.service';
+import {VideoSearchService} from '../../../service/video-search.service';
+import {VideoAutoCompleteService} from '../../../service/video-autocomplete.service';
 import {AudioPlayerService} from '../../../global/audio-player/audio-player.service';
-import {YoutubeRecommendedService} from "../../../service/youtube-recommended.service";
+import {VideoRecommendedService} from '../../../service/video-recommended.service';
 
 @Component({
   selector: 'app-youtube',
@@ -32,20 +32,20 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     list.push(component);
   }
 
-  constructor(private youtubeAutoCompleteService: YoutubeAutoCompleteService,
-              private youtubeSearchService: YoutubeSearchService,
-              private youtubeRecommendedService: YoutubeRecommendedService,
+  constructor(private videoAutoCompleteService: VideoAutoCompleteService,
+              private videoSearchService: VideoSearchService,
+              private videoRecommendedService: VideoRecommendedService,
               private audioPlayerService: AudioPlayerService) {
   }
 
   ngOnInit() {
-    this.youtubeSearchService.search('sandman mgtow');
-    this.searchResultsSubscription = this.youtubeSearchService.getResultList().subscribe((searchResults) => {
-      if ( searchResults != null ) { this.youtubeRecommendedService.recommended(searchResults[0].videoId); }
+    this.videoSearchService.search('sandman mgtow');
+    this.searchResultsSubscription = this.videoSearchService.getResultList().subscribe((searchResults) => {
+      if ( searchResults != null ) { this.videoRecommendedService.recommended(searchResults[0].videoId); }
       this.videoList = [];
       this.loadIncrementally(searchResults, this.videoList);
     });
-    this.recommendedResultsSubscription = this.youtubeRecommendedService.getResultList().subscribe((recommendedResults) => {
+    this.recommendedResultsSubscription = this.videoRecommendedService.getResultList().subscribe((recommendedResults) => {
       this.recommendedList = [];
       this.loadIncrementally(recommendedResults, this.recommendedList);
     });
@@ -59,7 +59,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       return;
     }
     this.predictionsTimeout = setTimeout(() => {
-      this.youtubeAutoCompleteService.getAutoComplete(searchQuery).subscribe((autoCompleteResponse) => {
+      this.videoAutoCompleteService.getAutoComplete(searchQuery).subscribe((autoCompleteResponse) => {
           this.predictions = [];
           autoCompleteResponse[1].forEach((e) => this.predictions.push(e));
           this.showPredictionsContainer = true;
@@ -79,7 +79,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
 
   public handleSubmitSearch(searchQuery) {
     this.showPredictionsContainer = false;
-    this.youtubeSearchService.search(searchQuery);
+    this.videoSearchService.search(searchQuery);
     this.searchQuery = '';
   }
 

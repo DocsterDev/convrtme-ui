@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {AudioPlayerService} from './audio-player.service';
 import {Howl, Howler} from 'howler';
-import {YoutubeDownloadService} from '../../service/youtube-download.service';
 import * as moment from 'moment';
 import {NotificationService} from '../notification/notification.service';
-import {YoutubeRecommendedService} from "../../service/youtube-recommended.service";
+import {VideoRecommendedService} from '../../service/video-recommended.service';
+import {VideoMetadataService} from '../../service/video-metadata.service';
 
 @Component({
   selector: 'app-audio-player',
@@ -34,9 +34,9 @@ export class AudioPlayerComponent implements OnInit {
   }
 
   constructor(private audioPlayerService: AudioPlayerService,
-              private youtubeDownloadService: YoutubeDownloadService,
+              private videoMetadataService: VideoMetadataService,
               private notificationService: NotificationService,
-              private youtubeRecommendedService: YoutubeRecommendedService) {
+              private videoRecommendedService: VideoRecommendedService) {
   }
 
   ngOnInit() {
@@ -87,7 +87,7 @@ export class AudioPlayerComponent implements OnInit {
     }
     this.audioPlayerService.triggerToggleLoading({videoId: video.videoId, toggle: true});
     this.audioPlayerService.triggerTogglePlaying({videoId: video.videoId, toggle: false});
-    this.videoServiceSub = this.youtubeDownloadService.downloadVideo(video).subscribe(
+    this.videoServiceSub = this.videoMetadataService.getVideo(video).subscribe(
       (videoResponse) => {
         this.video = videoResponse;
         this.buildAudioObject(this.video);
@@ -109,7 +109,7 @@ export class AudioPlayerComponent implements OnInit {
       onplay: () => {
         this.duration = AudioPlayerComponent.formatTime(video.duration);
         this.showNowPlayingBar = true;
-        this.youtubeRecommendedService.recommended(video.videoId);
+        this.videoRecommendedService.recommended(video.videoId);
         this.audioPlayerService.triggerTogglePlaying({videoId: video.videoId, toggle: true});
         requestAnimationFrame(this.step.bind(this));
       },
@@ -126,7 +126,7 @@ export class AudioPlayerComponent implements OnInit {
         this.audioPlayerService.triggerToggleLoading({videoId: video.videoId, toggle: false});
         this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error loading this video.'});
         this.videoServiceLock = false;
-        this.youtubeRecommendedService.recommended(video.videoId);
+        this.videoRecommendedService.recommended(video.videoId);
       },
       onend: () => {
         this.audioPlayerService.triggerTogglePlaying({videoId: video.videoId, toggle: false});

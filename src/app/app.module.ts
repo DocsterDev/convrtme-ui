@@ -30,19 +30,19 @@ import {UtilsService} from './service/utils.service';
 import {LoaderComponent} from './common/loader/loader.component';
 import {SearchCardComponent} from './container/content/youtube/search-card/search-card.component';
 import {VideoService} from './service/video.service';
-import {YoutubeSearchService} from './service/youtube-search.service';
-import {YoutubeDownloadService} from './service/youtube-download.service';
 import {NotificationComponent} from './global/notification/notification.component';
-import {YoutubeAutoCompleteService} from './service/youtube-autocomplete.service';
 import {GlobalHttpInterceptor} from './global/http-interceptor/global-http-interceptor';
 import {HttpModule} from '@angular/http';
 import {NotificationService} from './global/notification/notification.service';
-import { AudioPlayerComponent } from './global/audio-player/audio-player.component';
-import {AudioPlayerService} from "./global/audio-player/audio-player.service";
-import {MomentModule} from "angular2-moment";
-import {ConfigService} from "./service/config.service";
-import {YoutubeRecommendedService} from "./service/youtube-recommended.service";
-import {PlaylistService} from "./service/playlist.service";
+import {AudioPlayerComponent} from './global/audio-player/audio-player.component';
+import {AudioPlayerService} from './global/audio-player/audio-player.service';
+import {MomentModule} from 'angular2-moment';
+import {ConfigService} from './service/config.service';
+import {PlaylistService} from './service/playlist.service';
+import {VideoRecommendedService} from './service/video-recommended.service';
+import {VideoAutoCompleteService} from './service/video-autocomplete.service';
+import {VideoSearchService} from './service/video-search.service';
+import {VideoMetadataService} from './service/video-metadata.service';
 
 @NgModule({
   declarations: [
@@ -82,10 +82,10 @@ import {PlaylistService} from "./service/playlist.service";
     StompService,
     UtilsService,
     VideoService,
-    YoutubeSearchService,
-    YoutubeRecommendedService,
-    YoutubeDownloadService,
-    YoutubeAutoCompleteService,
+    VideoSearchService,
+    VideoRecommendedService,
+    VideoMetadataService,
+    VideoAutoCompleteService,
     NotificationService,
     AudioPlayerService,
     ConfigService,

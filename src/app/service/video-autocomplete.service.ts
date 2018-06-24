@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {ConfigService} from "./config.service";
 
 @Injectable()
-export class YoutubeAutoCompleteService {
+export class VideoAutoCompleteService {
   constructor(private http: HttpClient, private config: ConfigService) {
   }
 

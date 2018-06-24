@@ -5,22 +5,22 @@ import {HttpClient} from '@angular/common/http';
 import {ConfigService} from "./config.service";
 
 @Injectable()
-export class YoutubeRecommendedService {
+export class VideoSearchService {
   constructor(private http: HttpClient, private config: ConfigService) {
   }
 
   private resultList = new Subject<any>();
 
-  getServiceObservable(videoId: string) {
-    return this.http.get(this.config.getAddress() + '/api/youtube/recommended', {
+  getServiceObservable(query: string) {
+    return this.http.get(this.config.getAddress() + '/api/videos/search', {
       params: {
-        v: videoId
+        q: query
       }
     });
   }
 
-  recommended(videoId: string) {
-    this.getServiceObservable(videoId).subscribe((response) => {
+  search(query: string) {
+    this.getServiceObservable(query).subscribe((response) => {
       this.resultList.next(response);
     }, (error) => {
       console.log(error);

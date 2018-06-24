@@ -14,7 +14,7 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
     // Add custom headers
     const newRequest = request.clone({
       headers: request.headers.set(
-        'Authorization', 'BlahBlah'
+        'User', '45679142-dad6-498b-a017-fd76d81cec2d'
       )
     });
 
