@@ -15,17 +15,14 @@ import {SideNavComponent} from './container/side-nav/side-nav.component';
 import {RouterModule} from '@angular/router';
 import {appRoutes} from './app.routes';
 import {TileComponent} from './common/tile/tile.component';
-import {NgCircleProgressModule} from 'ng-circle-progress';
 import {FileDropModule} from 'ngx-file-drop';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {ProgressHttpModule} from 'angular-progress-http';
 import {MetadataService} from './service/metadata.service';
 import {UserService} from './service/user.service';
 import {FormsModule} from '@angular/forms';
-import {DropdownModule} from 'ng-custom-select';
 import {ModalModule} from 'ngx-bootstrap';
 import {YoutubeComponent} from './container/content/youtube/youtube.component';
-import {StompService} from 'ng2-stomp-service';
 import {UtilsService} from './service/utils.service';
 import {LoaderComponent} from './common/loader/loader.component';
 import {SearchCardComponent} from './container/content/youtube/search-card/search-card.component';
@@ -67,19 +64,16 @@ import {VideoMetadataService} from './service/video-metadata.service';
     FormsModule,
     BrowserModule,
     RouterModule.forRoot(appRoutes),
-    NgCircleProgressModule.forRoot(),
     FileDropModule,
     HttpClientModule,
     HttpModule,
     ProgressHttpModule,
-    DropdownModule,
     ModalModule.forRoot(),
     MomentModule
   ],
   providers: [
     MetadataService,
     UserService,
-    StompService,
     UtilsService,
     VideoService,
     VideoSearchService,
