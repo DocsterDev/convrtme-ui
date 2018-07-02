@@ -109,7 +109,6 @@ export class AudioPlayerComponent implements OnInit {
       onplay: () => {
         this.duration = AudioPlayerComponent.formatTime(video.duration);
         this.showNowPlayingBar = true;
-        this.videoRecommendedService.recommended(video.videoId);
         this.audioPlayerService.triggerTogglePlaying({videoId: video.videoId, toggle: true});
         requestAnimationFrame(this.step.bind(this));
       },
@@ -126,12 +125,12 @@ export class AudioPlayerComponent implements OnInit {
         this.audioPlayerService.triggerToggleLoading({videoId: video.videoId, toggle: false});
         this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error loading this video.'});
         this.videoServiceLock = false;
-        this.videoRecommendedService.recommended(video.videoId);
       },
       onend: () => {
         this.audioPlayerService.triggerTogglePlaying({videoId: video.videoId, toggle: false});
       },
       onload: () => {
+        this.videoRecommendedService.recommended(video.videoId);
         this.audioPlayerService.triggerToggleLoading({videoId: video.videoId, toggle: false});
         this.videoServiceLock = false;
       }
