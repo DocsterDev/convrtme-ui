@@ -17,7 +17,7 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
     // Add custom headers
     const newRequest = request.clone({
       headers: request.headers.set(
-        'token', token
+        'token', token == null ? '' : token
       )
     });
 
