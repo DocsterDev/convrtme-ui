@@ -1,6 +1,5 @@
 import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/Subscription';
-import {Howl, Howler} from 'howler';
 import {VideoSearchService} from '../../../service/video-search.service';
 import {VideoAutoCompleteService} from '../../../service/video-autocomplete.service';
 import {AudioPlayerService} from '../../../global/audio-player/audio-player.service';
@@ -18,7 +17,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   public searchQuery: string;
   public videoList = [];
   public recommendedList = [];
-  public playlist = [];
 
   private searchResultsSubscription: Subscription;
   private recommendedResultsSubscription: Subscription;
