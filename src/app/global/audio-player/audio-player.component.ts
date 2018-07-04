@@ -5,6 +5,7 @@ import * as moment from 'moment';
 import {NotificationService} from '../notification/notification.service';
 import {VideoRecommendedService} from '../../service/video-recommended.service';
 import {VideoMetadataService} from '../../service/video-metadata.service';
+import {ConfigService} from "../../service/config.service";
 
 @Component({
   selector: 'app-audio-player',
@@ -36,7 +37,8 @@ export class AudioPlayerComponent implements OnInit {
   constructor(private audioPlayerService: AudioPlayerService,
               private videoMetadataService: VideoMetadataService,
               private notificationService: NotificationService,
-              private videoRecommendedService: VideoRecommendedService) {
+              private videoRecommendedService: VideoRecommendedService,
+              private config: ConfigService) {
   }
 
   ngOnInit() {
@@ -103,7 +105,7 @@ export class AudioPlayerComponent implements OnInit {
 
   private buildAudioObject (video) {
     this.activeSound = new Howl({
-      src: ['http://localhost:8080/api/stream/' + video.videoId],
+      src: [this.config.getAddress() + '/api/stream/' + video.videoId],
       format: ['webm'],
       html5: true,
       onplay: () => {

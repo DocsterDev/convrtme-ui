@@ -2,19 +2,22 @@ import 'rxjs/add/operator/do';
 import {HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {NotificationService} from '../notification/notification.service';
 import {Injectable} from '@angular/core';
+import {LocalStorageService} from "ngx-webstorage";
 
 @Injectable()
 export class GlobalHttpInterceptor implements HttpInterceptor {
 
-  constructor(private notificationService: NotificationService) {
+  constructor(private notificationService: NotificationService, private localStorage: LocalStorageService) {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler) {
 
+    const token = this.localStorage.retrieve('token');
+
     // Add custom headers
     const newRequest = request.clone({
       headers: request.headers.set(
-        'User', '45679142-dad6-498b-a017-fd76d81cec2d'
+        'token', token
       )
     });
 

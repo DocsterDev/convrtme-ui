@@ -40,6 +40,7 @@ import {VideoRecommendedService} from './service/video-recommended.service';
 import {VideoAutoCompleteService} from './service/video-autocomplete.service';
 import {VideoSearchService} from './service/video-search.service';
 import {VideoMetadataService} from './service/video-metadata.service';
+import {Ng2Webstorage} from "ngx-webstorage";
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import {VideoMetadataService} from './service/video-metadata.service';
     HttpModule,
     ProgressHttpModule,
     ModalModule.forRoot(),
-    MomentModule
+    MomentModule,
+    Ng2Webstorage
   ],
   providers: [
     MetadataService,
