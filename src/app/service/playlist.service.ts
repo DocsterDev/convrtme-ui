@@ -7,8 +7,8 @@ export class PlaylistService {
 
   constructor(private http: HttpClient, private config: ConfigService) { }
 
-  createPlaylist(userUuid: string, playlist: any) {
-    return this.http.post(this.config.getAddress() + '/api/playlists', playlist);
+  createPlaylist(playlist: any) {
+    return this.http.post(this.config.getAddress() + '/api/videos/playlists', playlist);
   }
 
   getPlaylist(userUuid: string, playlistUuid: any) {

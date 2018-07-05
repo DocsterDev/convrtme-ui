@@ -1,5 +1,5 @@
-<div class="search-card Py(0.25)" [ngClass]="{'now-playing': nowPlaying, 'now-loading': nowLoading}" (click)="selectContent(video)">
-  <div class="row flex-nowrap no-gutters align-items-center">
+<div class="search-card" [ngClass]="{'now-playing': nowPlaying, 'now-loading': nowLoading}" (click)="selectContent(video)">
+  <div class="row flex-nowrap no-gutters align-items-start">
     <div class="col thumbnail-container">
         <img class="thumbnail" [src]="video.thumbnailUrl"/>
         <div class="play-icon"><img src="assets/img/svg/ic-video-loading.svg"/></div>

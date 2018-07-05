@@ -4,6 +4,7 @@ import {VideoSearchService} from '../../../service/video-search.service';
 import {VideoAutoCompleteService} from '../../../service/video-autocomplete.service';
 import {AudioPlayerService} from '../../../global/audio-player/audio-player.service';
 import {VideoRecommendedService} from '../../../service/video-recommended.service';
+import {PlaylistService} from "../../../service/playlist.service";
 
 @Component({
   selector: 'app-youtube',
@@ -33,7 +34,8 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   constructor(private videoAutoCompleteService: VideoAutoCompleteService,
               private videoSearchService: VideoSearchService,
               private videoRecommendedService: VideoRecommendedService,
-              private audioPlayerService: AudioPlayerService) {
+              private audioPlayerService: AudioPlayerService,
+              private playlistService: PlaylistService) {
   }
 
   ngOnInit() {
@@ -79,6 +81,18 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     this.showPredictionsContainer = false;
     this.videoSearchService.search(searchQuery);
     this.searchQuery = '';
+  }
+
+  public handleAddPlaylist() {
+    console.log('Add Playlist');
+    const playlist = {
+      name: 'playlist_1',
+      iconColor: 'F36262'
+    };
+    this.playlistService.createPlaylist(playlist).subscribe((response) => {
+      const resp: any = response;
+
+    });
   }
 
   private loadIncrementally(data, list) {

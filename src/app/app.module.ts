@@ -6,8 +6,6 @@ import {AppComponent} from './app.component';
 import {HeaderComponent} from './header/header.component';
 import {FooterComponent} from './footer/footer.component';
 import {ContainerComponent} from './container/container.component';
-import {AdComponent} from './container/ad/ad.component';
-import {PlaylistComponent} from './container/playlist/playlist.component';
 import {VideoComponent} from './container/content/video/video.component';
 import {AudioComponent} from './container/content/audio/audio.component';
 import {ContentComponent} from './container/content/content.component';
@@ -50,8 +48,6 @@ import {Ng2Webstorage} from "ngx-webstorage";
     ContentComponent,
     SideNavComponent,
     ContainerComponent,
-    AdComponent,
-    PlaylistComponent,
     VideoComponent,
     AudioComponent,
     TileComponent,
