@@ -39,23 +39,8 @@
       <div class="col" (click)="handleAddPlaylist()">
         <img src="assets/img/svg/playlist-add.svg" />
       </div>
-      <div class="col">
-        <div class="playlist-icon red"></div>
-      </div>
-      <div class="col">
-        <div class="playlist-icon orange"></div>
-      </div>
-      <div class="col">
-        <div class="playlist-icon yellow"></div>
-      </div>
-      <div class="col">
-        <div class="playlist-icon green"></div>
-      </div>
-      <div class="col">
-        <div class="playlist-icon blue"></div>
-      </div>
-      <div class="col">
-        <div class="playlist-icon violet"></div>
+      <div *ngFor="let playlist of playlists" class="col">
+        <div class="playlist-icon" [style.background]="'#' + playlist.iconColor"></div>
       </div>
     </div>
     <div class="row no-gutters dashed-border no-select align-content-center">

@@ -16,8 +16,9 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   public showPredictionsContainer: boolean;
   public predictions: Array<string>;
   public searchQuery: string;
-  public videoList = [];
-  public recommendedList = [];
+  public videoList: any = [];
+  public recommendedList: any = [];
+  public playlists: any = [];
 
   private searchResultsSubscription: Subscription;
   private recommendedResultsSubscription: Subscription;
@@ -48,6 +49,14 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     this.recommendedResultsSubscription = this.videoRecommendedService.getResultList().subscribe((recommendedResults) => {
       this.recommendedList = [];
       this.loadIncrementally(recommendedResults, this.recommendedList);
+    });
+    this.loadUserPlaylists();
+  }
+
+  public loadUserPlaylists(){
+    // TODO Only load if user is logged in
+    this.playlistService.getPlaylists().subscribe((response) => {
+      this.playlists = response;
     });
   }
 
@@ -85,14 +94,53 @@ export class YoutubeComponent implements OnInit, OnDestroy {
 
   public handleAddPlaylist() {
     console.log('Add Playlist');
-    const playlist = {
-      name: 'playlist_1',
+    const playlist0 = {
+      name: 'playlist_0',
       iconColor: 'F36262'
     };
-    this.playlistService.createPlaylist(playlist).subscribe((response) => {
-      const resp: any = response;
+    const playlist1 = {
+      name: 'playlist_1',
+      iconColor: 'F39E62'
+    };
+    const playlist2 = {
+      name: 'playlist_2',
+      iconColor: 'F7EE37'
+    };
+    const playlist3 = {
+      name: 'playlist_3',
+      iconColor: '8FDB49'
+    };
+    const playlist4 = {
+      name: 'playlist_4',
+      iconColor: '62BCF3'
+    };
+    const playlist5 = {
+      name: 'playlist_5',
+      iconColor: '668CDE'
+    };
+    this.playlistService.createPlaylist(playlist0).subscribe((response) => {
 
-    });
+      this.playlistService.createPlaylist(playlist1).subscribe((response) => {
+
+        this.playlistService.createPlaylist(playlist2).subscribe((response) => {
+
+          this.playlistService.createPlaylist(playlist3).subscribe((response) => {
+
+            this.playlistService.createPlaylist(playlist4).subscribe((response) => {
+
+              this.playlistService.createPlaylist(playlist5).subscribe((response) => {
+              });
+
+            });
+
+          });
+
+        });
+
+      });
+
+    })
+
   }
 
   private loadIncrementally(data, list) {

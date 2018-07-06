@@ -11,12 +11,12 @@ export class PlaylistService {
     return this.http.post(this.config.getAddress() + '/api/videos/playlists', playlist);
   }
 
-  getPlaylist(userUuid: string, playlistUuid: any) {
-    return this.http.get(this.config.getAddress() + '/api/playlists/' + playlistUuid);
+  getPlaylist(playlistUuid: any) {
+    return this.http.get(this.config.getAddress() + '/api/videos/playlists/' + playlistUuid);
   }
 
-  getPlaylists(userUuid: string) {
-    return this.http.get(this.config.getAddress() + '/api/playlists');
+  getPlaylists() {
+    return this.http.get(this.config.getAddress() + '/api/videos/playlists');
   }
 
   updatePlaylist(userUuid: string, playlistUuid: any, playlist: any) {
