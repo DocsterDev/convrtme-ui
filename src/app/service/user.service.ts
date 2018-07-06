@@ -5,7 +5,21 @@ import {HttpClient} from '@angular/common/http';
 @Injectable()
 export class UserService {
 
+  public currentUser: any = null;
+
   constructor(private http: HttpClient, private config: ConfigService) {
+  }
+
+  clearCurrentUser() {
+    this.currentUser = null;
+  }
+
+  setCurrentUser(user) {
+    this.currentUser = user;
+  }
+
+  isUserValid(){
+    return this.currentUser !== null;
   }
 
   register(email: string, pin: string) {

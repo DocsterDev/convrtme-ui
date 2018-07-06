@@ -5,6 +5,7 @@ import {VideoAutoCompleteService} from '../../../service/video-autocomplete.serv
 import {AudioPlayerService} from '../../../global/audio-player/audio-player.service';
 import {VideoRecommendedService} from '../../../service/video-recommended.service';
 import {PlaylistService} from "../../../service/playlist.service";
+import {UserService} from "../../../service/user.service";
 
 @Component({
   selector: 'app-youtube',
@@ -36,7 +37,8 @@ export class YoutubeComponent implements OnInit, OnDestroy {
               private videoSearchService: VideoSearchService,
               private videoRecommendedService: VideoRecommendedService,
               private audioPlayerService: AudioPlayerService,
-              private playlistService: PlaylistService) {
+              private playlistService: PlaylistService,
+              private userService: UserService) {
   }
 
   ngOnInit() {
@@ -54,10 +56,17 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   }
 
   public loadUserPlaylists(){
-    // TODO Only load if user is logged in
-    this.playlistService.getPlaylists().subscribe((response) => {
-      this.playlists = response;
-    });
+    setTimeout(() => {
+      // TODO CREATE AN EVENT LISTENER FOR A WHEN A USER BECOMES VALID ON LOAD
+      if (!this.userService.isUserValid()) {
+        return;
+      }
+      // TODO Only load if user is logged in
+      this.playlistService.getPlaylists().subscribe((response) => {
+        this.playlists = response;
+      });
+    }, 500);
+
   }
 
   public handleAutoCompleteLookup(searchQuery) {
@@ -93,6 +102,9 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   }
 
   public handleAddPlaylist() {
+    if (!this.userService.isUserValid()) {
+      return;
+    }
     console.log('Add Playlist');
     const playlist0 = {
       name: 'playlist_0',
@@ -129,6 +141,9 @@ export class YoutubeComponent implements OnInit, OnDestroy {
             this.playlistService.createPlaylist(playlist4).subscribe((response) => {
 
               this.playlistService.createPlaylist(playlist5).subscribe((response) => {
+
+                this.loadUserPlaylists();
+
               });
 
             });
