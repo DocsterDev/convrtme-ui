@@ -1,11 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {AudioPlayerService} from './audio-player.service';
 import {Howl, Howler} from 'howler';
-import * as moment from 'moment';
 import {NotificationService} from '../notification/notification.service';
 import {VideoRecommendedService} from '../../service/video-recommended.service';
 import {VideoMetadataService} from '../../service/video-metadata.service';
-import {ConfigService} from "../../service/config.service";
+import {ConfigService} from '../../service/config.service';
+import {UtilsService} from '../../service/utils.service';
 
 @Component({
   selector: 'app-audio-player',
@@ -27,18 +27,12 @@ export class AudioPlayerComponent implements OnInit {
   private videoServiceSub;
   private videoServiceLock = false;
 
-  static formatTime (seconds) {
-    if (seconds >= 3600) {
-      return moment.utc(seconds * 1000).format('h:mm:ss');
-    }
-    return moment.utc(seconds * 1000).format('m:ss');
-  }
-
   constructor(private audioPlayerService: AudioPlayerService,
               private videoMetadataService: VideoMetadataService,
               private notificationService: NotificationService,
               private videoRecommendedService: VideoRecommendedService,
-              private config: ConfigService) {
+              private config: ConfigService,
+              private utilsService: UtilsService) {
   }
 
   ngOnInit() {
@@ -109,7 +103,7 @@ export class AudioPlayerComponent implements OnInit {
       format: ['webm'],
       html5: true,
       onplay: () => {
-        this.duration = AudioPlayerComponent.formatTime(video.duration);
+        this.duration = this.utilsService.formatTime(video.duration);
         this.showNowPlayingBar = true;
         this.audioPlayerService.triggerTogglePlaying({videoId: video.videoId, toggle: true});
         requestAnimationFrame(this.step.bind(this));
@@ -141,7 +135,7 @@ export class AudioPlayerComponent implements OnInit {
 
   private step () {
     const seek = this.activeSound.seek() || 0;
-    this.timer = AudioPlayerComponent.formatTime(Math.round(seek));
+    this.timer = this.utilsService.formatTime(Math.round(seek));
     this.progress = (((seek / this.video.duration) * 100) || 0);
 
     if (this.activeSound.playing()) {

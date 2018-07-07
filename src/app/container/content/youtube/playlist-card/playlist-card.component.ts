@@ -1,13 +1,14 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import * as moment from 'moment';
 import {AudioPlayerService} from '../../../../global/audio-player/audio-player.service';
+import {UtilsService} from "../../../../service/utils.service";
 
 @Component({
-  selector: 'app-search-card',
-  templateUrl: './search-card.component.html',
-  styleUrls: ['./search-card.component.sass']
+  selector: 'app-playlist-card',
+  templateUrl: './playlist-card.component.html',
+  styleUrls: ['./playlist-card.component.sass']
 })
-export class SearchCardComponent implements OnInit {
+export class PlaylistCardComponent implements OnInit {
 
   @Input()
   public video: any;
@@ -16,12 +17,15 @@ export class SearchCardComponent implements OnInit {
   public selected = new EventEmitter<any>();
   @Output()
   public added = new EventEmitter<any>();
+  public duration: string;
   public nowPlaying: boolean;
   public nowLoading: boolean;
 
   public lastUpdated;
 
-  constructor(private audioPlayerService: AudioPlayerService) {
+  constructor(
+    private audioPlayerService: AudioPlayerService,
+    private utilsService: UtilsService) {
   }
 
   ngOnInit() {
@@ -40,7 +44,7 @@ export class SearchCardComponent implements OnInit {
         this.nowLoading = e.toggle;
       }
     });
-
+    this.duration = this.utilsService.formatTime(this.video.playDuration);
   }
 
   selectContent(video) {

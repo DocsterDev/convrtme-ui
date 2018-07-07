@@ -20,6 +20,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   public videoList: any = [];
   public recommendedList: any = [];
   public playlists: any = [];
+  public currentPlaylist = {};
 
   private searchResultsSubscription: Subscription;
   private recommendedResultsSubscription: Subscription;
@@ -156,6 +157,11 @@ export class YoutubeComponent implements OnInit, OnDestroy {
 
     })
 
+  }
+
+  public openPlaylist(playlist) {
+    console.log(JSON.stringify(playlist));
+    this.currentPlaylist = playlist;
   }
 
   private loadIncrementally(data, list) {

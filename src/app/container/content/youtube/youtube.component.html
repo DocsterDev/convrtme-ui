@@ -35,14 +35,16 @@
   </div>
   <div class="col-md Mx(1)">
     <div class="d-none d-md-block c-accent-color text-left c-bold c-smaller Pb(0.5)">Playlist</div>
-    <div class="row no-gutters text-left playlist-icon-col Mb(0.5)">
+    <div class="row no-gutters text-left playlist-icon-col">
       <div class="col" (click)="handleAddPlaylist()">
         <img src="assets/img/svg/playlist-add.svg" />
       </div>
       <div *ngFor="let playlist of playlists" class="col">
-        <div class="playlist-icon" [style.background]="'#' + playlist.iconColor"></div>
+        <div class="playlist-icon" [style.background]="'#' + playlist.iconColor" (click)="openPlaylist(playlist)"></div>
       </div>
     </div>
+    <div class="row no-gutters My(0.25)" style="height:0.15rem;" [style.background]="'#' + currentPlaylist.iconColor"></div>
+    <app-playlist-card *ngFor="let video of currentPlaylist.videos" (selected)="handleVideoSelect($event)" [video]="video"></app-playlist-card>
     <div class="row no-gutters dashed-border no-select align-content-center">
       <div class="col" style="align-self: center">
         <div class="row no-gutters align-content-center">

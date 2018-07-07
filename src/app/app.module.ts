@@ -39,6 +39,7 @@ import {VideoAutoCompleteService} from './service/video-autocomplete.service';
 import {VideoSearchService} from './service/video-search.service';
 import {VideoMetadataService} from './service/video-metadata.service';
 import {Ng2Webstorage} from "ngx-webstorage";
+import {PlaylistCardComponent} from "./container/content/youtube/playlist-card/playlist-card.component";
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import {Ng2Webstorage} from "ngx-webstorage";
     YoutubeComponent,
     LoaderComponent,
     SearchCardComponent,
+    PlaylistCardComponent,
     NotificationComponent,
     AudioPlayerComponent,
   ],

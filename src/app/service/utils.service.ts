@@ -24,6 +24,13 @@ export class UtilsService {
     return moment(duration, 'm:ss').diff(moment().startOf('day'), 'seconds');
   }
 
+  public formatTime (seconds) {
+    if (seconds >= 3600) {
+      return moment.utc(seconds * 1000).format('h:mm:ss');
+    }
+    return moment.utc(seconds * 1000).format('m:ss');
+  }
+
   public findNewBadge(video: any) {
     if (video.badges && video.badges.length > 0) {
       video.badges.forEach((e) => {
