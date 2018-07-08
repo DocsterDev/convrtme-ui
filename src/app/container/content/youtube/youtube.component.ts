@@ -108,67 +108,68 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     if (!this.userService.isUserValid()) {
       return;
     }
-    console.log('Add Playlist');
-    const playlist0 = {
-      name: 'playlist_0',
-      iconColor: 'F36262'
-    };
-    const playlist1 = {
-      name: 'playlist_1',
-      iconColor: 'F39E62'
-    };
-    const playlist2 = {
-      name: 'playlist_2',
-      iconColor: 'F7EE37'
-    };
-    const playlist3 = {
-      name: 'playlist_3',
-      iconColor: '8FDB49'
-    };
-    const playlist4 = {
-      name: 'playlist_4',
-      iconColor: '62BCF3'
-    };
-    const playlist5 = {
-      name: 'playlist_5',
-      iconColor: '668CDE'
-    };
-    this.playlistService.createPlaylist(playlist0).subscribe((response) => {
 
-      this.playlistService.createPlaylist(playlist1).subscribe((response) => {
-
-        this.playlistService.createPlaylist(playlist2).subscribe((response) => {
-
-          this.playlistService.createPlaylist(playlist3).subscribe((response) => {
-
-            this.playlistService.createPlaylist(playlist4).subscribe((response) => {
-
-              this.playlistService.createPlaylist(playlist5).subscribe((response) => {
-
-                this.loadUserPlaylists();
-
-              });
-
-            });
-
-          });
-
-        });
-
+    const playlists = [
+      {
+        name: 'playlist_0',
+        iconColor: 'F36262'
+      },
+      {
+        name: 'playlist_1',
+        iconColor: 'F39E62'
+      },
+      {
+        name: 'playlist_2',
+        iconColor: 'F7EE37'
+      },
+      {
+        name: 'playlist_3',
+        iconColor: '8FDB49'
+      },
+      {
+        name: 'playlist_4',
+        iconColor: '62BCF3'
+      },
+      {
+        name: 'playlist_5',
+        iconColor: '668CDE'
+      }
+      ];
+    // this.playlistService.createPlaylist(playlist0).subscribe((response) => {
+    //
+    //   this.playlistService.createPlaylist(playlist1).subscribe((response) => {
+    //
+    //     this.playlistService.createPlaylist(playlist2).subscribe((response) => {
+    //
+    //       this.playlistService.createPlaylist(playlist3).subscribe((response) => {
+    //
+    //         this.playlistService.createPlaylist(playlist4).subscribe((response) => {
+    //
+    //           this.playlistService.createPlaylist(playlist5).subscribe((response) => {
+      this.playlistService.updatePlaylists(playlists).subscribe((response) => {
+        this.loadUserPlaylists();
       });
 
-    })
+    //           });
+    //
+    //         });
+    //
+    //       });
+    //
+    //     });
+    //
+    //   });
+    //
+    // })
 
   }
 
-  public openPlaylist(playlist) {
+  public setPlaylistActive(playlist) {
     this.loadingPlaylist = true;
-    this.playlistService.getPlaylist(playlist.uuid).subscribe((response) => {
-      const resp: any = response;
-      console.log(JSON.stringify(response));
-      this.currentPlaylist = resp;
+    this.playlistService.setActive(playlist.uuid).subscribe((resposne) => {
+      this.loadUserPlaylists();
     });
-    // this.currentPlaylist = playlist;
+    this.currentPlaylist = playlist;
   }
 
   private loadIncrementally(data, list) {

@@ -40,7 +40,7 @@
         <img src="assets/img/svg/playlist-add.svg" />
       </div>
       <div *ngFor="let playlist of playlists" class="col">
-        <div class="playlist-icon" [style.background]="'#' + playlist.iconColor" (click)="openPlaylist(playlist)"></div>
+        <div class="playlist-icon" [style.background]="'#' + playlist.iconColor" (click)="setPlaylistActive(playlist)"></div>
       </div>
     </div>
     <div class="row no-gutters Mt(0.25) Mb(0.5)" style="height:0.15rem;" [style.background]="'#' + currentPlaylist.iconColor"></div>
