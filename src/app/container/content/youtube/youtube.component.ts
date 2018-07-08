@@ -22,6 +22,8 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   public playlists: any = [];
   public currentPlaylist = {};
 
+  public loadingPlaylist = false;
+
   private searchResultsSubscription: Subscription;
   private recommendedResultsSubscription: Subscription;
   private predictionsTimeout;
@@ -160,8 +162,13 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   }
 
   public openPlaylist(playlist) {
-    console.log(JSON.stringify(playlist));
-    this.currentPlaylist = playlist;
+    this.loadingPlaylist = true;
+    this.playlistService.getPlaylist(playlist.uuid).subscribe((response) => {
+      const resp: any = response;
+      console.log(JSON.stringify(response));
+      this.currentPlaylist = resp;
+    });
+    // this.currentPlaylist = playlist;
   }
 
   private loadIncrementally(data, list) {

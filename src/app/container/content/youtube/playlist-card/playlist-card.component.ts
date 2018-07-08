@@ -15,8 +15,6 @@ export class PlaylistCardComponent implements OnInit {
 
   @Output()
   public selected = new EventEmitter<any>();
-  @Output()
-  public added = new EventEmitter<any>();
   public duration: string;
   public nowPlaying: boolean;
   public nowLoading: boolean;
@@ -44,18 +42,12 @@ export class PlaylistCardComponent implements OnInit {
         this.nowLoading = e.toggle;
       }
     });
-    this.duration = this.utilsService.formatTime(this.video.playDuration);
+    this.duration = this.utilsService.formatTime(this.video.duration);
   }
 
   selectContent(video) {
-    this.selected.emit(video);
-  }
-
-  addedContent(event, video) {
-    event.stopPropagation();
     console.log(JSON.stringify(video));
-
-    this.added.emit(video);
+    this.selected.emit(video);
   }
 
 }

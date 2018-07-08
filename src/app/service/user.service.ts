@@ -27,11 +27,7 @@ export class UserService {
       email: email,
       pin: pin
     };
-    return this.http.post(this.config.getAddress() + '/api/context/register', user);
-  }
-
-  authenticate() {
-    return this.http.post(this.config.getAddress() + '/api/context/authenticate', null);
+    return this.http.post(this.config.getAddress() + '/api/user/register', user);
   }
 
 }

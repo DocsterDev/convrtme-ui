@@ -43,9 +43,9 @@
         <div class="playlist-icon" [style.background]="'#' + playlist.iconColor" (click)="openPlaylist(playlist)"></div>
       </div>
     </div>
-    <div class="row no-gutters My(0.25)" style="height:0.15rem;" [style.background]="'#' + currentPlaylist.iconColor"></div>
+    <div class="row no-gutters Mt(0.25) Mb(0.5)" style="height:0.15rem;" [style.background]="'#' + currentPlaylist.iconColor"></div>
     <app-playlist-card *ngFor="let video of currentPlaylist.videos" (selected)="handleVideoSelect($event)" [video]="video"></app-playlist-card>
-    <div class="row no-gutters dashed-border no-select align-content-center">
+    <div class="row no-gutters dashed-border no-select align-content-center Mt(1)">
       <div class="col" style="align-self: center">
         <div class="row no-gutters align-content-center">
           <div class="col">

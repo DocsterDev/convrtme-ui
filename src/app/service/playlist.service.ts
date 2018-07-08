@@ -19,6 +19,10 @@ export class PlaylistService {
     return this.http.get(this.config.getAddress() + '/api/videos/playlists');
   }
 
+  setActive(userUuid: string, playlistUuid: any) {
+    return this.http.put(this.config.getAddress() + '/api/playlists/' + playlistUuid + '/active', null);
+  }
+
   updatePlaylist(userUuid: string, playlistUuid: any, playlist: any) {
     return this.http.put(this.config.getAddress() + '/api/playlists/' + playlistUuid, playlist);
   }

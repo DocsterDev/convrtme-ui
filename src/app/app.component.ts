@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {LocalStorageService} from 'ngx-webstorage';
 import {UserService} from './service/user.service';
 import {UtilsService} from './service/utils.service';
+import {ContextService} from "./service/context.service";
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,7 @@ import {UtilsService} from './service/utils.service';
 export class AppComponent implements OnInit {
 
 
-  constructor(private localStorage: LocalStorageService, private userService: UserService) {
+  constructor(private localStorage: LocalStorageService, private userService: UserService, private contextService: ContextService) {
   }
 
   ngOnInit() {
@@ -32,7 +33,7 @@ export class AppComponent implements OnInit {
         this.userService.clearCurrentUser();
       });
     } else {
-      this.userService.authenticate().subscribe((response) => {
+      this.contextService.authenticate().subscribe((response) => {
         const resp: any = response;
         this.userService.setCurrentUser({email: resp.user.email});
         console.log('Already Logged In: ' + resp.user.email);
