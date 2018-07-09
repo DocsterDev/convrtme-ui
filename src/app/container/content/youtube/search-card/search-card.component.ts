@@ -31,12 +31,12 @@ export class SearchCardComponent implements OnInit {
         if (e.toggle === false) {
         return;
       }
-      if (e.videoId === this.video.videoId) {
+      if (e.id === this.video.id) {
         this.nowPlaying = true;
       }
     });
     this.audioPlayerService.triggerToggleLoadingEmitter$.subscribe((e) => {
-      if (e.videoId === this.video.videoId) {
+      if (e.id === this.video.id) {
         this.nowLoading = e.toggle;
       }
     });

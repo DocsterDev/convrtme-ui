@@ -20,9 +20,9 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   public videoList: any = [];
   public recommendedList: any = [];
   public playlists: any = [];
-  public currentPlaylist = {};
+  public currentPlaylist: any = {id: ""};
 
-  public loadingPlaylist = false;
+  public playlistLoading = false;
 
   private searchResultsSubscription: Subscription;
   private recommendedResultsSubscription: Subscription;
@@ -47,7 +47,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.videoSearchService.search('sandman mgtow');
     this.searchResultsSubscription = this.videoSearchService.getResultList().subscribe((searchResults) => {
-      if ( searchResults != null ) { this.videoRecommendedService.recommended(searchResults[0].videoId); }
+      if ( searchResults != null ) { this.videoRecommendedService.recommended(searchResults[0].id); }
       this.videoList = [];
       this.loadIncrementally(searchResults, this.videoList);
     });
@@ -64,11 +64,10 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       if (!this.userService.isUserValid()) {
         return;
       }
-      // TODO Only load if user is logged in
       this.playlistService.getPlaylists().subscribe((response) => {
         this.playlists = response;
       });
-    }, 500);
+    }, 1000);
 
   }
 
@@ -90,12 +89,12 @@ export class YoutubeComponent implements OnInit, OnDestroy {
 
   public handleVideoSelect($video) {
     this.audioPlayerService.triggerVideoEvent($video);
-    this.audioPlayerService.triggerToggleLoading({video: $video.videoId, toggle: true});
+    this.audioPlayerService.triggerToggleLoading({video: $video.id, toggle: true});
   }
 
   public handleRecommendedVideoSelect($video) {
     this.audioPlayerService.triggerVideoEvent($video);
-    this.audioPlayerService.triggerToggleLoading({video: $video.videoId, toggle: true});
+    this.audioPlayerService.triggerToggleLoading({video: $video.id, toggle: true});
   }
 
   public handleSubmitSearch(searchQuery) {
@@ -104,72 +103,23 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     this.searchQuery = '';
   }
 
-  public handleAddPlaylist() {
+  public handleAddToCurrentPlaylist($video) {
     if (!this.userService.isUserValid()) {
       return;
     }
-
-    const playlists = [
-      {
-        name: 'playlist_0',
-        iconColor: 'F36262'
-      },
-      {
-        name: 'playlist_1',
-        iconColor: 'F39E62'
-      },
-      {
-        name: 'playlist_2',
-        iconColor: 'F7EE37'
-      },
-      {
-        name: 'playlist_3',
-        iconColor: '8FDB49'
-      },
-      {
-        name: 'playlist_4',
-        iconColor: '62BCF3'
-      },
-      {
-        name: 'playlist_5',
-        iconColor: '668CDE'
-      }
-      ];
-    // this.playlistService.createPlaylist(playlist0).subscribe((response) => {
-    //
-    //   this.playlistService.createPlaylist(playlist1).subscribe((response) => {
-    //
-    //     this.playlistService.createPlaylist(playlist2).subscribe((response) => {
-    //
-    //       this.playlistService.createPlaylist(playlist3).subscribe((response) => {
-    //
-    //         this.playlistService.createPlaylist(playlist4).subscribe((response) => {
-    //
-    //           this.playlistService.createPlaylist(playlist5).subscribe((response) => {
-      this.playlistService.updatePlaylists(playlists).subscribe((response) => {
-        this.loadUserPlaylists();
-      });
-
-    //           });
-    //
-    //         });
-    //
-    //       });
-    //
-    //     });
-    //
-    //   });
-    //
-    // })
-
+    this.currentPlaylist.videos.push($video);
+    this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe((response) => {
+      const resp:any = response;
+      this.currentPlaylist = resp;
+    });
   }
 
   public setPlaylistActive(playlist) {
-    this.loadingPlaylist = true;
-    this.playlistService.setActive(playlist.uuid).subscribe((resposne) => {
-      this.loadUserPlaylists();
+    this.playlistLoading = true;
+    this.playlistService.getPlaylist(playlist.uuid).subscribe((response) => {
+      const resp: any = response;
+      this.currentPlaylist =  resp;
     });
-    this.currentPlaylist = playlist;
   }
 
   private loadIncrementally(data, list) {

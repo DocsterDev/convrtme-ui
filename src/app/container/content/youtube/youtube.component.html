@@ -31,19 +31,16 @@
 <div class="row no-gutters Px(0.5)">
   <div class="col Mx(1)">
     <div class="d-none d-md-block c-accent-color text-left c-bold c-smaller Pb(0.25)">Search Results</div>
-    <app-search-card *ngFor="let video of videoList" (selected)="handleVideoSelect($event)" [video]="video"></app-search-card>
+    <app-search-card *ngFor="let video of videoList" (added)="handleAddToCurrentPlaylist($event)" (selected)="handleVideoSelect($event)" [video]="video"></app-search-card>
   </div>
   <div class="col-md Mx(1)">
     <div class="d-none d-md-block c-accent-color text-left c-bold c-smaller Pb(0.5)">Playlist</div>
-    <div class="row no-gutters text-left playlist-icon-col">
-      <div class="col" (click)="handleAddPlaylist()">
-        <img src="assets/img/svg/playlist-add.svg" />
-      </div>
+    <div class="row no-gutters text-left playlist-icon-col Mt(0.25)">
       <div *ngFor="let playlist of playlists" class="col">
-        <div class="playlist-icon" [style.background]="'#' + playlist.iconColor" (click)="setPlaylistActive(playlist)"></div>
+        <div class="playlist-icon" [ngClass]="{'playlist-active': currentPlaylist.uuid === playlist.uuid}" [style.background]="'#' + playlist.iconColor" (click)="setPlaylistActive(playlist)"></div>
       </div>
     </div>
-    <div class="row no-gutters Mt(0.25) Mb(0.5)" style="height:0.15rem;" [style.background]="'#' + currentPlaylist.iconColor"></div>
+    <div class="row no-gutters Mt(1)"></div>
     <app-playlist-card *ngFor="let video of currentPlaylist.videos" (selected)="handleVideoSelect($event)" [video]="video"></app-playlist-card>
     <div class="row no-gutters dashed-border no-select align-content-center Mt(1)">
       <div class="col" style="align-self: center">
@@ -57,6 +54,6 @@
   </div>
   <div class="col-md Mx(1)">
     <div class="d-none d-md-block c-accent-color text-left c-bold c-smaller Pb(0.5)">Recommended</div>
-    <app-search-card *ngFor="let video of recommendedList" (selected)="handleRecommendedVideoSelect($event)" [video]="video"></app-search-card>
+    <app-search-card *ngFor="let video of recommendedList" (added)="handleAddToCurrentPlaylist($event)" (selected)="handleRecommendedVideoSelect($event)" [video]="video"></app-search-card>
   </div>
 </div>

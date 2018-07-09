@@ -81,8 +81,8 @@ export class AudioPlayerComponent implements OnInit {
     if (this.activeSound) {
       this.activeSound.stop();
     }
-    this.audioPlayerService.triggerToggleLoading({videoId: video.videoId, toggle: true});
-    this.audioPlayerService.triggerTogglePlaying({videoId: video.videoId, toggle: false});
+    this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: true});
+    this.audioPlayerService.triggerTogglePlaying({id: video.id, toggle: false});
     this.videoServiceSub = this.videoMetadataService.getVideo(video).subscribe(
       (videoResponse) => {
         this.video = videoResponse;
@@ -92,20 +92,20 @@ export class AudioPlayerComponent implements OnInit {
       (error) => {
         this.showNowPlayingBar = false;
         this.videoServiceLock = false;
-        this.audioPlayerService.triggerToggleLoading({videoId: video.videoId, toggle: false});
-        this.audioPlayerService.triggerTogglePlaying({videoId: video.videoId, toggle: false});
+        this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: false});
+        this.audioPlayerService.triggerTogglePlaying({id: video.id, toggle: false});
       });
   }
 
   private buildAudioObject (video) {
     this.activeSound = new Howl({
-      src: [this.config.getAddress() + '/api/stream/' + video.videoId],
+      src: [this.config.getAddress() + '/api/stream/' + video.id],
       format: ['webm'],
       html5: true,
       onplay: () => {
-        this.duration = this.utilsService.formatTime(video.duration);
+        this.duration = video.duration;
         this.showNowPlayingBar = true;
-        this.audioPlayerService.triggerTogglePlaying({videoId: video.videoId, toggle: true});
+        this.audioPlayerService.triggerTogglePlaying({id: video.id, toggle: true});
         requestAnimationFrame(this.step.bind(this));
       },
       onpause: () => {
@@ -113,21 +113,21 @@ export class AudioPlayerComponent implements OnInit {
         this.isPlaying = false;
       },
       onplayerror: (e) => {
-        this.audioPlayerService.triggerToggleLoading({videoId: video.videoId, toggle: false});
+        this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: false});
         this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error playing this video.'});
         this.videoServiceLock = false;
       },
       onloaderror: (e) => {
-        this.audioPlayerService.triggerToggleLoading({videoId: video.videoId, toggle: false});
+        this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: false});
         this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error loading this video.'});
         this.videoServiceLock = false;
       },
       onend: () => {
-        this.audioPlayerService.triggerTogglePlaying({videoId: video.videoId, toggle: false});
+        this.audioPlayerService.triggerTogglePlaying({id: video.id, toggle: false});
       },
       onload: () => {
-        this.videoRecommendedService.recommended(video.videoId);
-        this.audioPlayerService.triggerToggleLoading({videoId: video.videoId, toggle: false});
+        this.videoRecommendedService.recommended(video.id);
+        this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: false});
         this.videoServiceLock = false;
       }
     });
@@ -136,7 +136,7 @@ export class AudioPlayerComponent implements OnInit {
   private step () {
     const seek = this.activeSound.seek() || 0;
     this.timer = this.utilsService.formatTime(Math.round(seek));
-    this.progress = (((seek / this.video.duration) * 100) || 0);
+    this.progress = (((seek / this.utilsService.formatDuration(this.video.duration)) * 100) || 0);
 
     if (this.activeSound.playing()) {
       requestAnimationFrame(this.step.bind(this));

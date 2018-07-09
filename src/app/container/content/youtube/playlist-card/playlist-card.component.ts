@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import * as moment from 'moment';
 import {AudioPlayerService} from '../../../../global/audio-player/audio-player.service';
-import {UtilsService} from "../../../../service/utils.service";
 
 @Component({
   selector: 'app-playlist-card',
@@ -22,8 +21,7 @@ export class PlaylistCardComponent implements OnInit {
   public lastUpdated;
 
   constructor(
-    private audioPlayerService: AudioPlayerService,
-    private utilsService: UtilsService) {
+    private audioPlayerService: AudioPlayerService) {
   }
 
   ngOnInit() {
@@ -33,16 +31,16 @@ export class PlaylistCardComponent implements OnInit {
         if (e.toggle === false) {
         return;
       }
-      if (e.videoId === this.video.videoId) {
+      if (e.id === this.video.id) {
         this.nowPlaying = true;
       }
     });
     this.audioPlayerService.triggerToggleLoadingEmitter$.subscribe((e) => {
-      if (e.videoId === this.video.videoId) {
+      if (e.id === this.video.id) {
         this.nowLoading = e.toggle;
       }
     });
-    this.duration = this.utilsService.formatTime(this.video.duration);
+    this.duration = this.video.duration;
   }
 
   selectContent(video) {
