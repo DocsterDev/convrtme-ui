@@ -2,6 +2,8 @@
 
 // npm install nodemon express cookie-parser body-parser morgan method-override -save
 
+// https://javascriptrocks.wordpress.com/2016/06/04/express-with-angular-cli-in-5-minutes/ - Scroll down to comments
+
 var express = require('express');
 var app = express();
 var morgan = require('morgan');
