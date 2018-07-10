@@ -28,6 +28,7 @@ export class HeaderComponent implements OnInit {
     this.loading = true;
     this.userService.userSignedInEmitter$.subscribe((user) => {
       this.user = user;
+      // this.user.valid = false;
       this.loading = false;
     });
   }

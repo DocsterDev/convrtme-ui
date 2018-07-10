@@ -36,17 +36,12 @@
   <div class="col-md Mx(1)">
     <div class="d-none d-md-block c-accent-color text-left c-bold c-smaller Pb(0.5)">Playlist</div>
 
-    <div class="row no-gutters text-left playlist-icon-col Mt(0.25)">
-      <div *ngFor="let playlist of playlists" class="col">
+    <div class="row no-gutters Mt(0.25)">
+      <div *ngFor="let playlist of playlists" class="col d-flex align-items-center justify-content-center playlist-icon-col">
         <div class="playlist-icon" [ngClass]="{'playlist-active': currentPlaylist.uuid === playlist.uuid}" [style.background]="'#' + playlist.iconColor" (click)="setPlaylistActive(playlist)"></div>
       </div>
-    </div>
-    <div class="row no-gutters Mt(0.25) Mend(1)">
-      <div class="col text-right">
+      <div class="col d-flex align-items-center justify-content-end">
         <div class="dropdown">
-          <!--<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
-            <!--<img src="assets/img/svg/ic-expand-more.svg">-->
-          <!--</button>-->
           <div class="dropdown-toggle-arrow" data-toggle="dropdown" id="playlistOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <img src="assets/img/svg/ic-expand-more.svg">
           </div>
@@ -54,10 +49,9 @@
             <a class="dropdown-item" (click)="clearPlaylist()">Clear Playlist</a>
           </div>
         </div>
-
       </div>
     </div>
-    <!--<div class="row no-gutters Mt(1)"></div>-->
+    <div class="row no-gutters Mt(1)"></div>
     <app-playlist-card *ngFor="let video of currentPlaylist.videos" (removed)="handleRemoveFromPlaylist($event)" (selected)="handleVideoSelect($event)" [video]="video"></app-playlist-card>
     <div class="row no-gutters dashed-border no-select align-content-center Mt(1)">
       <div class="col" style="align-self: center">
