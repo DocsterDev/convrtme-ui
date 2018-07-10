@@ -20,7 +20,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   public videoList: any = [];
   public recommendedList: any = [];
   public playlists: any = [];
-  public currentPlaylist: any = {id: ""};
+  public currentPlaylist: any = {id: ''};
 
   public playlistLoading = false;
 
@@ -109,7 +109,18 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     }
     this.currentPlaylist.videos.push($video);
     this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe((response) => {
-      const resp:any = response;
+      const resp: any = response;
+      this.currentPlaylist = resp;
+    });
+  }
+
+  public handleRemoveFromPlaylist($video) {
+    if (!this.userService.isUserValid()) {
+      return;
+    }
+    this.currentPlaylist.videos = this.currentPlaylist.videos.filter(video => video.id !== $video.id);
+    this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe((response) => {
+      const resp: any = response;
       this.currentPlaylist = resp;
     });
   }

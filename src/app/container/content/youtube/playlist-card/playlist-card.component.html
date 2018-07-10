@@ -5,12 +5,15 @@
         <!--<div class="play-icon"><img src="assets/img/svg/ic-video-loading.svg"/></div>-->
     <!--</div>-->
     <div class="col">
-        <div class="text-left c-font-circular c-small c-light title-text Mstart(0.5) Mt(0.25)" [ngClass]="{'c-secondary-accent-color': nowPlaying, 'c-color': !nowPlaying}" style="max-height: 90px !important">
+        <div class="text-left c-font-circular c-small c-light title-text Mt(0.25)" [ngClass]="{'c-secondary-accent-color': nowPlaying, 'c-color': !nowPlaying}" style="max-height: 90px !important">
           <div>{{video.title}}</div>
           <!--<div class="Pt(0.25)"></div>-->
           <div class="subtitle" [ngClass]="{'c-secondary-accent-color sub-title-op': nowPlaying}">{{video.owner}}</div>
           <div class="subtitle" [ngClass]="{'c-secondary-accent-color sub-title-op': nowPlaying}">{{duration}}</div>
         </div>
+    </div>
+    <div class="col text-right playlist-icon-close" style="max-width:15px;">
+      <img src="assets/img/svg/ic-close.svg" (click)="removeContent($event, video)">
     </div>
   </div>
   </div>

@@ -14,6 +14,8 @@ export class PlaylistCardComponent implements OnInit {
 
   @Output()
   public selected = new EventEmitter<any>();
+  @Output()
+  public removed = new EventEmitter<any>();
   public duration: string;
   public nowPlaying: boolean;
   public nowLoading: boolean;
@@ -46,6 +48,11 @@ export class PlaylistCardComponent implements OnInit {
   selectContent(video) {
     console.log(JSON.stringify(video));
     this.selected.emit(video);
+  }
+
+  removeContent(event, video) {
+    event.stopPropagation();
+    this.removed.emit(video);
   }
 
 }
