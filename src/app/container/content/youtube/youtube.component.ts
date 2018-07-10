@@ -125,6 +125,14 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     });
   }
 
+  public clearPlaylist() {
+    this.currentPlaylist.videos = [];
+    this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe((response) => {
+      const resp: any = response;
+      this.currentPlaylist = resp;
+    });
+  }
+
   public setPlaylistActive(playlist) {
     this.playlistLoading = true;
     this.playlistService.getPlaylist(playlist.uuid).subscribe((response) => {
