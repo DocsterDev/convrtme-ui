@@ -1,42 +1,42 @@
-<div class="row no-gutters c-font-circular c-smaller c-bold">
-  <!-- Mobile UI -->
-  <div class="col-5 d-block d-md-none">
-    <div class="row flex-nowrap no-gutters align-items-center no-select" style="height: 50px !important">
-      <div class="col Mstart(1) Mend(0.5) no-outline text-center">
-          <img src="assets/img/svg/ic-logo-mobile.svg">
-      </div>
-      <div *ngFor="let option of navOptionsMobile" routerLinkActive="active" #rla="routerLinkActive" class="col tab-mobile P(1) no-outline text-center" routerLink="{{option.value}}">
-          <img src="assets/img/svg/{{ rla.isActive ? option.activeIcon : option.icon}}"/>
-      </div>
-    </div>
-  </div>
-  <!-- Desktop UI -->
-  <div class="col d-none d-md-block strict-width Mstart(1) Py(1)">
-    <img class=" Py(0.25)" src="assets/img/svg/ic-logo2.svg">
-  </div>
-  <div class="col-6 d-none d-md-block c-font-circular c-bold c-smaller c-light">
-    <div class="row no-gutters text-center no-select strict-width-tab flex-nowrap">
-      <div class="col-2 tab-text" *ngFor="let option of navOptions" (click)="navigate(option.index)">
-        <div class="Py(1)">{{option.display}}</div>
-      </div>
-    </div>
-  </div>
-  <div class="col d-none d-md-block">
-    <div *ngIf="!user.valid && !loading" class="row no-gutters d-flex justify-content-end no-select flex-nowrap">
-      <div class="col d-flex align-items-center justify-content-center" style="height: 66px; max-width: 200px;">
-        <div class="button" (click)="onSignUp()">Sign Up</div>
-      </div>
-      <div class="col d-flex align-items-center justify-content-center" style="height: 66px; max-width: 120px;" (click)="onLogIn()">
-        <div class="tab-text text-nowrap">
-          Log In
+<!-- Mobile Header -->
+<div class="d-block d-md-none">
+  <div class="row no-gutters c-font-circular c-smaller c-bold">
+    <div class="col-5">
+      <div class="row flex-nowrap no-gutters align-items-center no-select" style="height: 50px !important">
+        <div class="col Mstart(1) Mend(0.5) no-outline text-center">
+            <img src="assets/img/svg/ic-logo-mobile.svg">
+        </div>
+        <div *ngFor="let option of navOptionsMobile" routerLinkActive="active" #rla="routerLinkActive" class="col tab-mobile P(1) no-outline text-center" routerLink="{{option.value}}">
+            <img src="assets/img/svg/{{ rla.isActive ? option.activeIcon : option.icon}}"/>
         </div>
       </div>
     </div>
-    <div *ngIf="user.valid && !loading" class="row no-gutters no-select flex-nowrap Mend(2)">
-      <div class="col d-flex align-items-center justify-content-end" style="height: 66px;">
-        <div class="tab-text text-nowrap">
-          {{user.email}}
+  </div>
+</div>
+<!-- Desktop Header -->
+<div class="d-none d-md-block">
+  <div class="row no-gutters c-font-circular c-smaller c-bold">
+    <div class="col d-flex align-items-center justify-content-center" style="max-width: 150px;">
+      <img src="assets/img/svg/ic-logo2.svg">
+    </div>
+    <div class="col c-font-circular c-bold c-smaller c-light">
+      <div class="row no-gutters text-center no-select strict-width-tab flex-nowrap">
+        <div class="col-2 tab-text" *ngFor="let option of navOptions" (click)="navigate(option.index)">
+          <div class="Py(1)">{{option.display}}</div>
         </div>
+      </div>
+    </div>
+    <div *ngIf="!user.valid && !loading" class="col d-flex align-items-center justify-content-center" style="height: 60px; max-width: 200px;">
+      <div class="button" (click)="onSignUp()">Sign Up</div>
+    </div>
+    <div *ngIf="!user.valid && !loading" class="col d-flex align-items-center justify-content-center" style="height: 60px; max-width: 120px;" (click)="onLogIn()">
+      <div class="tab-text text-nowrap">
+        Log In
+      </div>
+    </div>
+    <div *ngIf="user.valid && !loading" class="col d-flex align-items-center justify-content-end Mend(1.5)" style="height: 60px;">
+      <div class="tab-text text-nowrap">
+        {{user.email}}
       </div>
     </div>
   </div>
