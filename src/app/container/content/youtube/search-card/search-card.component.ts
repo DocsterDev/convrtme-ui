@@ -49,8 +49,6 @@ export class SearchCardComponent implements OnInit {
 
   addedContent(event, video) {
     event.stopPropagation();
-    console.log(JSON.stringify(video));
-
     this.added.emit(video);
   }
 

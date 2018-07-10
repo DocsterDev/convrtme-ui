@@ -46,7 +46,6 @@ export class PlaylistCardComponent implements OnInit {
   }
 
   selectContent(video) {
-    console.log(JSON.stringify(video));
     this.selected.emit(video);
   }
 

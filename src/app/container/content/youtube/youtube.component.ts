@@ -55,20 +55,14 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       this.recommendedList = [];
       this.loadIncrementally(recommendedResults, this.recommendedList);
     });
-    this.loadUserPlaylists();
-  }
-
-  public loadUserPlaylists(){
-    setTimeout(() => {
-      // TODO CREATE AN EVENT LISTENER FOR A WHEN A USER BECOMES VALID ON LOAD
-      if (!this.userService.isUserValid()) {
-        return;
+    this.userService.userSignedInEmitter$.subscribe((response) => {
+      const user: any = response;
+      if (user.valid) {
+        this.playlistService.getPlaylists().subscribe((response) => {
+          this.playlists = response;
+        });
       }
-      this.playlistService.getPlaylists().subscribe((response) => {
-        this.playlists = response;
-      });
-    }, 1000);
-
+    });
   }
 
   public handleAutoCompleteLookup(searchQuery) {
@@ -104,9 +98,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   }
 
   public handleAddToCurrentPlaylist($video) {
-    if (!this.userService.isUserValid()) {
-      return;
-    }
     this.currentPlaylist.videos.push($video);
     this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe((response) => {
       const resp: any = response;
@@ -115,9 +106,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   }
 
   public handleRemoveFromPlaylist($video) {
-    if (!this.userService.isUserValid()) {
-      return;
-    }
     this.currentPlaylist.videos = this.currentPlaylist.videos.filter(video => video.id !== $video.id);
     this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe((response) => {
       const resp: any = response;

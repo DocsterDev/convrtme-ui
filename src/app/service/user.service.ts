@@ -1,33 +1,35 @@
-import {Injectable} from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import {ConfigService} from './config.service';
 import {HttpClient} from '@angular/common/http';
 
 @Injectable()
 export class UserService {
 
-  public currentUser: any = null;
+  public validUser: boolean = false;
+  public userSignedInEmitter$: EventEmitter<any>;
 
   constructor(private http: HttpClient, private config: ConfigService) {
+    this.userSignedInEmitter$ = new EventEmitter();
   }
 
-  clearCurrentUser() {
-    this.currentUser = null;
+  public triggerUserSignedInEvent(user): void {
+    this.userSignedInEmitter$.emit(user);
   }
 
-  setCurrentUser(user) {
-    this.currentUser = user;
+  public setUserValid(valid) {
+    this.validUser = valid;
   }
 
-  isUserValid(){
-    return this.currentUser !== null;
-  }
-
-  register(email: string, pin: string) {
+  public register(email: string, pin: string) {
     const user = {
       email: email,
       pin: pin
     };
     return this.http.post(this.config.getAddress() + '/api/user/register', user);
+  }
+
+  public authenticate() {
+    return this.http.post(this.config.getAddress() + '/api/context/authenticate', null);
   }
 
 }

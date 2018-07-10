@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {UserService} from "../service/user.service";
 
 @Component({
   selector: 'app-header',
@@ -6,6 +7,9 @@ import {Component, OnInit} from '@angular/core';
   styleUrls: ['./header.component.sass']
 })
 export class HeaderComponent implements OnInit {
+
+  public loading: boolean;
+  public user: any = {};
 
   public navOptions = [];
 
@@ -17,12 +21,16 @@ export class HeaderComponent implements OnInit {
     {display: 'YouTube', icon: 'ic-video-youtube.svg', activeIcon: 'ic-video-youtube-active.svg', value: 'app/youtube'}
   ];
 
-  constructor() {
+  constructor(private userService: UserService) {
   }
 
   ngOnInit() {
+    this.loading = true;
+    this.userService.userSignedInEmitter$.subscribe((user) => {
+      this.user = user;
+      this.loading = false;
+    });
   }
-
 
   public navigate(index) {
     console.log('Navigating to: ' + index);

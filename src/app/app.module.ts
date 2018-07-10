@@ -40,7 +40,6 @@ import {VideoSearchService} from './service/video-search.service';
 import {VideoMetadataService} from './service/video-metadata.service';
 import {Ng2Webstorage} from 'ngx-webstorage';
 import {PlaylistCardComponent} from './container/content/youtube/playlist-card/playlist-card.component';
-import {ContextService} from './service/context.service';
 
 @NgModule({
   declarations: [
@@ -85,7 +84,6 @@ import {ContextService} from './service/context.service';
     AudioPlayerService,
     ConfigService,
     PlaylistService,
-    ContextService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: GlobalHttpInterceptor,

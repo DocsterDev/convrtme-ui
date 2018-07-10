@@ -22,14 +22,21 @@
     </div>
   </div>
   <div class="col d-none d-md-block">
-    <div class="row no-gutters align-items-center no-select flex-nowrap justify-content-end">
-      <div class="col" style="max-width: 150px">
-        <div align="right" class="button" (click)="onSignUp()">Sign Up</div>
+    <div *ngIf="user.valid && !loading" class="row no-gutters d-flex justify-content-end no-select flex-nowrap">
+      <div class="col d-flex align-items-center justify-content-center" style="height: 66px; max-width: 200px;">
+        <div class="button" (click)="onSignUp()">Sign Up</div>
       </div>
-      <div class="col text-right Py(1)" style="max-width: 135px" (click)="onLogIn()">
-        <span class="tab-text Mend(2) text-nowrap">
+      <div class="col d-flex align-items-center justify-content-center" style="height: 66px; max-width: 120px;" (click)="onLogIn()">
+        <div class="tab-text text-nowrap">
           Log In
-        </span>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="!user.valid && !loading" class="row no-gutters no-select flex-nowrap Mend(2)">
+      <div class="col d-flex align-items-center justify-content-end" style="height: 66px;">
+        <div class="tab-text text-nowrap">
+          {{user.email}}
+        </div>
       </div>
     </div>
   </div>
