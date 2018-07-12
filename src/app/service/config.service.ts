@@ -5,7 +5,9 @@ export class ConfigService {
 
   //private host = 'jeff-staging.mynetgear.com';
   private host = 'localhost';
-  private port = '8080';
+  private port = '8083';
+
+
 
   constructor() { }
 

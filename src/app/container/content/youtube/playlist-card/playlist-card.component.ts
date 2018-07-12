@@ -12,6 +12,9 @@ export class PlaylistCardComponent implements OnInit {
   @Input()
   public video: any;
 
+  @Input()
+  public color: any;
+
   @Output()
   public selected = new EventEmitter<any>();
   @Output()

@@ -19,4 +19,8 @@ export class PlaylistService {
     return this.http.put(this.config.getAddress() + '/api/playlists/' + playlistUuid + '/videos', videos);
   }
 
+  deleteVideo(playlistUuid: any, videoId: any) {
+    return this.http.delete(this.config.getAddress() + '/api/playlists/' + playlistUuid + '/videos/' + videoId);
+  }
+
 }
