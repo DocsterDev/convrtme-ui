@@ -6,6 +6,7 @@ import {AudioPlayerService} from '../../../global/audio-player/audio-player.serv
 import {VideoRecommendedService} from '../../../service/video-recommended.service';
 import {PlaylistService} from "../../../service/playlist.service";
 import {UserService} from "../../../service/user.service";
+import {NotificationService} from "../../../global/notification/notification.service";
 
 @Component({
   selector: 'app-youtube',
@@ -41,7 +42,8 @@ export class YoutubeComponent implements OnInit, OnDestroy {
               private videoRecommendedService: VideoRecommendedService,
               private audioPlayerService: AudioPlayerService,
               private playlistService: PlaylistService,
-              private userService: UserService) {
+              private userService: UserService,
+              private notificationService: NotificationService) {
   }
 
   ngOnInit() {
@@ -102,20 +104,23 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       console.log('No playlist is set to add to');
       return;
     }
-    // if () {
-    //
-    // }
+    if (this.currentPlaylist.videos.length > 0) {
+      for (const video of this.currentPlaylist.videos) {
+        if (video.id === $video.id) {
+          this.notificationService.showNotification({type: 'warn', message: 'Sorry, cant add the same video more than once: ' + $video.title});
+          return;
+        }
+      }
+    }
     const originalPlaylist = JSON.parse(JSON.stringify(this.currentPlaylist));
-    setTimeout(() => {
-      this.currentPlaylist.videos.push($video);
-      this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe((response) => {
+    this.currentPlaylist.videos.push($video);
+    this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe((response) => {
       const resp: any = response;
       this.currentPlaylist = resp;
     }, (error) => {
       console.log(JSON.stringify(error));
-        this.currentPlaylist = originalPlaylist;
+      this.currentPlaylist = originalPlaylist;
     });
-    }, 100);
   }
 
   public handleRemoveFromPlaylist($video) {
@@ -124,7 +129,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       this.currentPlaylist.videos = this.currentPlaylist.videos.filter(video => video.id !== $video.id);
       this.playlistService.deleteVideo(this.currentPlaylist.uuid, $video.id).subscribe((response) => {
       const resp: any = response;
-      //this.currentPlaylist = resp;
+      this.currentPlaylist = resp;
     }, (error) => {
       console.log(JSON.stringify(error));
       this.currentPlaylist = originalPlaylist;
