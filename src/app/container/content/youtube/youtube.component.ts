@@ -102,31 +102,34 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       console.log('No playlist is set to add to');
       return;
     }
+    // if () {
+    //
+    // }
     const originalPlaylist = JSON.parse(JSON.stringify(this.currentPlaylist));
-    this.currentPlaylist.videos.push($video);
-    this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe((response) => {
+    setTimeout(() => {
+      this.currentPlaylist.videos.push($video);
+      this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe((response) => {
       const resp: any = response;
       this.currentPlaylist = resp;
     }, (error) => {
       console.log(JSON.stringify(error));
-      setTimeout(() => {
         this.currentPlaylist = originalPlaylist;
-      }, 300);
     });
+    }, 100);
   }
 
   public handleRemoveFromPlaylist($video) {
     const originalPlaylist = JSON.parse(JSON.stringify(this.currentPlaylist));
-    this.currentPlaylist.videos = this.currentPlaylist.videos.filter(video => video.id !== $video.id);
-    this.playlistService.deleteVideo(this.currentPlaylist.uuid, $video.id).subscribe((response) => {
+    setTimeout(() => {
+      this.currentPlaylist.videos = this.currentPlaylist.videos.filter(video => video.id !== $video.id);
+      this.playlistService.deleteVideo(this.currentPlaylist.uuid, $video.id).subscribe((response) => {
       const resp: any = response;
-      this.currentPlaylist = resp;
+      //this.currentPlaylist = resp;
     }, (error) => {
       console.log(JSON.stringify(error));
-      setTimeout(() => {
-        this.currentPlaylist = originalPlaylist;
-      }, 300);
+      this.currentPlaylist = originalPlaylist;
     });
+    }, 100);
   }
 
   public clearPlaylist() {
