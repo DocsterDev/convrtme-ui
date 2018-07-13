@@ -27,6 +27,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
 
   private searchResultsSubscription: Subscription;
   private recommendedResultsSubscription: Subscription;
+  private playlistResultsSubscription: Subscription;
   private predictionsTimeout;
 
   @ViewChild('searchInput')
@@ -56,6 +57,10 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     this.recommendedResultsSubscription = this.videoRecommendedService.getResultList().subscribe((recommendedResults) => {
       this.recommendedList = [];
       this.loadIncrementally(recommendedResults, this.recommendedList);
+    });
+    this.playlistResultsSubscription = this.playlistService.getResultList().subscribe((playlistResults) => {
+      this.currentPlaylist.videos = [];
+      this.loadIncrementally(playlistResults, this.currentPlaylist.videos);
     });
     this.userService.userSignedInEmitter$.subscribe((response) => {
       const user: any = response;
@@ -116,20 +121,20 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     this.currentPlaylist.videos.push($video);
     this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe((response) => {
       const resp: any = response;
-      this.currentPlaylist = resp;
+      // this.currentPlaylist.videos = resp;
     }, (error) => {
       console.log(JSON.stringify(error));
       this.currentPlaylist = originalPlaylist;
     });
   }
 
-  public handleRemoveFromPlaylist($video) {
+  public handleRemoveFromPlaylist($event) {
     const originalPlaylist = JSON.parse(JSON.stringify(this.currentPlaylist));
     setTimeout(() => {
-      this.currentPlaylist.videos = this.currentPlaylist.videos.filter(video => video.id !== $video.id);
-      this.playlistService.deleteVideo(this.currentPlaylist.uuid, $video.id).subscribe((response) => {
+      this.currentPlaylist.videos = this.currentPlaylist.videos.filter(video => video.id !== $event.video.id);
+      this.playlistService.deleteVideo(this.currentPlaylist.uuid, this.currentPlaylist.id).subscribe((response) => {
       const resp: any = response;
-      this.currentPlaylist = resp;
+      // this.currentPlaylist.videos = resp;
     }, (error) => {
       console.log(JSON.stringify(error));
       this.currentPlaylist = originalPlaylist;
@@ -147,10 +152,12 @@ export class YoutubeComponent implements OnInit, OnDestroy {
 
   public setPlaylistActive(playlist) {
     this.playlistLoading = true;
-    this.playlistService.getPlaylist(playlist.uuid).subscribe((response) => {
-      const resp: any = response;
-      this.currentPlaylist =  resp;
-    });
+    this.playlistService.getPlaylistVideosEffect(playlist.uuid);
+    // this.playlistService.getPlaylistVideos(playlist.uuid).subscribe((response) => {
+      // const resp: any = response;
+      this.currentPlaylist = JSON.parse(JSON.stringify(playlist));
+      // this.currentPlaylist.videos =  resp;
+    // });
   }
 
   private loadIncrementally(data, list) {

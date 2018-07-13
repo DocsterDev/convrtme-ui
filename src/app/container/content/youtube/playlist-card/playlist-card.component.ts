@@ -11,7 +11,6 @@ export class PlaylistCardComponent implements OnInit {
 
   @Input()
   public video: any;
-
   @Input()
   public color: any;
 
@@ -22,6 +21,7 @@ export class PlaylistCardComponent implements OnInit {
   public duration: string;
   public nowPlaying: boolean;
   public nowLoading: boolean;
+  public fadeIn = false;
 
   public lastUpdated;
 
@@ -46,6 +46,9 @@ export class PlaylistCardComponent implements OnInit {
       }
     });
     this.duration = this.video.duration;
+    setTimeout(() => {
+      this.fadeIn = true;
+    });
   }
 
   selectContent(video) {
@@ -54,7 +57,7 @@ export class PlaylistCardComponent implements OnInit {
 
   removeContent(event, video) {
     event.stopPropagation();
-    this.removed.emit(video);
+    this.removed.emit({event: event, video: video});
   }
 
 }

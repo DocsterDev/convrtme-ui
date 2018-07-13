@@ -1,7 +1,7 @@
-<div class="playlist-card My(0.5)" [ngClass]="{'now-playing': nowPlaying, 'now-loading': nowLoading}" (click)="selectContent(video)">
+<div class="playlist-card My(0.5) no-select" [ngClass]="{'now-playing': nowPlaying, 'now-loading': nowLoading, 'fade-in-load': fadeIn}" (click)="selectContent(video)">
   <div class="row flex-nowrap no-gutters">
     <div class="col" style="max-width: 5px;">
-      <div class="color-bar" [style.background]="color"></div>
+      <div class="color-bar" [style.background]="'#' + color"></div>
     </div>
     <div class="col card-border">
       <div class="row flex-nowrap no-gutters align-items-start">

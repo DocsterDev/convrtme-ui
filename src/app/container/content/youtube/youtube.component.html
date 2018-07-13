@@ -52,7 +52,7 @@
       </div>
     </div>
     <div class="row no-gutters Mt(1)"></div>
-    <app-playlist-card *ngFor="let video of currentPlaylist.videos" (removed)="handleRemoveFromPlaylist($event)" (selected)="handleVideoSelect($event)" [color]="'#' + currentPlaylist.iconColor" [video]="video"></app-playlist-card>
+    <app-playlist-card *ngFor="let video of currentPlaylist.videos" (removed)="handleRemoveFromPlaylist($event)" (selected)="handleVideoSelect($event)" [color]="currentPlaylist.iconColor" [video]="video"></app-playlist-card>
     <div class="row no-gutters dashed-border no-select align-content-center Mt(1)">
       <div class="col" style="align-self: center">
         <div class="row no-gutters align-content-center">
