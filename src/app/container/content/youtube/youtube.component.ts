@@ -162,7 +162,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
 
   private loadIncrementally(data, list) {
     data.forEach((e, index) => {
-      const delay = Math.floor((Math.random() * 1400));
+      const delay = Math.floor((Math.random() * 1100));
       const maxMillis = 500;
       const minMillis = 100;
       //const delay = Math.floor(Math.random() * (maxMillis - minMillis + 1)) + minMillis;

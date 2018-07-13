@@ -30,10 +30,12 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
         switch (err.status) {
           case 0: {
             this.notificationService.showNotification({type: 'error', message: 'Yikes! It looks like youre not connected to the internet or our servers are down.'});
+            console.error(err);
             break;
           }
           default: {
             this.notificationService.showNotification({type: 'error', message: err.error.message});
+            console.error(err);
             break;
           }
         }
