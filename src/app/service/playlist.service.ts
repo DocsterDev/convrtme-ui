@@ -36,6 +36,9 @@ export class PlaylistService {
   }
 
   public getPlaylistVideosEffect(videoId: string) {
+    if (!videoId) {
+      return;
+    }
     this.getPlaylistVideos(videoId).subscribe((response) => {
       this.resultList.next(response);
     }, (error) => {
