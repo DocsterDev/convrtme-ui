@@ -12,11 +12,7 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler) {
 
-    console.log('REQUEST = ' + JSON.stringify(request));
-
     const token = this.localStorage.retrieve('token');
-
-    console.log('Token value: ' + token);
 
     // Add custom headers
     let newRequest;

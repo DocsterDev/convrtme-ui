@@ -59,7 +59,8 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     });
     this.playlistResultsSubscription = this.playlistService.getResultList().subscribe((playlistResults) => {
       this.currentPlaylist.videos = [];
-      this.loadIncrementally(playlistResults, this.currentPlaylist.videos);
+      this.currentPlaylist.videos = playlistResults;
+      // this.loadIncrementally(playlistResults, this.currentPlaylist.videos);
     });
     this.userService.userSignedInEmitter$.subscribe((response) => {
       const user: any = response;
@@ -102,6 +103,17 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     this.showPredictionsContainer = false;
     this.videoSearchService.search(searchQuery);
     this.searchQuery = '';
+  }
+
+  public handleDndPlaylistSort($event) {
+    const originalPlaylist = JSON.parse(JSON.stringify(this.currentPlaylist));
+    this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe((response) => {
+      // const resp: any = response;
+      // this.currentPlaylist.videos = resp;
+    }, (error) => {
+      console.log(JSON.stringify(error));
+      this.currentPlaylist = originalPlaylist;
+    });
   }
 
   public handleAddToCurrentPlaylist($video) {

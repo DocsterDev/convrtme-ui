@@ -40,6 +40,7 @@ import {VideoSearchService} from './service/video-search.service';
 import {VideoMetadataService} from './service/video-metadata.service';
 import {Ng2Webstorage} from 'ngx-webstorage';
 import {PlaylistCardComponent} from './container/content/youtube/playlist-card/playlist-card.component';
+import {DndModule} from 'ngx-dnd';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import {PlaylistCardComponent} from './container/content/youtube/playlist-card/p
     ProgressHttpModule,
     ModalModule.forRoot(),
     MomentModule,
-    Ng2Webstorage
+    Ng2Webstorage,
+    DndModule.forRoot()
   ],
   providers: [
     MetadataService,
