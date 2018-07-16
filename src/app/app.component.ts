@@ -8,33 +8,33 @@ import {UtilsService} from './service/utils.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.sass']
 })
-export class AppComponent implements OnInit, AfterViewInit {
+export class AppComponent implements OnInit {
 
   constructor(private localStorage: LocalStorageService, private userService: UserService) {
   }
 
   ngOnInit() {
-
-  }
-
-  ngAfterViewInit() {
-    const token = this.localStorage.retrieve('token');
-    if (!token) {
-      this.userService.register(UtilsService.generateUUID() + '@gmail.com', '1234').subscribe((response) => {
-        const resp: any = response;
-        this.localStorage.store('token', resp.token);
-        this.handleSuccess(resp.user);
-      }, (error) => {
-        this.handleError();
-      });
-    } else {
-      this.userService.authenticate().subscribe((response) => {
-        const resp: any = response;
-        this.handleSuccess(resp.user);
-      }, (error) => {
-        this.handleError();
-      });
-    }
+    setTimeout(() => {
+      const token = this.localStorage.retrieve('token');
+      if (!token) {
+        this.userService.register(UtilsService.generateUUID() + '@gmail.com', '1234').subscribe((response) => {
+          const resp: any = response;
+          this.localStorage.store('token', resp.token);
+          this.handleSuccess(resp.user);
+        }, (error) => {
+          console.log('ERROR' + JSON.stringify(error));
+          this.handleError();
+        });
+      } else {
+        this.userService.authenticate().subscribe((response) => {
+          const resp: any = response;
+          this.handleSuccess(resp.user);
+        }, (error) => {
+          console.log('ERROR' + JSON.stringify(error));
+          this.handleError();
+        });
+      }
+    });
   }
 
   private handleSuccess(user) {
@@ -43,7 +43,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.userService.setUserValid(true);
   }
 
-  private handleError(){
+  private handleError() {
     this.userService.triggerUserSignedInEvent({valid: false});
     this.localStorage.clear('token');
     this.localStorage.clear('email');

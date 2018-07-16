@@ -48,7 +48,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.videoSearchService.search('sandman mgtow');
     this.searchResultsSubscription = this.videoSearchService.getResultList().subscribe((searchResults) => {
       if ( searchResults != null ) { this.videoRecommendedService.recommended(searchResults[0].id); }
       this.videoList = [];
@@ -68,6 +67,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
         this.playlistService.getPlaylists().subscribe((response) => {
           this.playlists = response;
         });
+        this.videoSearchService.search('sandman mgtow');
       }
     });
   }
@@ -120,7 +120,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     const originalPlaylist = JSON.parse(JSON.stringify(this.currentPlaylist));
     this.currentPlaylist.videos.push($video);
     this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe((response) => {
-      const resp: any = response;
+      // const resp: any = response;
       // this.currentPlaylist.videos = resp;
     }, (error) => {
       console.log(JSON.stringify(error));

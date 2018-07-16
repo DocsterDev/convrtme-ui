@@ -12,14 +12,24 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler) {
 
+    console.log('REQUEST = ' + JSON.stringify(request));
+
     const token = this.localStorage.retrieve('token');
 
+    console.log('Token value: ' + token);
+
     // Add custom headers
-    const newRequest = request.clone({
-      headers: request.headers.set(
-        'token', token == null ? '' : token
-      )
-    });
+    let newRequest;
+
+    if (token != null) {
+      newRequest = request.clone({
+        headers: request.headers.set(
+          'token', token
+        )
+      });
+    } else {
+      newRequest = request;
+    }
 
     return next.handle(newRequest).do(
       success => {
