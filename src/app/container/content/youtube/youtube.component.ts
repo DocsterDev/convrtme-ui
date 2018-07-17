@@ -7,6 +7,7 @@ import {VideoRecommendedService} from '../../../service/video-recommended.servic
 import {PlaylistService} from "../../../service/playlist.service";
 import {UserService} from "../../../service/user.service";
 import {NotificationService} from "../../../global/notification/notification.service";
+// import { ContainerComponent, DraggableComponent } from 'ngx-smooth-dnd';
 
 @Component({
   selector: 'app-youtube',
@@ -105,7 +106,8 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     this.searchQuery = '';
   }
 
-  public handleDndPlaylistSort($event) {
+  public handleDndPlaylistSort(dropResult) {
+    this.currentPlaylist.videos = this.applyDrag(this.currentPlaylist.videos, dropResult);
     const originalPlaylist = JSON.parse(JSON.stringify(this.currentPlaylist));
     this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe((response) => {
       // const resp: any = response;
@@ -181,6 +183,28 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       setTimeout(YoutubeComponent.updateComponent, delay, e, index, list);
     });
   }
+
+  // public onDrop(dropResult) {
+  //   this.currentPlaylist.videos = applyDrag(this.currentPlaylist.videos, dropResult);
+  // }
+
+  private applyDrag = (arr, dragResult) => {
+  const { removedIndex, addedIndex, payload } = dragResult;
+  if (removedIndex === null && addedIndex === null) return arr;
+
+  const result = [...arr];
+  let itemToAdd = payload;
+
+  if (removedIndex !== null) {
+    itemToAdd = result.splice(removedIndex, 1)[0];
+  }
+
+  if (addedIndex !== null) {
+    result.splice(addedIndex, 0, itemToAdd);
+  }
+
+  return result;
+};
 
   @HostListener('window:click') onClick() {
     if (this.showPredictionsContainer && this.searchInput.nativeElement !== document.activeElement) {

@@ -79,6 +79,7 @@ export class AudioPlayerComponent implements OnInit {
     this.showNowPlayingBar = false;
     this.progress = '0';
     if (this.activeSound) {
+      console.log('Stopping currently playing audio');
       this.activeSound.stop();
     }
     this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: true});
@@ -102,6 +103,8 @@ export class AudioPlayerComponent implements OnInit {
       src: [this.config.getAddress() + '/api/stream/' + video.id],
       format: ['webm'],
       html5: true,
+      buffer: true,
+
       onplay: () => {
         this.duration = video.duration;
         this.showNowPlayingBar = true;

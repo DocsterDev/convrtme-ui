@@ -41,6 +41,7 @@ import {VideoMetadataService} from './service/video-metadata.service';
 import {Ng2Webstorage} from 'ngx-webstorage';
 import {PlaylistCardComponent} from './container/content/youtube/playlist-card/playlist-card.component';
 import {DndModule} from 'ngx-dnd';
+import {NgxSmoothDnDModule} from 'ngx-smooth-dnd';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import {DndModule} from 'ngx-dnd';
     ModalModule.forRoot(),
     MomentModule,
     Ng2Webstorage,
-    DndModule.forRoot()
+    // DndModule.forRoot(),
+    NgxSmoothDnDModule
   ],
   providers: [
     MetadataService,
