@@ -40,7 +40,6 @@ import {VideoSearchService} from './service/video-search.service';
 import {VideoMetadataService} from './service/video-metadata.service';
 import {Ng2Webstorage} from 'ngx-webstorage';
 import {PlaylistCardComponent} from './container/content/youtube/playlist-card/playlist-card.component';
-import {DndModule} from 'ngx-dnd';
 import {NgxSmoothDnDModule} from 'ngx-smooth-dnd';
 
 @NgModule({
@@ -65,10 +64,8 @@ import {NgxSmoothDnDModule} from 'ngx-smooth-dnd';
     FormsModule,
     BrowserModule,
     RouterModule.forRoot(appRoutes),
-    FileDropModule,
     HttpClientModule,
     HttpModule,
-    ProgressHttpModule,
     ModalModule.forRoot(),
     MomentModule,
     Ng2Webstorage,
