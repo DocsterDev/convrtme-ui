@@ -1,5 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+// import {trigger,state,style,animate,transition}from '@angular/animations';
 
 
 import {AppComponent} from './app.component';
@@ -13,9 +15,7 @@ import {SideNavComponent} from './container/side-nav/side-nav.component';
 import {RouterModule} from '@angular/router';
 import {appRoutes} from './app.routes';
 import {TileComponent} from './common/tile/tile.component';
-import {FileDropModule} from 'ngx-file-drop';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {ProgressHttpModule} from 'angular-progress-http';
 import {MetadataService} from './service/metadata.service';
 import {UserService} from './service/user.service';
 import {FormsModule} from '@angular/forms';
@@ -70,7 +70,8 @@ import {NgxSmoothDnDModule} from 'ngx-smooth-dnd';
     MomentModule,
     Ng2Webstorage,
     // DndModule.forRoot(),
-    NgxSmoothDnDModule
+    NgxSmoothDnDModule,
+    BrowserAnimationsModule
   ],
   providers: [
     MetadataService,

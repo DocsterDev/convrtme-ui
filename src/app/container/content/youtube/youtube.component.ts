@@ -7,7 +7,7 @@ import {VideoRecommendedService} from '../../../service/video-recommended.servic
 import {PlaylistService} from "../../../service/playlist.service";
 import {UserService} from "../../../service/user.service";
 import {NotificationService} from "../../../global/notification/notification.service";
-// import { ContainerComponent, DraggableComponent } from 'ngx-smooth-dnd';
+import { ContainerComponent, DraggableComponent, IDropResult } from 'ngx-smooth-dnd';
 
 @Component({
   selector: 'app-youtube',

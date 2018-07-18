@@ -33,7 +33,7 @@
               "node_modules/moment/min/moment.min.js",
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.bundle.js",
-              "node_modules/ngx-smooth-dnd/bundles/ngx-smooth-dnd.umd.js"
+             //  "node_modules/smooth-dnd/dist/index.js"
 //              "node_modules/bootstrap/dist/js/bootstrap.js"
 
             ]
@@ -86,7 +86,7 @@
               "node_modules/moment/min/moment.min.js",
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.bundle.js",
-              "node_modules/bootstrap/dist/js/bootstrap.js"
+              // "node_modules/bootstrap/dist/js/bootstrap.js"
             ],
             "styles": [
               "src/styles.sass",

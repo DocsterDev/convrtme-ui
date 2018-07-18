@@ -57,13 +57,11 @@
     </div>
     <div class="row no-gutters Mt(1)"></div>
     <smooth-dnd-container [lockAxis]="'y'" (drop)="handleDndPlaylistSort($event)">
-      <div *ngFor="let video of currentPlaylist.videos">
-        <smooth-dnd-draggable>
+        <smooth-dnd-draggable *ngFor="let video of currentPlaylist.videos">
           <div>
             <app-playlist-card (removed)="handleRemoveFromPlaylist($event)" (selected)="handleVideoSelect($event)" [color]="currentPlaylist.iconColor" [video]="video"></app-playlist-card>
           </div>
         </smooth-dnd-draggable>
-      </div>
     </smooth-dnd-container>
     <!--<div dnd-sortable-container [sortableData]="currentPlaylist.videos">-->
       <!--<div *ngFor="let video of currentPlaylist.videos; let i = index" dnd-sortable [sortableIndex]="i" (onDropSuccess)="handleDndPlaylistSort($event)">-->
