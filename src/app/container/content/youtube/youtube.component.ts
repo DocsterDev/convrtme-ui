@@ -107,15 +107,14 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   }
 
   public handlePlaylistVideoSort(dropResult) {
-    this.currentPlaylist.videos = this.applyDrag(this.currentPlaylist.videos, dropResult);
     const originalPlaylist = JSON.parse(JSON.stringify(this.currentPlaylist));
-    this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe((response) => {
-      const resp: any = response;
-      this.currentPlaylist.videos = resp;
+    this.currentPlaylist.videos = this.applyDrag(this.currentPlaylist.videos, dropResult);
+    this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe(() => {
+
     }, (error) => {
+      this.currentPlaylist = originalPlaylist;
       this.notificationService.showNotification({type: 'error', message: 'Uh oh, something went wrong. Try again.'});
       console.log(JSON.stringify(error));
-      this.currentPlaylist = originalPlaylist;
     });
   }
 
@@ -134,50 +133,43 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     }
     const originalPlaylist = JSON.parse(JSON.stringify(this.currentPlaylist));
     this.currentPlaylist.videos.push($video);
-    this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe((response) => {
-      const resp: any = response;
-      this.currentPlaylist.videos = resp;
+    this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe(() => {
+
     }, (error) => {
+      this.currentPlaylist = originalPlaylist;
       this.notificationService.showNotification({type: 'error', message: 'Uh oh, something went wrong. Try again.'});
       console.log(JSON.stringify(error));
-      this.currentPlaylist = originalPlaylist;
     });
   }
 
   public handleRemoveFromPlaylist($event) {
     const originalPlaylist = JSON.parse(JSON.stringify(this.currentPlaylist));
       this.currentPlaylist.videos = this.currentPlaylist.videos.filter(video => video.id !== $event.video.id);
-      this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe((response) => {
-        const resp: any = response;
-        this.currentPlaylist.videos = resp;
+      this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe(() => {
+
     }, (error) => {
+        this.currentPlaylist = originalPlaylist;
         this.notificationService.showNotification({type: 'error', message: 'Uh oh, something went wrong. Try again.'});
         console.log(JSON.stringify(error));
-        this.currentPlaylist = originalPlaylist;
     });
   }
 
   public clearPlaylist() {
     const originalPlaylist = JSON.parse(JSON.stringify(this.currentPlaylist));
     this.currentPlaylist.videos = [];
-    this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe((response) => {
-      const resp: any = response;
-      this.currentPlaylist = resp;
+    this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe(() => {
+
     }, (error) => {
+      this.currentPlaylist = originalPlaylist;
       this.notificationService.showNotification({type: 'error', message: 'Uh oh, something went wrong. Try again.'});
       console.log(JSON.stringify(error));
-      this.currentPlaylist = originalPlaylist;
     });
   }
 
   public setPlaylistActive(playlist) {
     this.playlistLoading = true;
     this.playlistService.getPlaylistVideosEffect(playlist.uuid);
-    // this.playlistService.getPlaylistVideos(playlist.uuid).subscribe((response) => {
-      // const resp: any = response;
-      this.currentPlaylist = JSON.parse(JSON.stringify(playlist));
-      // this.currentPlaylist.videos =  resp;
-    // });
+    this.currentPlaylist = JSON.parse(JSON.stringify(playlist));
   }
 
   private loadIncrementally(data, list) {
@@ -189,10 +181,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       setTimeout(YoutubeComponent.updateComponent, delay, e, index, list);
     });
   }
-
-  // public onDrop(dropResult) {
-  //   this.currentPlaylist.videos = applyDrag(this.currentPlaylist.videos, dropResult);
-  // }
 
   private applyDrag = (arr, dragResult) => {
   const { removedIndex, addedIndex, payload } = dragResult;
