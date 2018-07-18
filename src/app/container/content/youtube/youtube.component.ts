@@ -106,13 +106,14 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     this.searchQuery = '';
   }
 
-  public handleDndPlaylistSort(dropResult) {
+  public handlePlaylistVideoSort(dropResult) {
     this.currentPlaylist.videos = this.applyDrag(this.currentPlaylist.videos, dropResult);
     const originalPlaylist = JSON.parse(JSON.stringify(this.currentPlaylist));
     this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe((response) => {
-      // const resp: any = response;
-      // this.currentPlaylist.videos = resp;
+      const resp: any = response;
+      this.currentPlaylist.videos = resp;
     }, (error) => {
+      this.notificationService.showNotification({type: 'error', message: 'Uh oh, something went wrong. Try again.'});
       console.log(JSON.stringify(error));
       this.currentPlaylist = originalPlaylist;
     });
@@ -134,9 +135,10 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     const originalPlaylist = JSON.parse(JSON.stringify(this.currentPlaylist));
     this.currentPlaylist.videos.push($video);
     this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe((response) => {
-      // const resp: any = response;
-      // this.currentPlaylist.videos = resp;
+      const resp: any = response;
+      this.currentPlaylist.videos = resp;
     }, (error) => {
+      this.notificationService.showNotification({type: 'error', message: 'Uh oh, something went wrong. Try again.'});
       console.log(JSON.stringify(error));
       this.currentPlaylist = originalPlaylist;
     });
@@ -144,23 +146,27 @@ export class YoutubeComponent implements OnInit, OnDestroy {
 
   public handleRemoveFromPlaylist($event) {
     const originalPlaylist = JSON.parse(JSON.stringify(this.currentPlaylist));
-    setTimeout(() => {
       this.currentPlaylist.videos = this.currentPlaylist.videos.filter(video => video.id !== $event.video.id);
-      this.playlistService.deleteVideo(this.currentPlaylist.uuid, this.currentPlaylist.id).subscribe((response) => {
-      const resp: any = response;
-      // this.currentPlaylist.videos = resp;
+      this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe((response) => {
+        const resp: any = response;
+        this.currentPlaylist.videos = resp;
     }, (error) => {
-      console.log(JSON.stringify(error));
-      this.currentPlaylist = originalPlaylist;
+        this.notificationService.showNotification({type: 'error', message: 'Uh oh, something went wrong. Try again.'});
+        console.log(JSON.stringify(error));
+        this.currentPlaylist = originalPlaylist;
     });
-    }, 100);
   }
 
   public clearPlaylist() {
+    const originalPlaylist = JSON.parse(JSON.stringify(this.currentPlaylist));
     this.currentPlaylist.videos = [];
     this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe((response) => {
       const resp: any = response;
       this.currentPlaylist = resp;
+    }, (error) => {
+      this.notificationService.showNotification({type: 'error', message: 'Uh oh, something went wrong. Try again.'});
+      console.log(JSON.stringify(error));
+      this.currentPlaylist = originalPlaylist;
     });
   }
 
