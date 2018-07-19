@@ -4,10 +4,9 @@ import {VideoSearchService} from '../../../service/video-search.service';
 import {VideoAutoCompleteService} from '../../../service/video-autocomplete.service';
 import {AudioPlayerService} from '../../../global/audio-player/audio-player.service';
 import {VideoRecommendedService} from '../../../service/video-recommended.service';
-import {PlaylistService} from "../../../service/playlist.service";
-import {UserService} from "../../../service/user.service";
-import {NotificationService} from "../../../global/notification/notification.service";
-import { ContainerComponent, DraggableComponent, IDropResult } from 'ngx-smooth-dnd';
+import {PlaylistService} from '../../../service/playlist.service';
+import {UserService} from '../../../service/user.service';
+import {NotificationService} from '../../../global/notification/notification.service';
 
 @Component({
   selector: 'app-youtube',
@@ -91,11 +90,17 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   }
 
   public handleVideoSelect($video) {
+    $video.isRecommended = false;
+    $video.playlistVideos = [];
+    if ($video.isPlaylist === true) {
+      $video.playlistVideos = JSON.parse(JSON.stringify(this.currentPlaylist.videos));
+    }
     this.audioPlayerService.triggerVideoEvent($video);
     this.audioPlayerService.triggerToggleLoading({video: $video.id, toggle: true});
   }
 
   public handleRecommendedVideoSelect($video) {
+    $video.isRecommended = true;
     this.audioPlayerService.triggerVideoEvent($video);
     this.audioPlayerService.triggerToggleLoading({video: $video.id, toggle: true});
   }
@@ -177,7 +182,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       const delay = Math.floor((Math.random() * 1100));
       const maxMillis = 500;
       const minMillis = 100;
-      //const delay = Math.floor(Math.random() * (maxMillis - minMillis + 1)) + minMillis;
+      // const delay = Math.floor(Math.random() * (maxMillis - minMillis + 1)) + minMillis;
       setTimeout(YoutubeComponent.updateComponent, delay, e, index, list);
     });
   }

@@ -21,7 +21,7 @@ export class AudioPlayerService {
     this.triggerToggleLoadingEmitter$.emit(loadingConfig);
   }
 
-  public triggerVideoEvent(video: any): void {
+  public triggerVideoEvent(video: any) {
     this.triggerVideoEventEmitter$.emit(video);
   }
 

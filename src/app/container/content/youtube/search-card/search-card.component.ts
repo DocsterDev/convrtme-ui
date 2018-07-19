@@ -47,6 +47,7 @@ export class SearchCardComponent implements OnInit {
   }
 
   selectContent(video) {
+    video.isPlaylist = false;
     this.selected.emit(video);
   }
 

@@ -27,6 +27,8 @@ export class AudioPlayerComponent implements OnInit {
   private videoServiceSub;
   private videoServiceLock = false;
 
+  private isPlaylist = false;
+
   constructor(private audioPlayerService: AudioPlayerService,
               private videoMetadataService: VideoMetadataService,
               private notificationService: NotificationService,
@@ -75,6 +77,10 @@ export class AudioPlayerComponent implements OnInit {
       console.log('Cant select another video right now');
       return;
     }
+    if (video.isPlaylist === true) {
+      this.isPlaylist = true;
+      console.log(JSON.stringify(video.playlistVideos));
+    }
     this.videoServiceLock = true;
     this.showNowPlayingBar = false;
     this.progress = '0';
@@ -87,7 +93,7 @@ export class AudioPlayerComponent implements OnInit {
     this.videoServiceSub = this.videoMetadataService.getVideo(video).subscribe(
       (videoResponse) => {
         this.video = videoResponse;
-        this.buildAudioObject(this.video);
+        this.buildAudioObject(video);
         this.activeSound.play();
       },
       (error) => {
@@ -129,7 +135,10 @@ export class AudioPlayerComponent implements OnInit {
         this.audioPlayerService.triggerTogglePlaying({id: video.id, toggle: false});
       },
       onload: () => {
-        this.videoRecommendedService.recommended(video.id);
+        console.log('LOADED!!!!!!');
+        if (video.isRecommended === false && video.isPlaylist === false) {
+          this.videoRecommendedService.recommended(video.id);
+        }
         this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: false});
         this.videoServiceLock = false;
       }

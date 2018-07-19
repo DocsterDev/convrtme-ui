@@ -52,6 +52,8 @@ export class PlaylistCardComponent implements OnInit {
   }
 
   selectContent(video) {
+    video.isRecommended = false;
+    video.isPlaylist = true;
     this.selected.emit(video);
   }
 
