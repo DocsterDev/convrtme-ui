@@ -21,7 +21,7 @@
   &:hover .playlist-icon-move
     visibility: visible
   &:hover .card-border
-    border: solid 1px rgba(76,96,133,0.13)
+    border-color: rgba(76,96,133,0.05)
   &:hover .color-bar
     opacity: 0.65
   &:hover
@@ -74,7 +74,7 @@
 .playlist-icon-close
   visibility: hidden
   position: absolute
-  top: 0px
+  top: 0
   right: 6px
   &:hover
     opacity: 0.8
@@ -87,12 +87,16 @@
   right: 3px
 
 .color-bar
-  height: 81px
+  height: 100%
   width: 10px
   z-index: 99
   //background: #F36262
 
 .card-border
-  border: solid 1px rgba(76,96,133,0.18)
+  border-color: rgba(76,96,133,0.07)
+  border-width: 2px
+  border-style: solid
+  border-left: 2px
+  border-radius: 0
   height: 80px
 

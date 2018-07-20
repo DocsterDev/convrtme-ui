@@ -2,7 +2,8 @@
   <div class="row flex-nowrap no-gutters align-items-start">
     <div class="col thumbnail-container">
         <img class="thumbnail" [src]="video.thumbnailUrl"/>
-        <div class="play-icon"><img src="assets/img/svg/ic-video-loading.svg"/></div>
+        <div class="loading-icon"><img src="assets/img/svg/ic-video-loading.svg"/></div>
+        <div class="play-icon"><img src="assets/img/svg/ic-large-play-arrow.svg"/></div>
     </div>
     <div class="col">
         <div class="text-left c-font-circular c-small c-light title-text Mstart(0.5) Mt(0.5)" [ngClass]="{'c-accent-color': nowPlaying, 'c-color': !nowPlaying}" style="max-height: 90px !important">
@@ -18,6 +19,9 @@
           <div class="playlist-icon" [style.background]="'#' + playlist.iconColor"></div>
         </div>
       </div>
+    </div>
+    <div class="col align-self-center play-icon-active d-none d-md-block" style="max-width:50px;">
+      <div class="text-center"><img src="/assets/img/svg/ic-sound-active.svg"></div>
     </div>
     <div class="col align-self-center playlist-icon-add d-none d-md-block" style="max-width:20px;" (click)="addedContent($event, video)">
       <div class="text-center"><img src="/assets/img/svg/ic-plus-playlist.svg"></div>

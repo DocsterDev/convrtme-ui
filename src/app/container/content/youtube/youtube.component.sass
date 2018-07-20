@@ -38,24 +38,23 @@
     cursor: pointer
 
 .playlist-icon
-  //height: 14px
-  //width: 14px
-  //border-radius: 50%
   height: 8px
   width: 150px
   transition: transform 100ms ease
   transform: scaleY(1)
-  &:hover
-    transform: scaleY(1.4)
-    z-index: 999
+
 .playlist-active
   transform: scaleY(1.7)
   z-index: 999
 
 .playlist-icon-col
-  max-width: 35px
+  max-width: 50px
+  height: 50px
   &:hover
     cursor: pointer
+  &:hover .playlist-icon
+    transform: scaleY(1.4)
+    z-index: 999
 
 .dropdown-toggle-arrow
   &:hover
@@ -66,4 +65,4 @@
   right: 0 !important
 
 .smooth-dnd-draggable-wrapper
-  overflow: visible !important
+  // overflow: visible !important

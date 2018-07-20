@@ -1,15 +1,15 @@
 <div class="playlist-card My(0.5) no-select" [ngClass]="{'now-playing': nowPlaying, 'now-loading': nowLoading, 'fade-in-load': fadeIn}" (click)="selectContent(video)">
-  <div class="row flex-nowrap no-gutters card-border">
-    <div class="col" style="max-width: 5px;">
+  <div class="row flex-nowrap no-gutters">
+    <div class="col" style="max-width: 10px;">
       <div class="color-bar" [style.background]="'#' + color"></div>
     </div>
-    <div class="col">
+    <div class="col card-border">
       <div class="row flex-nowrap no-gutters align-items-start">
         <!--<div class="col thumbnail-container">-->
         <!--<img class="thumbnail" [src]="video.thumbnailUrl"/>-->
         <!--<div class="play-icon"><img src="assets/img/svg/ic-video-loading.svg"/></div>-->
         <!--</div>-->
-        <div class="col d-flex align-items-center" style="height: 80px;">
+        <div class="col d-flex align-items-center" style="height: 76px;">
           <div class="c-font-circular c-small c-light title-text text-left Mstart(1) Pend(2)" [ngClass]="{'c-accent-color': nowPlaying, 'c-color': !nowPlaying}" style="max-height: 90px !important">
             <div class="title">{{video.title}}</div>
             <div class="Pt(0.25)"></div>
@@ -18,9 +18,10 @@
             <div class="subtitle" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{duration}}</div>
           </div>
         </div>
-        <div class="col text-right" style="max-width:15px;">
-          <div class="playlist-icon-close"><img src="assets/img/svg/ic-close.svg" (click)="removeContent($event, video)"></div>
-          <div class="playlist-icon-move"><img src="assets/img/svg/ic-drag-move.svg"></div>
+        <div class="col d-flex align-items-center" style="max-width:30px; height: 76px;">
+          <!--<div class="playlist-icon-close"><img src="assets/img/svg/iclose.svg" (click)="removeContent($event, video)"></div>-->
+          <!--<div class="playlist-icon-move"><img src="assets/img/svg/ic-drag-move.svg"></div>-->
+          <div ><img src="assets/img/svg/ic-playlist-handle.svg"></div>
         </div>
       </div>
     </div>

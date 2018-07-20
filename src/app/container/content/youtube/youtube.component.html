@@ -37,25 +37,24 @@
 
   <div class="col-md Mx(1) order-3">
     <div class="d-block d-md-none My(1)"></div>
-    <div class="d-none d-md-block c-accent-color text-left c-bold c-smaller Pb(0.5)">Playlist</div>
+    <div class="d-none d-md-block c-accent-color text-left c-bold c-smaller">Playlist</div>
     <div class="row no-gutters Mt(0.25) d-flex justify-content-center">
-      <div *ngFor="let playlist of playlists" class="col d-flex align-items-center justify-content-center playlist-icon-col">
-        <div class="playlist-icon" [ngClass]="{'playlist-active': currentPlaylist.uuid === playlist.uuid}" [style.background]="'#' + playlist.iconColor" (click)="setPlaylistActive(playlist)"></div>
+      <div *ngFor="let playlist of playlists" class="col d-flex align-items-center justify-content-center playlist-icon-col" (click)="setPlaylistActive(playlist)">
+        <div class="playlist-icon" [ngClass]="{'playlist-active': currentPlaylist.uuid === playlist.uuid}" [style.background]="'#' + playlist.iconColor"></div>
       </div>
-      <div class="col d-none d-md-block">
-        <div class="d-flex align-items-center justify-content-end">
-          <div class="dropdown">
-            <div class="dropdown-toggle-arrow" data-toggle="dropdown" id="playlistOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <img src="assets/img/svg/ic-expand-more.svg">
-            </div>
-            <div class="dropdown-menu" aria-labelledby="playlistOptions">
-              <a class="dropdown-item" (click)="clearPlaylist()">Clear Playlist</a>
-            </div>
-          </div>
-        </div>
-      </div>
+      <!--<div class="col d-none d-md-block">-->
+        <!--<div class="d-flex align-items-center justify-content-end">-->
+          <!--<div class="dropdown">-->
+            <!--<div class="dropdown-toggle-arrow" data-toggle="dropdown" id="playlistOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+              <!--<img src="assets/img/svg/ic-expand-more.svg">-->
+            <!--</div>-->
+            <!--<div class="dropdown-menu" aria-labelledby="playlistOptions">-->
+              <!--<a class="dropdown-item" (click)="clearPlaylist()">Clear Playlist</a>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
     </div>
-    <div class="row no-gutters Mt(1)"></div>
     <smooth-dnd-container [lockAxis]="'y'" (drop)="handlePlaylistVideoSort($event)">
         <smooth-dnd-draggable *ngFor="let video of currentPlaylist.videos">
             <app-playlist-card (removed)="handleRemoveFromPlaylist($event)" (selected)="handleVideoSelect($event)" [color]="currentPlaylist.iconColor" [video]="video"></app-playlist-card>
@@ -66,7 +65,7 @@
         <!--<app-playlist-card (removed)="handleRemoveFromPlaylist($event)" (selected)="handleVideoSelect($event)" [color]="currentPlaylist.iconColor" [video]="video"></app-playlist-card>-->
       <!--</div>-->
     <!--</div>-->
-    <div class="row no-gutters dashed-border no-select align-content-center Mt(1)">
+    <div class="row no-gutters dashed-border no-select align-content-center Mt(2)">
       <div class="col" style="align-self: center">
         <div class="row no-gutters align-content-center">
           <div class="col">
