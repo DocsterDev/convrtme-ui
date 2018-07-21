@@ -57,11 +57,11 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       this.recommendedList = [];
       this.loadIncrementally(recommendedResults, this.recommendedList);
     });
-    this.playlistResultsSubscription = this.playlistService.getResultList().subscribe((playlistResults) => {
-      this.currentPlaylist.videos = [];
-      this.currentPlaylist.videos = playlistResults;
-      // this.loadIncrementally(playlistResults, this.currentPlaylist.videos);
-    });
+    // this.playlistResultsSubscription = this.playlistService.getResultList().subscribe((playlistResults) => {
+    //   this.currentPlaylist.videos = [];
+    //   this.currentPlaylist.videos = playlistResults;
+    //   // this.loadIncrementally(playlistResults, this.currentPlaylist.videos);
+    // });
     this.userService.userSignedInEmitter$.subscribe((response) => {
       const user: any = response;
       if (user.valid) {
@@ -70,6 +70,17 @@ export class YoutubeComponent implements OnInit, OnDestroy {
         });
         this.videoSearchService.search('sandman mgtow');
       }
+    });
+    this.audioPlayerService.triggerPlaylistActionEventEmitter$.subscribe((resp) => {
+      const action: any = resp;
+      if (action.action === 'next') {
+        console.log('NEXT');
+      }
+      if (action.action === 'prev') {
+        console.log('PREVIOUS');
+      }
+      console.log('Is Playlist: ' + action.isPlaylist);
+
     });
   }
 
@@ -91,10 +102,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
 
   public handleVideoSelect($video) {
     $video.isRecommended = false;
-    $video.playlistVideos = [];
-    if ($video.isPlaylist === true) {
-      $video.playlistVideos = JSON.parse(JSON.stringify(this.currentPlaylist.videos));
-    }
     this.audioPlayerService.triggerVideoEvent($video);
     this.audioPlayerService.triggerToggleLoading({video: $video.id, toggle: true});
   }
@@ -114,6 +121,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   public handlePlaylistVideoSort(dropResult) {
     const originalPlaylist = JSON.parse(JSON.stringify(this.currentPlaylist));
     this.currentPlaylist.videos = this.applyDrag(this.currentPlaylist.videos, dropResult);
+    this.audioPlayerService.triggerPlaylistUpdateEvent({playlist: this.currentPlaylist.videos});
     this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe(() => {
 
     }, (error) => {
@@ -138,6 +146,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     }
     const originalPlaylist = JSON.parse(JSON.stringify(this.currentPlaylist));
     this.currentPlaylist.videos.push($video);
+    this.audioPlayerService.triggerPlaylistUpdateEvent({playlist: this.currentPlaylist.videos});
     this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe(() => {
 
     }, (error) => {
@@ -150,6 +159,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   public handleRemoveFromPlaylist($event) {
     const originalPlaylist = JSON.parse(JSON.stringify(this.currentPlaylist));
       this.currentPlaylist.videos = this.currentPlaylist.videos.filter(video => video.id !== $event.video.id);
+      this.audioPlayerService.triggerPlaylistUpdateEvent({playlist: this.currentPlaylist.videos});
       this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe(() => {
 
     }, (error) => {
@@ -173,7 +183,14 @@ export class YoutubeComponent implements OnInit, OnDestroy {
 
   public setPlaylistActive(playlist) {
     this.playlistLoading = true;
-    this.playlistService.getPlaylistVideosEffect(playlist.uuid);
+    this.playlistService.getPlaylistVideos(playlist.uuid).subscribe((videos) => {
+      this.currentPlaylist.videos = [];
+      this.currentPlaylist.videos = videos;
+      this.audioPlayerService.triggerPlaylistUpdateEvent({playlist: videos});
+    }, (error) => {
+      this.notificationService.showNotification({type: 'error', message: 'Uh oh, couldnt retrieve playlist videos. Try again.'});
+      console.log(JSON.stringify(error));
+    });
     this.currentPlaylist = JSON.parse(JSON.stringify(playlist));
   }
 

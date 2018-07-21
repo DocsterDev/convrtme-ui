@@ -40,6 +40,7 @@ export class AudioPlayerComponent implements OnInit {
   ngOnInit() {
     this.progress = '0';
     this.audioPlayerService.triggerVideoEventEmitter$.subscribe((e) => {
+      this.isPlaylist = e.isPlaylist;
       this.playMedia(e);
     });
     this.audioPlayerService.triggerTogglePlayingEmitter$.subscribe((e) => {
@@ -47,6 +48,14 @@ export class AudioPlayerComponent implements OnInit {
     });
     this.audioPlayerService.triggerToggleLoadingEmitter$.subscribe((e) => {
       this.isLoading = e.toggle;
+    });
+    this.audioPlayerService.triggerPlaylistUpdateEventEmitter$.subscribe((e) => {
+
+      if (this.isPlaying) {
+        console.log('Currently Playing: ' + this.video.title);
+      }
+      console.log();
+
     });
   }
 
@@ -59,17 +68,11 @@ export class AudioPlayerComponent implements OnInit {
   }
 
   public seekNext() {
-    // if (this.progress > 100) {
-    //   return;
-    // }
-    // this.progress++;
+    this.audioPlayerService.triggerPlaylistActionEvent({action: 'next', isPlaylist: this.isPlaylist});
   }
 
   public seekPrev() {
-    // if (this.progress < 0) {
-    //   return;
-    // }
-    // this.progress--;
+    this.audioPlayerService.triggerPlaylistActionEvent({action: 'prev', isPlaylist: this.isPlaylist});
   }
 
   public playMedia(video) {
@@ -79,13 +82,11 @@ export class AudioPlayerComponent implements OnInit {
     }
     if (video.isPlaylist === true) {
       this.isPlaylist = true;
-      console.log(JSON.stringify(video.playlistVideos));
     }
     this.videoServiceLock = true;
     this.showNowPlayingBar = false;
     this.progress = '0';
     if (this.activeSound) {
-      console.log('Stopping currently playing audio');
       this.activeSound.stop();
     }
     this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: true});
@@ -135,7 +136,6 @@ export class AudioPlayerComponent implements OnInit {
         this.audioPlayerService.triggerTogglePlaying({id: video.id, toggle: false});
       },
       onload: () => {
-        console.log('LOADED!!!!!!');
         if (video.isRecommended === false && video.isPlaylist === false) {
           this.videoRecommendedService.recommended(video.id);
         }

@@ -25,9 +25,6 @@ export class SearchCardComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.video.addedByPlaylists.length > 0) {
-      console.log('Added By Playlist ' + this.video.addedByPlaylists[0].iconColor);
-    }
     this.lastUpdated = moment(this.video.timestamp);
     this.audioPlayerService.triggerTogglePlayingEmitter$.subscribe((e) => {
       this.nowPlaying = false;

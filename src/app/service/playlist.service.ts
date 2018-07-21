@@ -35,14 +35,14 @@ export class PlaylistService {
     return this.resultList.asObservable();
   }
 
-  public getPlaylistVideosEffect(videoId: string) {
-    if (!videoId) {
-      return;
-    }
-    this.getPlaylistVideos(videoId).subscribe((response) => {
-      this.resultList.next(response);
-    }, (error) => {
-      console.log(error);
-    });
-  }
+  // public getPlaylistVideosEffect(videoId: string) {
+  //   if (!videoId) {
+  //     return;
+  //   }
+  //   this.getPlaylistVideos(videoId).subscribe((response) => {
+  //     this.resultList.next(response);
+  //   }, (error) => {
+  //     console.log(error);
+  //   });
+  // }
 }
