@@ -1,7 +1,6 @@
-import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs/Subscription';
 import {VideoSearchService} from '../../../service/video-search.service';
-import {VideoAutoCompleteService} from '../../../service/video-autocomplete.service';
 import {AudioPlayerService} from '../../../global/audio-player/audio-player.service';
 import {VideoRecommendedService} from '../../../service/video-recommended.service';
 import {PlaylistService} from '../../../service/playlist.service';
@@ -15,9 +14,6 @@ import {NotificationService} from '../../../global/notification/notification.ser
 })
 export class YoutubeComponent implements OnInit, OnDestroy {
 
-  public showPredictionsContainer: boolean;
-  public predictions: Array<string>;
-  public searchQuery: string;
   public videoList: any = [];
   public recommendedList: any = [];
   public playlists: any = [];
@@ -29,27 +25,20 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   private recommendedResultsSubscription: Subscription;
   private signInEventSubscription: Subscription;
   private playlistActionSubscription: Subscription;
-  private autoCompleteSubscription: Subscription;
   private playlistUpdateSubscription: Subscription;
   private getPlaylistVideosSubscription: Subscription;
-
-  private predictionsTimeout;
-
-  @ViewChild('searchInput')
-  public searchInput: ElementRef;
 
   static updateComponent(component, index, list) {
     component.index = index;
     list.push(component);
   }
 
-  constructor(private videoAutoCompleteService: VideoAutoCompleteService,
-              private videoSearchService: VideoSearchService,
-              private videoRecommendedService: VideoRecommendedService,
+  constructor(private videoRecommendedService: VideoRecommendedService,
               private audioPlayerService: AudioPlayerService,
               private playlistService: PlaylistService,
               private userService: UserService,
-              private notificationService: NotificationService) {
+              private notificationService: NotificationService,
+              private videoSearchService: VideoSearchService) {
   }
 
   ngOnInit() {
@@ -86,22 +75,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     });
   }
 
-  public handleAutoCompleteLookup(searchQuery) {
-    clearTimeout(this.predictionsTimeout);
-    if (searchQuery === '') {
-      this.showPredictionsContainer = false;
-      this.predictions = [];
-      return;
-    }
-    this.predictionsTimeout = setTimeout(() => {
-      this.autoCompleteSubscription = this.videoAutoCompleteService.getAutoComplete(searchQuery).subscribe((autoCompleteResponse) => {
-        this.predictions = [];
-        autoCompleteResponse[1].forEach((e) => this.predictions.push(e));
-        this.showPredictionsContainer = true;
-      });
-    });
-  }
-
   public handleVideoSelect($video) {
     $video.isRecommended = false;
     this.audioPlayerService.triggerVideoEvent($video);
@@ -112,12 +85,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     $video.isRecommended = true;
     this.audioPlayerService.triggerVideoEvent($video);
     this.audioPlayerService.triggerToggleLoading({video: $video.id, toggle: true});
-  }
-
-  public handleSubmitSearch(searchQuery) {
-    this.showPredictionsContainer = false;
-    this.videoSearchService.search(searchQuery);
-    this.searchQuery = '';
   }
 
   public handlePlaylistVideoSort(dropResult) {
@@ -227,18 +194,11 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     return result;
   };
 
-  @HostListener('window:click') onClick() {
-    if (this.showPredictionsContainer && this.searchInput.nativeElement !== document.activeElement) {
-      this.showPredictionsContainer = false;
-    }
-  }
-
   ngOnDestroy() {
     this.searchResultsSubscription.unsubscribe();
     this.recommendedResultsSubscription.unsubscribe();
     this.signInEventSubscription.unsubscribe();
     this.playlistActionSubscription.unsubscribe();
-    this.autoCompleteSubscription.unsubscribe();
     this.playlistUpdateSubscription.unsubscribe();
     this.getPlaylistVideosSubscription.unsubscribe();
   }

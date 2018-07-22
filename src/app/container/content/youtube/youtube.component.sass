@@ -1,41 +1,10 @@
 @import variables
 
-.header-search-box
-  border: 2px solid $textColor
-  color: $textColor !important
-  text-shadow: 0 0 0 $textColor
-  -webkit-text-fill-color: transparent
-  width: 100%
-  height: 45px
-  opacity: .20
-
 .dashed-border
   border: 3px dashed #dee6f3
   color: #dee6f3
   border-radius: 8px
   height: 80px
-
-.search
-  overflow: hidden
-  float: right
-
-.search-content
-  color: $textColorLight
-  display: block
-  position: absolute
-  background: $colorWhite
-  min-width: 400px
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.3)
-  border: 1px solid $tabHoverColor
-  z-index: 1
-
-.search-content div
-  display: block
-  float: none
-  text-align: left
-  &:hover
-    background: $tabHoverColor
-    cursor: pointer
 
 .playlist-icon
   height: 8px
@@ -55,14 +24,3 @@
   &:hover .playlist-icon
     transform: scaleY(1.4)
     z-index: 999
-
-.dropdown-toggle-arrow
-  &:hover
-    cursor: pointer
-
-.dropdown-menu
-  left: 200px !important
-  right: 0 !important
-
-.smooth-dnd-draggable-wrapper
-  // overflow: visible !important

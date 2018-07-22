@@ -1,43 +1,79 @@
 <!-- Mobile Header -->
-<div class="d-block d-md-none">
-  <div class="row no-gutters c-font-circular c-smaller c-bold">
-    <div class="col-5">
-      <div class="row flex-nowrap no-gutters align-items-center no-select" style="height: 50px !important">
-        <div class="col Mstart(1) Mend(0.5) no-outline text-center">
-            <img src="assets/img/svg/ic-logo-mobile.svg">
-        </div>
-        <div *ngFor="let option of navOptionsMobile" routerLinkActive="active" #rla="routerLinkActive" class="col tab-mobile P(1) no-outline text-center" routerLink="{{option.value}}">
-            <img src="assets/img/svg/{{ rla.isActive ? option.activeIcon : option.icon}}"/>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<!-- TODO: Figure out if i want to be able to navigate while on mobile with the tabs instead of everything on the same page -->
+<!--<div class="d-block d-md-none">-->
+<!--<div class="row no-gutters c-font-circular c-smaller c-bold">-->
+<!--<div class="col-5">-->
+<!--<div class="row flex-nowrap no-gutters align-items-center no-select" style="height: 50px !important">-->
+<!--<div class="col Mstart(1) Mend(0.5) no-outline text-center">-->
+<!--<img src="assets/img/svg/ic-logo-mobile.svg">-->
+<!--</div>-->
+<!--<div *ngFor="let option of navOptionsMobile" routerLinkActive="active" #rla="routerLinkActive"-->
+<!--class="col tab-mobile P(1) no-outline text-center" routerLink="{{option.value}}">-->
+<!--<img src="assets/img/svg/{{ rla.isActive ? option.activeIcon : option.icon}}"/>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+
 <!-- Desktop Header -->
-<div class="d-none d-md-block">
-  <div class="row no-gutters c-font-circular c-smaller c-bold">
-    <div class="col d-flex align-items-center justify-content-center" style="max-width: 150px;">
-      <img src="assets/img/svg/ic-logo2.svg">
-    </div>
-    <div class="col c-font-circular c-bold c-smaller c-light">
-      <div class="row no-gutters text-center no-select strict-width-tab flex-nowrap">
-        <div class="col-2 tab-text" *ngFor="let option of navOptions" (click)="navigate(option.index)">
-          <div class="Py(1)">{{option.display}}</div>
-        </div>
+<!--<div class="d-none d-md-block">--> <!-- TODO Uncomment if i want to be able to switch between mobile and desktop -->
+<div class="row no-gutters c-font-circular c-smaller c-bold">
+
+  <div class="col d-md-flex align-items-center justify-content-start flex-fill Mstart(1)">
+    <img src="assets/img/svg/ic-logo2.svg">
+  </div>
+  <div class="col d-sm-flex align-items-center justify-content-start flex-fill Mstart(1) no-outline">
+    <img src="assets/img/svg/ic-logo-mobile.svg">
+  </div>
+
+  <div class="col d-flex align-items-center justify-content-center flex-fill Mstart(1)" style="height: 65px;">
+    <div class="position-relative">
+      <form name="search" (submit)="handleSubmitSearch(searchQuery)">
+        <input [(ngModel)]="searchQuery"
+               (ngModelChange)="handleAutoCompleteLookup(searchQuery)"
+               name="q"
+               class="search-input c-font-circular c-bold Px(1)"
+               autocorrect="off"
+               autocapitalize="off"
+               spellcheck="false"
+               autocomplete="off"
+               placeholder="Search"
+               #searchInput/>
+        <button type="submit" style="display:none">hidden submit</button>
+      </form>
+      <div class="position-absolute" style="right: 17px; top: 12px">
+        <img src="assets/img/svg/ic-search.svg"/>
       </div>
     </div>
-    <div *ngIf="!user.valid && !loading" class="col d-flex align-items-center justify-content-center" style="height: 60px; max-width: 200px;">
-      <div class="button" (click)="onSignUp()">Sign Up</div>
-    </div>
-    <div *ngIf="!user.valid && !loading" class="col d-flex align-items-center justify-content-center" style="height: 60px; max-width: 120px;" (click)="onLogIn()">
-      <div class="tab-text text-nowrap">
-        Log In
-      </div>
-    </div>
-    <div *ngIf="user.valid && !loading" class="col d-flex align-items-center justify-content-end Mend(1.5)" style="height: 60px;">
-      <div class="tab-text text-nowrap">
-        {{user.email}}
+    <div *ngIf="showPredictionsContainer && predictions.length > 0 "
+         class="search-auto-complete-container c-font-circular c-light">
+      <div *ngFor="let prediction of predictions" (click)="handleSubmitSearch(prediction)">
+        <div class="Px(1) Py(0.5) t-regular2">{{prediction}}</div>
       </div>
     </div>
   </div>
+
+  <div class="col flex-fill"></div>
+
+  <!-- TODO: Uncomment this when i can figure out how to keep track of users - for now i will us users ip as a user name -->
+
+  <!--<div *ngIf="!user.valid && !loading" class="col d-flex align-items-center justify-content-center"-->
+  <!--style="height: 60px; max-width: 200px;">-->
+  <!--<div class="button">Sign Up</div>-->
+  <!--</div>-->
+  <!--<div *ngIf="!user.valid && !loading" class="col d-flex align-items-center justify-content-center"-->
+  <!--style="height: 60px; max-width: 120px;">-->
+  <!--<div class="tab-text text-nowrap">-->
+  <!--Log In-->
+  <!--</div>-->
+  <!--</div>-->
+  <!--<div *ngIf="user.valid && !loading" class="col d-flex align-items-center justify-content-end Mend(1.5)"-->
+  <!--style="height: 60px;">-->
+  <!--<div class="tab-text text-nowrap">-->
+  <!--{{user.email}}-->
+  <!--</div>-->
+  <!--</div>-->
 </div>
+<!--</div>-->

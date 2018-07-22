@@ -1,13 +1,5 @@
 @import variables
 
-.strict-width
-  max-width: 150px
-  min-width: 115px
-
-.strict-width-tab
-  max-width: 750px
-  min-width: 600px
-
 .tab-text
   color: $textColorLight
   &:hover
@@ -30,3 +22,31 @@
 
 .header-shadow-mobile
   box-shadow: 0 16px 24px 2px rgba(0, 0, 0, .14), 0 6px 30px 5px rgba(0, 0, 0, .12), 0 8px 10px -5px rgba(0, 0, 0, .2)
+
+.search-input
+  border: 2px solid $textColor
+  color: $textColor !important
+  text-shadow: 0 0 0 $textColor
+  -webkit-text-fill-color: transparent
+  min-width: 200px
+  height: 45px
+  opacity: .20
+
+.search-auto-complete-container
+  color: $textColorLight
+  display: block
+  position: absolute
+  top: 55px
+  background: $colorWhite
+  min-width: 400px
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.3)
+  border: 1px solid $tabHoverColor
+  z-index: 999
+
+.search-auto-complete-container div
+  display: block
+  float: none
+  text-align: left
+  &:hover
+    background: $tabHoverColor
+    cursor: pointer

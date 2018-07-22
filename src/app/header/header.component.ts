@@ -1,6 +1,8 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {UserService} from "../service/user.service";
+import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {UserService} from '../service/user.service';
 import {Subscription} from 'rxjs/Subscription';
+import {VideoSearchService} from '../service/video-search.service';
+import {VideoAutoCompleteService} from '../service/video-autocomplete.service';
 
 @Component({
   selector: 'app-header',
@@ -12,11 +14,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public loading: boolean;
   public user: any = {};
 
-  public navOptions = [];
+  public showPredictionsContainer: boolean;
+  public predictions: Array<string>;
+  public searchQuery: string;
+  private predictionsTimeout;
 
-  private userSignInSubscription:Subscription;
+  private userSignInSubscription: Subscription;
+  private autoCompleteSubscription: Subscription;
 
-  // public navOptions = [{display: 'Community', index: 0}, {display: 'Library', index: 1}, {display: 'Premium', index: 2}];
+  @ViewChild('searchInput')
+  public searchInput: ElementRef;
 
   public navOptionsMobile = [
     {display: 'Audio', icon: 'ic-volume-mute.svg', activeIcon: 'ic-volume-mute-active.svg', value: 'app/audio'},
@@ -24,7 +31,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     {display: 'YouTube', icon: 'ic-video-youtube.svg', activeIcon: 'ic-video-youtube-active.svg', value: 'app/youtube'}
   ];
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, private videoSearchService: VideoSearchService, private videoAutoCompleteService: VideoAutoCompleteService) {
   }
 
   ngOnInit() {
@@ -36,20 +43,37 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
   }
 
-  public navigate(index) {
-    console.log('Navigating to: ' + index);
+  public handleAutoCompleteLookup(searchQuery) {
+    clearTimeout(this.predictionsTimeout);
+    if (searchQuery === '') {
+      this.showPredictionsContainer = false;
+      this.predictions = [];
+      return;
+    }
+    this.predictionsTimeout = setTimeout(() => {
+      this.autoCompleteSubscription = this.videoAutoCompleteService.getAutoComplete(searchQuery).subscribe((autoCompleteResponse) => {
+        this.predictions = [];
+        autoCompleteResponse[1].forEach((e) => this.predictions.push(e));
+        this.showPredictionsContainer = true;
+      });
+    });
   }
 
-  public onSignUp() {
-    console.log('On Sign Up');
+  public handleSubmitSearch(searchQuery) {
+    this.showPredictionsContainer = false;
+    this.videoSearchService.search(searchQuery);
+    this.searchQuery = '';
   }
 
-  public onLogIn() {
-    console.log('On Log In');
+  @HostListener('window:click') onClick() {
+    if (this.showPredictionsContainer && this.searchInput.nativeElement !== document.activeElement) {
+      this.showPredictionsContainer = false;
+    }
   }
 
   ngOnDestroy() {
     this.userSignInSubscription.unsubscribe();
+    this.autoCompleteSubscription.unsubscribe();
   }
 
 }
