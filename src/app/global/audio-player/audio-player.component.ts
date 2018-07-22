@@ -27,6 +27,9 @@ export class AudioPlayerComponent implements OnInit {
   private videoServiceSub;
   private videoServiceLock = false;
 
+  private currentPlaylist: any = [];
+  private playlistIndex: number;
+
   private isPlaylist = false;
 
   constructor(private audioPlayerService: AudioPlayerService,
@@ -40,6 +43,7 @@ export class AudioPlayerComponent implements OnInit {
   ngOnInit() {
     this.progress = '0';
     this.audioPlayerService.triggerVideoEventEmitter$.subscribe((e) => {
+      console.log('BRO');
       this.isPlaylist = e.isPlaylist;
       this.playMedia(e);
     });
@@ -54,9 +58,21 @@ export class AudioPlayerComponent implements OnInit {
       if (this.isPlaying) {
         console.log('Currently Playing: ' + this.video.title);
       }
-      console.log();
+      this.currentPlaylist = e.playlist;
+      this.checkCurrentPlaylist();
 
     });
+  }
+
+  private checkCurrentPlaylist() {
+    for (let i = 0; i < this.currentPlaylist.length; i++) {
+      const video = this.currentPlaylist[i];
+      if (video.id === this.video.id) {
+        console.log('Index set: ' + i);
+        this.playlistIndex = i;
+        break;
+      }
+    }
   }
 
   public toggle() {
@@ -94,6 +110,7 @@ export class AudioPlayerComponent implements OnInit {
     this.videoServiceSub = this.videoMetadataService.getVideo(video).subscribe(
       (videoResponse) => {
         this.video = videoResponse;
+        this.checkCurrentPlaylist();
         this.buildAudioObject(video);
         this.activeSound.play();
       },
