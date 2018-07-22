@@ -62,7 +62,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public handleSubmitSearch(searchQuery) {
     this.showPredictionsContainer = false;
     this.videoSearchService.search(searchQuery);
-    this.searchQuery = '';
+    // this.searchQuery = '';
   }
 
   @HostListener('window:click') onClick() {

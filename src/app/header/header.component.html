@@ -21,14 +21,11 @@
 <!--<div class="d-none d-md-block">--> <!-- TODO Uncomment if i want to be able to switch between mobile and desktop -->
 <div class="row no-gutters c-font-circular c-smaller c-bold">
 
-  <div class="col d-md-flex align-items-center justify-content-start flex-fill Mstart(1)">
-    <img src="assets/img/svg/ic-logo2.svg">
-  </div>
-  <div class="col d-sm-flex align-items-center justify-content-start flex-fill Mstart(1) no-outline">
+  <div class="col d-flex align-items-center justify-content-start Mstart(1)">
     <img src="assets/img/svg/ic-logo-mobile.svg">
   </div>
 
-  <div class="col d-flex align-items-center justify-content-center flex-fill Mstart(1)" style="height: 65px;">
+  <div class="col d-flex align-items-center justify-content-center" style="height: 65px;">
     <div class="position-relative">
       <form name="search" (submit)="handleSubmitSearch(searchQuery)">
         <input [(ngModel)]="searchQuery"
@@ -43,7 +40,7 @@
                #searchInput/>
         <button type="submit" style="display:none">hidden submit</button>
       </form>
-      <div class="position-absolute" style="right: 17px; top: 12px">
+      <div class="position-absolute" style="right: 17px; top: 11px">
         <img src="assets/img/svg/ic-search.svg"/>
       </div>
     </div>
@@ -55,7 +52,7 @@
     </div>
   </div>
 
-  <div class="col flex-fill"></div>
+  <div class="col"></div>
 
   <!-- TODO: Uncomment this when i can figure out how to keep track of users - for now i will us users ip as a user name -->
 
