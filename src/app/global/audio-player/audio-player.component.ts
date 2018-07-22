@@ -85,10 +85,26 @@ export class AudioPlayerComponent implements OnInit {
 
   public seekNext() {
     this.audioPlayerService.triggerPlaylistActionEvent({action: 'next', isPlaylist: this.isPlaylist});
+    this.playNextVideo();
   }
 
   public seekPrev() {
     this.audioPlayerService.triggerPlaylistActionEvent({action: 'prev', isPlaylist: this.isPlaylist});
+    if (this.playlistIndex === 0) {
+      console.log('Cant go to previous');
+    } else {
+      this.playlistIndex = this.playlistIndex - 1;
+      this.audioPlayerService.triggerVideoEvent(this.currentPlaylist[this.playlistIndex]);
+    }
+  }
+
+  private playNextVideo(){
+    if ((this.currentPlaylist.length - 1) === this.playlistIndex) {
+      console.log('Playlist has reached the end');
+    } else {
+      this.playlistIndex = this.playlistIndex + 1;
+      this.audioPlayerService.triggerVideoEvent(this.currentPlaylist[this.playlistIndex]);
+    }
   }
 
   public playMedia(video) {
@@ -151,6 +167,7 @@ export class AudioPlayerComponent implements OnInit {
       },
       onend: () => {
         this.audioPlayerService.triggerTogglePlaying({id: video.id, toggle: false});
+        this.playNextVideo();
       },
       onload: () => {
         if (video.isRecommended === false && video.isPlaylist === false) {
