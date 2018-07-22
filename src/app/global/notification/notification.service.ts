@@ -1,13 +1,5 @@
 import {EventEmitter, Injectable} from '@angular/core';
 
-// export class Notification {
-//
-//   constructor(
-//     public message: string,
-//     public type: string) {}
-//
-// }
-
 @Injectable()
 export class NotificationService {
 

@@ -1,13 +1,14 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import * as moment from 'moment';
 import {AudioPlayerService} from '../../../../global/audio-player/audio-player.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-search-card',
   templateUrl: './search-card.component.html',
   styleUrls: ['./search-card.component.sass']
 })
-export class SearchCardComponent implements OnInit {
+export class SearchCardComponent implements OnInit, OnDestroy {
 
   @Input()
   public video: any;
@@ -21,21 +22,24 @@ export class SearchCardComponent implements OnInit {
 
   public lastUpdated;
 
+  private videoPlayingSubscription: Subscription;
+  private videoLoadingSubscription: Subscription;
+
   constructor(private audioPlayerService: AudioPlayerService) {
   }
 
   ngOnInit() {
     this.lastUpdated = moment(this.video.timestamp);
-    this.audioPlayerService.triggerTogglePlayingEmitter$.subscribe((e) => {
+    this.videoPlayingSubscription = this.audioPlayerService.triggerTogglePlayingEmitter$.subscribe((e) => {
       this.nowPlaying = false;
-        if (e.toggle === false) {
+      if (e.toggle === false) {
         return;
       }
       if (e.id === this.video.id) {
         this.nowPlaying = true;
       }
     });
-    this.audioPlayerService.triggerToggleLoadingEmitter$.subscribe((e) => {
+    this.videoLoadingSubscription = this.audioPlayerService.triggerToggleLoadingEmitter$.subscribe((e) => {
       if (e.id === this.video.id) {
         this.nowLoading = e.toggle;
       }
@@ -51,6 +55,11 @@ export class SearchCardComponent implements OnInit {
   addedContent(event, video) {
     event.stopPropagation();
     this.added.emit(video);
+  }
+
+  ngOnDestroy() {
+    this.videoPlayingSubscription.unsubscribe();
+    this.videoLoadingSubscription.unsubscribe();
   }
 
 }

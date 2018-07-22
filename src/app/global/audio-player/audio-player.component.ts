@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AudioPlayerService} from './audio-player.service';
 import {Howl, Howler} from 'howler';
 import {NotificationService} from '../notification/notification.service';
@@ -6,13 +6,14 @@ import {VideoRecommendedService} from '../../service/video-recommended.service';
 import {VideoMetadataService} from '../../service/video-metadata.service';
 import {ConfigService} from '../../service/config.service';
 import {UtilsService} from '../../service/utils.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-audio-player',
   templateUrl: './audio-player.component.html',
   styleUrls: ['./audio-player.component.sass']
 })
-export class AudioPlayerComponent implements OnInit {
+export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   public showNowPlayingBar: boolean;
   public video: any = {};
@@ -24,13 +25,18 @@ export class AudioPlayerComponent implements OnInit {
 
   public isLoading = false;
   public isPlaying = false;
-  private videoServiceSub;
   private videoServiceLock = false;
 
   private currentPlaylist: any = [];
   private playlistIndex: number;
 
   private isPlaylist = false;
+
+  private videoEventSubscription: Subscription;
+  private videoPlayingEventSubscription: Subscription;
+  private videoLoadingEventSubscription: Subscription;
+  private playlistUpdateEventSubscription: Subscription;
+  private videoServiceSubscription: Subscription;
 
   constructor(private audioPlayerService: AudioPlayerService,
               private videoMetadataService: VideoMetadataService,
@@ -42,18 +48,18 @@ export class AudioPlayerComponent implements OnInit {
 
   ngOnInit() {
     this.progress = '0';
-    this.audioPlayerService.triggerVideoEventEmitter$.subscribe((e) => {
+    this.videoEventSubscription = this.audioPlayerService.triggerVideoEventEmitter$.subscribe((e) => {
       console.log('BRO');
       this.isPlaylist = e.isPlaylist;
       this.playMedia(e);
     });
-    this.audioPlayerService.triggerTogglePlayingEmitter$.subscribe((e) => {
+    this.videoPlayingEventSubscription = this.audioPlayerService.triggerTogglePlayingEmitter$.subscribe((e) => {
       this.isPlaying = e.toggle;
     });
-    this.audioPlayerService.triggerToggleLoadingEmitter$.subscribe((e) => {
+    this.videoLoadingEventSubscription = this.audioPlayerService.triggerToggleLoadingEmitter$.subscribe((e) => {
       this.isLoading = e.toggle;
     });
-    this.audioPlayerService.triggerPlaylistUpdateEventEmitter$.subscribe((e) => {
+    this.playlistUpdateEventSubscription = this.audioPlayerService.triggerPlaylistUpdateEventEmitter$.subscribe((e) => {
 
       if (this.isPlaying) {
         console.log('Currently Playing: ' + this.video.title);
@@ -98,7 +104,7 @@ export class AudioPlayerComponent implements OnInit {
     }
   }
 
-  private playNextVideo(){
+  private playNextVideo() {
     if ((this.currentPlaylist.length - 1) === this.playlistIndex) {
       console.log('Playlist has reached the end');
     } else {
@@ -123,7 +129,7 @@ export class AudioPlayerComponent implements OnInit {
     }
     this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: true});
     this.audioPlayerService.triggerTogglePlaying({id: video.id, toggle: false});
-    this.videoServiceSub = this.videoMetadataService.getVideo(video).subscribe(
+    this.videoServiceSubscription = this.videoMetadataService.getVideo(video).subscribe(
       (videoResponse) => {
         this.video = videoResponse;
         this.checkCurrentPlaylist();
@@ -138,7 +144,7 @@ export class AudioPlayerComponent implements OnInit {
       });
   }
 
-  private buildAudioObject (video) {
+  private buildAudioObject(video) {
     this.activeSound = new Howl({
       src: [this.config.getAddress() + '/api/stream/' + video.id],
       format: ['webm'],
@@ -179,7 +185,7 @@ export class AudioPlayerComponent implements OnInit {
     });
   }
 
-  private step () {
+  private step() {
     const seek = this.activeSound.seek() || 0;
     this.timer = this.utilsService.formatTime(Math.round(seek));
     this.progress = (((seek / this.utilsService.formatDuration(this.video.duration)) * 100) || 0);
@@ -187,6 +193,13 @@ export class AudioPlayerComponent implements OnInit {
     if (this.activeSound.playing()) {
       requestAnimationFrame(this.step.bind(this));
     }
+  }
+
+  ngOnDestroy() {
+    this.videoEventSubscription.unsubscribe();
+    this.videoPlayingEventSubscription.unsubscribe();
+    this.videoLoadingEventSubscription.unsubscribe();
+    this.playlistUpdateEventSubscription.unsubscribe();
   }
 
 }

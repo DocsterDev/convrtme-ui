@@ -1,11 +1,15 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {HttpClient} from '@angular/common/http';
 import {ConfigService} from './config.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Injectable()
-export class VideoRecommendedService {
+export class VideoRecommendedService implements OnDestroy{
+
+  private videoRecommendationSubscription:Subscription;
+
   constructor(private http: HttpClient, private config: ConfigService) {
   }
 
@@ -20,7 +24,7 @@ export class VideoRecommendedService {
   }
 
   recommended(videoId: string) {
-    this.getServiceObservable(videoId).subscribe((response) => {
+    this.videoRecommendationSubscription = this.getServiceObservable(videoId).subscribe((response) => {
       this.resultList.next(response);
     }, (error) => {
       console.log(error);
@@ -29,6 +33,10 @@ export class VideoRecommendedService {
 
   getResultList(): Observable<any> {
     return this.resultList.asObservable();
+  }
+
+  ngOnDestroy() {
+    this.videoRecommendationSubscription.unsubscribe();
   }
 
 }

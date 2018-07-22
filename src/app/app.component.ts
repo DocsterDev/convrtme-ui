@@ -1,14 +1,18 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {LocalStorageService} from 'ngx-webstorage';
 import {UserService} from './service/user.service';
 import {UtilsService} from './service/utils.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.sass']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
+
+  private userRegisterSubscription: Subscription;
+  private userAuthenticateSubscription: Subscription;
 
   constructor(private localStorage: LocalStorageService, private userService: UserService) {
   }
@@ -17,7 +21,7 @@ export class AppComponent implements OnInit {
     setTimeout(() => {
       const token = this.localStorage.retrieve('token');
       if (!token) {
-        this.userService.register(UtilsService.generateUUID() + '@gmail.com', '1234').subscribe((response) => {
+        this.userRegisterSubscription = this.userService.register(UtilsService.generateUUID() + '@gmail.com', '1234').subscribe((response) => {
           const resp: any = response;
           this.localStorage.store('token', resp.token);
           this.handleSuccess(resp.user);
@@ -26,7 +30,7 @@ export class AppComponent implements OnInit {
           this.handleError();
         });
       } else {
-        this.userService.authenticate().subscribe((response) => {
+        this.userAuthenticateSubscription = this.userService.authenticate().subscribe((response) => {
           const resp: any = response;
           this.handleSuccess(resp.user);
         }, (error) => {
@@ -48,6 +52,11 @@ export class AppComponent implements OnInit {
     this.localStorage.clear('token');
     this.localStorage.clear('email');
     this.userService.setUserValid(false);
+  }
+
+  ngOnDestroy() {
+    this.userRegisterSubscription.unsubscribe();
+    this.userAuthenticateSubscription.unsubscribe();
   }
 
 }

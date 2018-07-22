@@ -1,17 +1,20 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UserService} from "../service/user.service";
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.sass']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
 
   public loading: boolean;
   public user: any = {};
 
   public navOptions = [];
+
+  private userSignInSubscription:Subscription;
 
   // public navOptions = [{display: 'Community', index: 0}, {display: 'Library', index: 1}, {display: 'Premium', index: 2}];
 
@@ -26,7 +29,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     this.loading = true;
-    this.userService.userSignedInEmitter$.subscribe((user) => {
+    this.userSignInSubscription = this.userService.userSignedInEmitter$.subscribe((user) => {
       this.user = user;
       // this.user.valid = false;
       this.loading = false;
@@ -43,6 +46,10 @@ export class HeaderComponent implements OnInit {
 
   public onLogIn() {
     console.log('On Log In');
+  }
+
+  ngOnDestroy() {
+    this.userSignInSubscription.unsubscribe();
   }
 
 }
