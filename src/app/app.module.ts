@@ -41,6 +41,7 @@ import {VideoMetadataService} from './service/video-metadata.service';
 import {Ng2Webstorage} from 'ngx-webstorage';
 import {PlaylistCardComponent} from './container/content/youtube/playlist-card/playlist-card.component';
 import {NgxSmoothDnDModule} from 'ngx-smooth-dnd';
+import {IpService} from "./service/ip.service";
 
 @NgModule({
   declarations: [
@@ -86,6 +87,7 @@ import {NgxSmoothDnDModule} from 'ngx-smooth-dnd';
     AudioPlayerService,
     ConfigService,
     PlaylistService,
+    IpService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: GlobalHttpInterceptor,

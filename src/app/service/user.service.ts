@@ -20,10 +20,13 @@ export class UserService {
     this.validUser = valid;
   }
 
-  public register(email: string, pin: string) {
+  public register(email: string, pin: string, ip: string, city: string, region: string) {
     const user = {
       email: email,
-      pin: pin
+      pin: pin,
+      ip: ip,
+      city: city,
+      region: region
     };
     return this.http.post(this.config.getAddress() + '/api/user/register', user);
   }

@@ -187,8 +187,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   private step() {
     const seek = this.activeSound.seek() || 0;
-    this.timer = this.utilsService.formatTime(Math.round(seek));
-    this.progress = (((seek / this.utilsService.formatDuration(this.video.duration)) * 100) || 0);
+    this.timer = UtilsService.formatTime(Math.round(seek));
+    this.progress = (((seek / UtilsService.formatDuration(this.video.duration)) * 100) || 0);
 
     if (this.activeSound.playing()) {
       requestAnimationFrame(this.step.bind(this));

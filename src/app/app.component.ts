@@ -3,6 +3,7 @@ import {LocalStorageService} from 'ngx-webstorage';
 import {UserService} from './service/user.service';
 import {UtilsService} from './service/utils.service';
 import {Subscription} from 'rxjs/Subscription';
+import {IpService} from "./service/ip.service";
 
 @Component({
   selector: 'app-root',
@@ -13,32 +14,68 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private userRegisterSubscription: Subscription;
   private userAuthenticateSubscription: Subscription;
+  private ipSubscription: Subscription;
 
-  constructor(private localStorage: LocalStorageService, private userService: UserService) {
+  private userInfo: any = {};
+
+  /*
+
+  {
+    "ip": "73.170.141.95",
+    "city": "Redwood City",
+    "region": "California",
+    "region_code": "CA",
+    "country": "US",
+    "country_name": "United States",
+    "continent_code": "NA",
+    "in_eu": false,
+    "postal": "94062",
+    "latitude": 37.4096,
+    "longitude": -122.2991,
+    "timezone": "America/Los_Angeles",
+    "utc_offset": "-0700",
+    "country_calling_code": "+1",
+    "currency": "USD",
+    "languages": "en-US,es-US,haw,fr",
+    "asn": "AS7922",
+    "org": "Comcast Cable Communications, LLC"
+}
+
+   */
+
+  constructor(private localStorage: LocalStorageService, private userService: UserService, private ipService: IpService) {
   }
 
   ngOnInit() {
-    setTimeout(() => {
-      const token = this.localStorage.retrieve('token');
-      if (!token) {
-        this.userRegisterSubscription = this.userService.register(UtilsService.generateUUID() + '@gmail.com', '1234').subscribe((response) => {
-          const resp: any = response;
-          this.localStorage.store('token', resp.token);
-          this.handleSuccess(resp.user);
-        }, (error) => {
-          console.log('ERROR' + JSON.stringify(error));
-          this.handleError();
-        });
-      } else {
-        this.userAuthenticateSubscription = this.userService.authenticate().subscribe((response) => {
-          const resp: any = response;
-          this.handleSuccess(resp.user);
-        }, (error) => {
-          console.log('ERROR' + JSON.stringify(error));
-          this.handleError();
-        });
-      }
+    this.ipSubscription = this.ipService.getCurrentIp().subscribe((response1) => {
+      this.userInfo = response1;
+      this.initAuthentication();
+    }, (error) => {
+      console.error('Could not fetch IP address / city /region for current user');
+      this.initAuthentication();
     });
+  }
+
+  private initAuthentication() {
+    const token = this.localStorage.retrieve('token');
+    if (!token) {
+      this.userRegisterSubscription = this.userService.register(UtilsService.generateUUID() + '@gmail.com', '1234', this.userInfo.query, this.userInfo.city, this.userInfo.region).subscribe((response2) => {
+        const resp: any = response2;
+        this.localStorage.store('token', resp.token);
+        this.handleSuccess(resp.user);
+      }, (error) => {
+        console.log('ERROR' + JSON.stringify(error));
+        this.handleError();
+      });
+    } else {
+      this.userAuthenticateSubscription = this.userService.authenticate().subscribe((response3) => {
+        const resp: any = response3;
+        this.handleSuccess(resp.user);
+      }, (error) => {
+        console.log('ERROR' + JSON.stringify(error));
+        this.handleError();
+      });
+    }
   }
 
   private handleSuccess(user) {
@@ -57,6 +94,7 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.userRegisterSubscription.unsubscribe();
     this.userAuthenticateSubscription.unsubscribe();
+    this.ipSubscription.unsubscribe();
   }
 
 }

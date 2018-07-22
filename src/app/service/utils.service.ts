@@ -17,21 +17,21 @@ export class UtilsService {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   }
 
-  public formatDuration (duration) {
+  public static formatDuration (duration) {
     if (duration.length > 5) {
       return moment(duration, 'h:mm:ss').diff(moment().startOf('day'), 'seconds');
     }
     return moment(duration, 'm:ss').diff(moment().startOf('day'), 'seconds');
   }
 
-  public formatTime (seconds) {
+  public static formatTime (seconds) {
     if (seconds >= 3600) {
       return moment.utc(seconds * 1000).format('h:mm:ss');
     }
     return moment.utc(seconds * 1000).format('m:ss');
   }
 
-  public findNewBadge(video: any) {
+  public static findNewBadge(video: any) {
     if (video.badges && video.badges.length > 0) {
       video.badges.forEach((e) => {
         if (e.metadataBadgeRenderer.label === 'NEW') {
