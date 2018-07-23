@@ -1,8 +1,8 @@
 import 'rxjs/add/operator/do';
 import {HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {NotificationService} from '../notification/notification.service';
+import {NotificationService} from '../../components/notification/notification.service';
 import {Injectable} from '@angular/core';
-import {LocalStorageService} from 'ngx-webstorage';
+import {LocalStorageService} from "ngx-webstorage";
 
 @Injectable()
 export class GlobalHttpInterceptor implements HttpInterceptor {
@@ -40,6 +40,7 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
           console.log('Service call success after ' + this.retryCount + ' retries');
           this.retryCount = 0;
         }
+        // On service response success
       },
       err => {
 
@@ -50,7 +51,7 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
               console.error('Service call failed. Retry ' + this.retryCount + '...');
               setTimeout(() => {
                 this.executeServiceCall(request, next);
-              }, 50);
+              },50);
               break;
             }
             this.notificationService.showNotification({type: 'error', message: 'Yikes! It looks like you&apos;re not connected to the internet or our servers are down.'})
