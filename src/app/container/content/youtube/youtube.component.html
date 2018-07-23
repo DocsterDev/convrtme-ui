@@ -17,6 +17,9 @@
              [style.background]="'#' + playlist.iconColor"></div>
       </div>
     </div>
+    <div *ngIf="playlistLoading" class="c-font-circular c-small c-bold c-light help-text">
+      <div class="Py(2)">Loading...</div>
+    </div>
     <div *ngIf="!currentPlaylist.videos && !playlistLoading" class="c-font-circular c-small c-bold c-light help-text">
       <div class="Py(2)">Select a playlist above.</div>
     </div>
