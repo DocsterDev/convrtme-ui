@@ -42,8 +42,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
               private videoMetadataService: VideoMetadataService,
               private notificationService: NotificationService,
               private videoRecommendedService: VideoRecommendedService,
-              private config: ConfigService,
-              private utilsService: UtilsService) {
+              private config: ConfigService) {
   }
 
   ngOnInit() {
@@ -62,7 +61,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.playlistUpdateEventSubscription = this.audioPlayerService.triggerPlaylistUpdateEventEmitter$.subscribe((e) => {
 
       if (this.isPlaying) {
-        console.log('Currently Playing: ' + this.video.title);
+        console.log('Currently Playing: ' + this.audioPlayerService.getPlayingVideo().title);
       }
       this.currentPlaylist = e.playlist;
       this.checkCurrentPlaylist();
@@ -73,7 +72,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private checkCurrentPlaylist() {
     for (let i = 0; i < this.currentPlaylist.length; i++) {
       const video = this.currentPlaylist[i];
-      if (video.id === this.video.id) {
+      if (video.id === this.audioPlayerService.getPlayingVideo().id) {
         console.log('Index set: ' + i);
         this.playlistIndex = i;
         break;
@@ -132,6 +131,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.videoServiceSubscription = this.videoMetadataService.getVideo(video).subscribe(
       (videoResponse) => {
         this.video = videoResponse;
+        this.audioPlayerService.setPlaylingVideo(videoResponse);
         this.checkCurrentPlaylist();
         this.buildAudioObject(video);
         this.activeSound.play();
@@ -188,7 +188,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private step() {
     const seek = this.activeSound.seek() || 0;
     this.timer = UtilsService.formatTime(Math.round(seek));
-    this.progress = (((seek / UtilsService.formatDuration(this.video.duration)) * 100) || 0);
+    this.progress = (((seek / UtilsService.formatDuration(this.audioPlayerService.getPlayingVideo().duration)) * 100) || 0);
 
     if (this.activeSound.playing()) {
       requestAnimationFrame(this.step.bind(this));

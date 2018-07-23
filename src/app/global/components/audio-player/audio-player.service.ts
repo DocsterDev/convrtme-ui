@@ -9,6 +9,8 @@ export class AudioPlayerService {
   public triggerPlaylistActionEventEmitter$: EventEmitter<any>;
   public triggerPlaylistUpdateEventEmitter$: EventEmitter<any>;
 
+  public video: any = {};
+
   constructor() {
     this.triggerTogglePlayingEmitter$ = new EventEmitter();
     this.triggerToggleLoadingEmitter$ = new EventEmitter();
@@ -35,6 +37,14 @@ export class AudioPlayerService {
 
   public triggerPlaylistUpdateEvent(playlist: any) {
     this.triggerPlaylistUpdateEventEmitter$.emit(playlist);
+  }
+
+  public getPlayingVideo() {
+    return this.video;
+  };
+
+  public setPlaylingVideo(video: any) {
+    this.video = video;
   }
 
 }

@@ -30,6 +30,10 @@ export class SearchCardComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.lastUpdated = moment(this.video.timestamp);
+    this.nowPlaying = false;
+    if (this.audioPlayerService.getPlayingVideo().id === this.video.id) {
+      this.nowPlaying = true;
+    }
     this.videoPlayingSubscription = this.audioPlayerService.triggerTogglePlayingEmitter$.subscribe((e) => {
       this.nowPlaying = false;
       if (e.toggle === false) {
