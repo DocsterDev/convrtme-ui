@@ -1,6 +1,6 @@
 <div class="row no-gutters">
   <div class="col Mx(1) order-2">
-    <div class="d-none d-md-block c-accent-color text-left c-bold c-smaller Pb(0.5)">Search Results</div>
+    <div class="d-none d-md-block c-light text-left c-smaller Pb(0.5)">Search Results</div>
     <app-search-card *ngFor="let video of videoList" (added)="handleAddToCurrentPlaylist($event)"
                      (selected)="handleVideoSelect($event)" [video]="video"></app-search-card>
     <div class="d-block d-md-none Mb(1)"></div>
@@ -8,8 +8,8 @@
 
   <div class="col-md Mx(1) order-3">
     <div class="d-block d-md-none My(1)"></div>
-    <div class="d-none d-md-block c-accent-color text-left c-bold c-smaller">Playlist</div>
-    <div class="row no-gutters Mt(0.25) d-flex justify-content-center">
+    <!--<div class="d-none d-md-block c-light text-left c-smaller">Playlist</div>-->
+    <div class="row no-gutters Mt(0.25) d-flex flex-nowrap justify-content-center">
       <div *ngFor="let playlist of playlists"
            class="col d-flex align-items-center justify-content-center playlist-icon-col"
            (click)="setPlaylistActive(playlist)">
@@ -17,11 +17,11 @@
              [style.background]="'#' + playlist.iconColor"></div>
       </div>
     </div>
-    <div *ngIf="playlistLoading" class="c-font-circular c-small c-bold c-light help-text">
-      <div class="Py(2)">Loading...</div>
+    <div *ngIf="playlistLoading" class="help-text">
+      <div class="c-font-circular c-smaller c-light Py(2)">Loading...</div>
     </div>
-    <div *ngIf="!currentPlaylist.videos && !playlistLoading" class="c-font-circular c-small c-bold c-light help-text">
-      <div class="Py(2)">Select a playlist above.</div>
+    <div *ngIf="!currentPlaylist.videos && !playlistLoading" class="help-text">
+      <div class="c-font-circular c-smaller c-light Py(2)">Select a playlist above.</div>
     </div>
     <div *ngIf="currentPlaylist.videos && !playlistLoading">
       <smooth-dnd-container [lockAxis]="'y'" (drop)="handlePlaylistVideoSort($event)">
@@ -30,8 +30,8 @@
         </smooth-dnd-draggable>
       </smooth-dnd-container>
     </div>
-    <div *ngIf="currentPlaylist.videos && currentPlaylist.videos.length === 0 && !playlistLoading" class="c-font-circular c-small c-bold c-light help-text">
-      <div class="Py(2)">No videos in this playlist. Try adding some.</div>
+    <div *ngIf="currentPlaylist.videos && currentPlaylist.videos.length === 0 && !playlistLoading" class="help-text">
+      <div class="c-font-circular c-smaller c-light Py(2)">No videos in this playlist. Try adding some.</div>
     </div>
     <!--<div class="row no-gutters dashed-border no-select align-content-center Mt(2)">-->
       <!--<div class="col" style="align-self: center">-->
@@ -45,7 +45,7 @@
     <div class="d-block d-md-none My(1.5)"></div>
   </div>
   <div class="col-md Mx(1) order-1">
-    <div class="d-none d-md-block c-accent-color text-left c-bold c-smaller Pb(0.5)">Recommended</div>
+    <div class="d-none d-md-block c-light text-left c-smaller Pb(0.5)">Recommended For You</div>
     <app-search-card *ngFor="let video of recommendedList" (added)="handleAddToCurrentPlaylist($event)"
                      (selected)="handleRecommendedVideoSelect($event)" [video]="video"></app-search-card>
   </div>
