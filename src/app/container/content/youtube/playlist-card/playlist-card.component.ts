@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import * as moment from 'moment';
-import {AudioPlayerService} from '../../../../global/audio-player/audio-player.service';
+import {AudioPlayerService} from '../../../../global/components/audio-player/audio-player.service';
 import {Subscription} from 'rxjs/Subscription';
 
 @Component({

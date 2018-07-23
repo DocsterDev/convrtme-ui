@@ -2,10 +2,10 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AudioPlayerService} from './audio-player.service';
 import {Howl, Howler} from 'howler';
 import {NotificationService} from '../notification/notification.service';
-import {VideoRecommendedService} from '../../service/video-recommended.service';
-import {VideoMetadataService} from '../../service/video-metadata.service';
-import {ConfigService} from '../../service/config.service';
-import {UtilsService} from '../../service/utils.service';
+import {VideoRecommendedService} from '../../../service/video-recommended.service';
+import {VideoMetadataService} from '../../../service/video-metadata.service';
+import {ConfigService} from '../../../service/config.service';
+import {UtilsService} from '../../../service/utils.service';
 import {Subscription} from 'rxjs/Subscription';
 
 @Component({

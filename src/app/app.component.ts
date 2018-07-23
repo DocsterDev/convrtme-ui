@@ -3,7 +3,7 @@ import {LocalStorageService} from 'ngx-webstorage';
 import {UserService} from './service/user.service';
 import {UtilsService} from './service/utils.service';
 import {Subscription} from 'rxjs/Subscription';
-import {IpService} from "./service/ip.service";
+import {IpService} from './service/ip.service';
 
 @Component({
   selector: 'app-root',

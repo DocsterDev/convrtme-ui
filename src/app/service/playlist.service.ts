@@ -1,18 +1,19 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ConfigService} from './config.service';
 import {Subject} from "rxjs/Subject";
 import {Observable} from "rxjs/Observable";
+import {HeaderService} from "./header.service";
 
 @Injectable()
 export class PlaylistService {
 
   private resultList = new Subject<any>();
 
-  constructor(private http: HttpClient, private config: ConfigService) { }
+  constructor(private http: HttpClient, private config: ConfigService, private headerService: HeaderService) { }
 
   getPlaylists() {
-    return this.http.get(this.config.getAddress() + '/api/playlists');
+    return this.http.get(this.config.getAddress() + '/api/playlists', this.headerService.getTokenHeader());
   }
 
   getPlaylist(playlistUuid: string) {
@@ -20,11 +21,11 @@ export class PlaylistService {
   }
 
   getPlaylistVideos(playlistUuid: string) {
-    return this.http.get(this.config.getAddress() + '/api/playlists/' + playlistUuid + '/videos');
+    return this.http.get(this.config.getAddress() + '/api/playlists/' + playlistUuid + '/videos', this.headerService.getTokenHeader());
   }
 
   updateVideos(playlistUuid: any, videos: any) {
-    return this.http.put(this.config.getAddress() + '/api/playlists/' + playlistUuid + '/videos', videos);
+    return this.http.put(this.config.getAddress() + '/api/playlists/' + playlistUuid + '/videos', videos, this.headerService.getTokenHeader());
   }
 
   deleteVideo(playlistUuid: any, videoId: any) {

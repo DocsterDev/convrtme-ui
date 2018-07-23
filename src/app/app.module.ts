@@ -25,12 +25,11 @@ import {UtilsService} from './service/utils.service';
 import {LoaderComponent} from './common/loader/loader.component';
 import {SearchCardComponent} from './container/content/youtube/search-card/search-card.component';
 import {VideoService} from './service/video.service';
-import {NotificationComponent} from './global/notification/notification.component';
-import {GlobalHttpInterceptor} from './global/http-interceptor/global-http-interceptor';
-import {HttpModule} from '@angular/http';
-import {NotificationService} from './global/notification/notification.service';
-import {AudioPlayerComponent} from './global/audio-player/audio-player.component';
-import {AudioPlayerService} from './global/audio-player/audio-player.service';
+import {NotificationComponent} from './global/components/notification/notification.component';
+import {GlobalInterceptor} from './global/services/global-interceptor';
+import {NotificationService} from './global/components/notification/notification.service';
+import {AudioPlayerComponent} from './global/components/audio-player/audio-player.component';
+import {AudioPlayerService} from './global/components/audio-player/audio-player.service';
 import {MomentModule} from 'angular2-moment';
 import {ConfigService} from './service/config.service';
 import {PlaylistService} from './service/playlist.service';
@@ -41,7 +40,8 @@ import {VideoMetadataService} from './service/video-metadata.service';
 import {Ng2Webstorage} from 'ngx-webstorage';
 import {PlaylistCardComponent} from './container/content/youtube/playlist-card/playlist-card.component';
 import {NgxSmoothDnDModule} from 'ngx-smooth-dnd';
-import {IpService} from "./service/ip.service";
+import {IpService} from './service/ip.service';
+import {HeaderService} from './service/header.service';
 
 @NgModule({
   declarations: [
@@ -66,11 +66,9 @@ import {IpService} from "./service/ip.service";
     BrowserModule,
     RouterModule.forRoot(appRoutes),
     HttpClientModule,
-    HttpModule,
     ModalModule.forRoot(),
     MomentModule,
     Ng2Webstorage,
-    // DndModule.forRoot(),
     NgxSmoothDnDModule,
     BrowserAnimationsModule
   ],
@@ -88,9 +86,10 @@ import {IpService} from "./service/ip.service";
     ConfigService,
     PlaylistService,
     IpService,
+    HeaderService,
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: GlobalHttpInterceptor,
+      useClass: GlobalInterceptor,
       multi: true
     }
   ],

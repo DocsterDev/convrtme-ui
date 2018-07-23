@@ -1,11 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs/Subscription';
 import {VideoSearchService} from '../../../service/video-search.service';
-import {AudioPlayerService} from '../../../global/audio-player/audio-player.service';
+import {AudioPlayerService} from '../../../global/components/audio-player/audio-player.service';
 import {VideoRecommendedService} from '../../../service/video-recommended.service';
 import {PlaylistService} from '../../../service/playlist.service';
 import {UserService} from '../../../service/user.service';
-import {NotificationService} from '../../../global/notification/notification.service';
+import {NotificationService} from '../../../global/components/notification/notification.service';
 
 @Component({
   selector: 'app-youtube',
