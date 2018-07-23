@@ -11,16 +11,16 @@
         <!--</div>-->
         <div class="col d-flex align-items-center" style="height: 76px;">
           <div class="c-font-circular c-small c-light title-text text-left Mstart(1) Pend(2)" [ngClass]="{'c-accent-color': nowPlaying, 'c-color': !nowPlaying}" style="max-height: 90px !important">
-            <div class="title">{{video.title}}</div>
+            <div class="title">{{video.title}}&nbsp;<span class="play-icon-active Mstart(0.5)"><img style="width:12px;height:12px;" src="/assets/img/svg/ic-sound-active.svg"></span></div>
             <div class="Pt(0.25)"></div>
             <div class="subtitle" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{video.owner}}
             </div>
             <div class="subtitle" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{duration}}</div>
           </div>
         </div>
-        <div class="col text-left align-self-center d-none d-md-block play-icon-active" style="max-width: 100px">
-          <img style="width:15px;height:12px;" src="/assets/img/svg/ic-sound-active.svg">
-        </div>
+        <!--<div class="col text-left align-self-center d-none d-md-block play-icon-active" style="max-width: 100px">-->
+          <!--<img style="width:15px;height:12px;" src="/assets/img/svg/ic-sound-active.svg">-->
+        <!--</div>-->
         <div class="col d-flex align-items-center" style="max-width:30px; height: 76px;">
           <div ><img src="assets/img/svg/ic-playlist-handle.svg"></div>
         </div>
