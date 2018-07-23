@@ -18,7 +18,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   public recommendedList: any = [];
   public playlists: any = [];
   public currentPlaylist: any = {id: ''};
-
   public playlistLoading = false;
 
   private searchResultsSubscription: Subscription;
@@ -162,6 +161,8 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     }, (error) => {
       this.notificationService.showNotification({type: 'error', message: 'Uh oh, couldn&apos;t retrieve playlist videos. Try again.'});
       console.log(JSON.stringify(error));
+    }, () => {
+      this.playlistLoading = false;
     });
     this.currentPlaylist = JSON.parse(JSON.stringify(playlist));
   }

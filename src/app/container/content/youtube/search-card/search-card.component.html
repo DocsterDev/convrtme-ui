@@ -13,18 +13,18 @@
           <div class="subtitle" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{video.publishedTimeAgo}}</div>
         </div>
     </div>
-    <div class="col align-self-center d-none d-md-block" style="max-width:20px;" (click)="addedContent($event, video)">
-      <div class="text-center">
-        <div *ngFor="let playlist of video.addedByPlaylists">
-          <div class="playlist-icon" [style.background]="'#' + playlist.iconColor"></div>
-        </div>
-      </div>
+    <div class="col align-self-start play-icon-active d-none d-md-block Mt(0.25)" style="max-width:35px;">
+      <img style="width:15px;height:12px;" src="/assets/img/svg/ic-sound-active.svg">
     </div>
-    <div class="col align-self-center play-icon-active d-none d-md-block" style="max-width:50px;">
-      <div class="text-center"><img src="/assets/img/svg/ic-sound-active.svg"></div>
-    </div>
-    <div class="col align-self-center playlist-icon-add d-none d-md-block" style="max-width:20px;" (click)="addedContent($event, video)">
-      <div class="text-center"><img src="/assets/img/svg/ic-plus-playlist.svg"></div>
+    <!--<div class="col align-self-center d-none d-md-block" style="max-width:20px;" (click)="addedContent($event, video)">-->
+      <!--<div class="text-center">-->
+        <!--<div *ngFor="let playlist of video.addedByPlaylists">-->
+          <!--<div class="playlist-icon" [style.background]="'#' + playlist.iconColor"></div>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+    <div class="col d-flex align-self-center justify-content-center playlist-icon-add Py(0.75)" style="max-width:45px;border-radius:50%;" (click)="addedContent($event, video)">
+      <img style="width:19px;height:19px;" src="/assets/img/svg/ic-plus-playlist.svg">
     </div>
   </div>
   </div>

@@ -17,21 +17,28 @@
              [style.background]="'#' + playlist.iconColor"></div>
       </div>
     </div>
-    <smooth-dnd-container [lockAxis]="'y'" (drop)="handlePlaylistVideoSort($event)">
-      <smooth-dnd-draggable *ngFor="let video of currentPlaylist.videos">
-        <app-playlist-card (removed)="handleRemoveFromPlaylist($event)" (selected)="handleVideoSelect($event)"
-                           [color]="currentPlaylist.iconColor" [video]="video"></app-playlist-card>
-      </smooth-dnd-draggable>
-    </smooth-dnd-container>
-    <div class="row no-gutters dashed-border no-select align-content-center Mt(2)">
-      <div class="col" style="align-self: center">
-        <div class="row no-gutters align-content-center">
-          <div class="col">
-            <div class="c-font-circular c-bold c-smaller">Add Videos Here</div>
-          </div>
-        </div>
-      </div>
+    <div *ngIf="!currentPlaylist.videos && !playlistLoading" class="c-font-circular c-small c-bold c-light help-text">
+      <div class="Py(2)">Select a playlist above.</div>
     </div>
+    <div *ngIf="currentPlaylist.videos && !playlistLoading">
+      <smooth-dnd-container [lockAxis]="'y'" (drop)="handlePlaylistVideoSort($event)">
+        <smooth-dnd-draggable *ngFor="let video of currentPlaylist.videos">
+          <app-playlist-card (removed)="handleRemoveFromPlaylist($event)" (selected)="handleVideoSelect($event)" [color]="currentPlaylist.iconColor" [video]="video"></app-playlist-card>
+        </smooth-dnd-draggable>
+      </smooth-dnd-container>
+    </div>
+    <div *ngIf="currentPlaylist.videos && currentPlaylist.videos.length === 0 && !playlistLoading" class="c-font-circular c-small c-bold c-light help-text">
+      <div class="Py(2)">No videos in this playlist. Try adding some.</div>
+    </div>
+    <!--<div class="row no-gutters dashed-border no-select align-content-center Mt(2)">-->
+      <!--<div class="col" style="align-self: center">-->
+        <!--<div class="row no-gutters align-content-center">-->
+          <!--<div class="col">-->
+            <!--<div class="c-font-circular c-bold c-smaller">Add Videos Here</div>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
     <div class="d-block d-md-none My(1.5)"></div>
   </div>
   <div class="col-md Mx(1) order-1">
