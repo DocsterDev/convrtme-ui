@@ -135,7 +135,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.video = videoResponse;
         this.audioPlayerService.setPlaylingVideo(videoResponse);
         this.checkCurrentPlaylist();
-        this.buildAudioObject(video);
+        this.buildAudioObject(this.video);
         this.activeSound.play();
       },
       (error) => {
@@ -148,7 +148,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   private buildAudioObject(video) {
     this.activeSound = new Howl({
-      src: [this.config.getAddress() + '/api/stream/' + video.id],
+      src: [this.config.getStreamAddress() + '/stream?u=' + video.encodedStreamUrl],
       format: ['webm'],
       html5: true,
       buffer: true,
