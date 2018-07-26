@@ -104,11 +104,13 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   private playNextVideo() {
-    if ((this.currentPlaylist.length - 1) === this.playlistIndex) {
-      console.log('Playlist has reached the end');
-    } else {
-      this.playlistIndex = this.playlistIndex + 1;
-      this.audioPlayerService.triggerVideoEvent(this.currentPlaylist[this.playlistIndex]);
+    if (this.isPlaylist === true) {
+      if ((this.currentPlaylist.length - 1) === this.playlistIndex) {
+        console.log('Playlist has reached the end');
+      } else {
+        this.playlistIndex = this.playlistIndex + 1;
+        this.audioPlayerService.triggerVideoEvent(this.currentPlaylist[this.playlistIndex]);
+      }
     }
   }
 
@@ -173,7 +175,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       },
       onend: () => {
         this.audioPlayerService.triggerTogglePlaying({id: video.id, toggle: false});
-        this.playNextVideo();
+          this.playNextVideo();
       },
       onload: () => {
         if (video.isRecommended === false && video.isPlaylist === false) {
