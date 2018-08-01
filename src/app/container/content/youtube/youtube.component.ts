@@ -107,10 +107,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     if (this.currentPlaylist.videos.length > 0) {
       for (const video of this.currentPlaylist.videos) {
         if (video.id === $video.id) {
-          this.notificationService.showNotification({
-            type: 'warn',
-            message: 'Sorry, can&apos;t add the same video more than once: ' + $video.title
-          });
+          this.notificationService.showNotification({type: 'warn', message: 'Sorry, can\'t add the same video more than once: ' + $video.title});
           return;
         }
       }
@@ -119,7 +116,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     this.currentPlaylist.videos.push($video);
     this.audioPlayerService.triggerPlaylistUpdateEvent({playlist: this.currentPlaylist.videos});
     this.playlistUpdateSubscription = this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe(() => {
-
+      this.notificationService.showNotification({type: 'success', message: 'Added to playlist'});
     }, (error) => {
       this.currentPlaylist = originalPlaylist;
       this.notificationService.showNotification({type: 'error', message: 'Uh oh, something went wrong. Try again.'});
@@ -159,7 +156,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       this.currentPlaylist.videos = videos;
       this.audioPlayerService.triggerPlaylistUpdateEvent({playlist: videos});
     }, (error) => {
-      this.notificationService.showNotification({type: 'error', message: 'Uh oh, couldn&apos;t retrieve playlist videos. Try again.'});
+      this.notificationService.showNotification({type: 'error', message: 'Uh oh, couldn\'t retrieve playlist videos. Try again.'});
       console.log(JSON.stringify(error));
     }, () => {
       this.playlistLoading = false;
