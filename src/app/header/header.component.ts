@@ -1,4 +1,4 @@
-import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer, ViewChild} from '@angular/core';
 import {UserService} from '../service/user.service';
 import {Subscription} from 'rxjs/Subscription';
 import {VideoSearchService} from '../service/video-search.service';
@@ -31,7 +31,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     {display: 'YouTube', icon: 'ic-video-youtube.svg', activeIcon: 'ic-video-youtube-active.svg', value: 'app/youtube'}
   ];
 
-  constructor(private userService: UserService, private videoSearchService: VideoSearchService, private videoAutoCompleteService: VideoAutoCompleteService) {
+  constructor(
+    private userService: UserService,
+    private videoSearchService: VideoSearchService,
+    private videoAutoCompleteService: VideoAutoCompleteService,
+    private renderer:Renderer) {
   }
 
   ngOnInit() {
@@ -62,7 +66,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public handleSubmitSearch(searchQuery) {
     this.showPredictionsContainer = false;
     this.videoSearchService.search(searchQuery);
-    // this.searchQuery = '';
+    this.searchQuery = searchQuery;
+    this.renderer.invokeElementMethod(
+      this.searchInput.nativeElement, 'blur', []);
   }
 
   @HostListener('window:click') onClick() {
