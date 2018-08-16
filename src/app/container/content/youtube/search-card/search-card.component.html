@@ -4,6 +4,7 @@
         <img class="thumbnail" [src]="video.thumbnailUrl"/>
         <div class="loading-icon"><img src="assets/img/svg/ic-video-loading.svg"/></div>
         <div class="play-icon"><img src="assets/img/svg/ic-large-play-arrow.svg"/></div>
+        <div class="duration-badge">{{video.duration}}</div>
     </div>
     <div class="col">
         <div class="text-left c-font-circular c-small c-light title-text Mstart(0.5) Mt(0.5)" [ngClass]="{'c-accent-color': nowPlaying, 'c-color': !nowPlaying}" style="max-height: 90px !important">

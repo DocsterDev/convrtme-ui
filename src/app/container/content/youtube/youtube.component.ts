@@ -58,7 +58,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
         this.playlistService.getPlaylists().subscribe((response) => {
           this.playlists = response;
         });
-        this.videoSearchService.search('sandman mgtow');
+        this.videoSearchService.search('news');
       }
     });
     this.playlistActionSubscription = this.audioPlayerService.triggerPlaylistActionEventEmitter$.subscribe((resp) => {
@@ -69,8 +69,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       if (action.action === 'prev') {
         console.log('PREVIOUS');
       }
-      console.log('Is Playlist: ' + action.isPlaylist);
-
     });
   }
 

@@ -7,7 +7,7 @@ export class ConfigService {
 
   private host = 'ec2-52-53-165-205.us-west-1.compute.amazonaws.com';
 
-  // private host = 'localhost';
+  //private host = 'localhost';
   private port = '8083';
   private streamPort = '8084';
 
