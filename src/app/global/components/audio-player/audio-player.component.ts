@@ -164,11 +164,13 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.isPlaying = false;
       },
       onplayerror: (e) => {
+        console.error(e);
         this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: false});
         this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error playing this video.'});
         this.videoServiceLock = false;
       },
       onloaderror: (e) => {
+        console.error(e);
         this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: false});
         this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error loading this video.'});
         this.videoServiceLock = false;
