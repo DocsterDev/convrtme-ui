@@ -136,7 +136,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.audioPlayerService.setPlaylingVideo(videoResponse);
         this.checkCurrentPlaylist();
         this.buildAudioObject(this.video);
-        this.activeSound.play();
+        // this.activeSound.play();
       },
       (error) => {
         this.showNowPlayingBar = false;
@@ -152,6 +152,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       format: ['webm'],
       html5: true,
       buffer: true,
+      autoplay: true,
+      preload: true,
 
       onplay: () => {
         this.duration = video.duration;
