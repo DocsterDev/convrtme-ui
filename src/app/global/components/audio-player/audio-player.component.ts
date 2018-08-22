@@ -139,9 +139,9 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.audioPlayerService.setPlaylingVideo(videoResponse);
         this.checkCurrentPlaylist();
         this.buildAudioObject(this.video);
-        // this.activeSound.play();
-        const event = new MouseEvent('click', {bubbles: true});
-        this.renderer.invokeElementMethod(this.togglePlayBtn.nativeElement, 'dispatchEvent', [event]);
+        this.activeSound.play();
+        // const event = new MouseEvent('click', {bubbles: true});
+        // this.renderer.invokeElementMethod(this.togglePlayBtn.nativeElement, 'dispatchEvent', [event]);
       },
       (error) => {
         this.showNowPlayingBar = false;
