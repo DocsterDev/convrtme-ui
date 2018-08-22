@@ -1,6 +1,6 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, Renderer, ViewChild} from '@angular/core';
 import {AudioPlayerService} from './audio-player.service';
-import {Howl, Howler} from 'howler';
+import {Howl} from 'howler';
 import {NotificationService} from '../notification/notification.service';
 import {VideoRecommendedService} from '../../../service/video-recommended.service';
 import {VideoMetadataService} from '../../../service/video-metadata.service';
@@ -14,6 +14,7 @@ import {Subscription} from 'rxjs/Subscription';
   styleUrls: ['./audio-player.component.sass']
 })
 export class AudioPlayerComponent implements OnInit, OnDestroy {
+  @ViewChild('togglePlayBtn') togglePlayBtn: ElementRef;
 
   public showNowPlayingBar: boolean;
   public video: any = {};
@@ -21,7 +22,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   public duration: string;
   public timer: string;
 
-  private activeSound: Howler;
+  private activeSound: Howl;
 
   public isLoading = false;
   public isPlaying = false;
@@ -42,13 +43,16 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
               private videoMetadataService: VideoMetadataService,
               private notificationService: NotificationService,
               private videoRecommendedService: VideoRecommendedService,
-              private config: ConfigService) {
+              private config: ConfigService,
+              private renderer: Renderer) {
   }
 
   ngOnInit() {
+
+    Howl.autoSuspend = false;
+
     this.progress = '0';
     this.videoEventSubscription = this.audioPlayerService.triggerVideoEventEmitter$.subscribe((e) => {
-      console.log('BRO');
       this.isPlaylist = e.isPlaylist;
       this.playMedia(e);
     });
@@ -73,7 +77,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     for (let i = 0; i < this.currentPlaylist.length; i++) {
       const video = this.currentPlaylist[i];
       if (video.id === this.audioPlayerService.getPlayingVideo().id) {
-        console.log('Index set: ' + i);
         this.playlistIndex = i;
         break;
       }
@@ -137,6 +140,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.checkCurrentPlaylist();
         this.buildAudioObject(this.video);
         // this.activeSound.play();
+        const event = new MouseEvent('click', {bubbles: true});
+        this.renderer.invokeElementMethod(this.togglePlayBtn.nativeElement, 'dispatchEvent', [event]);
       },
       (error) => {
         this.showNowPlayingBar = false;
@@ -152,7 +157,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       format: ['webm'],
       html5: true,
       buffer: true,
-      autoplay: true,
       preload: true,
 
       onplay: () => {

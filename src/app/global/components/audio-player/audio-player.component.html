@@ -10,7 +10,7 @@
             </div>
           </div>
           <div class="col">
-            <div (click)="toggle()" class="playback-action P(0.25)">
+            <div #togglePlayBtn (click)="toggle()" class="playback-action P(0.25)">
               <img *ngIf="!isPlaying" src="/assets/img/svg/ic-play-arrow.svg">
               <img *ngIf="isPlaying" src="/assets/img/svg/ic-pause.svg">
             </div>
