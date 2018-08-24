@@ -6,6 +6,7 @@ import {VideoRecommendedService} from '../../../service/video-recommended.servic
 import {PlaylistService} from '../../../service/playlist.service';
 import {UserService} from '../../../service/user.service';
 import {NotificationService} from '../../../global/components/notification/notification.service';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-youtube',
@@ -27,6 +28,8 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   private playlistUpdateSubscription: Subscription;
   private getPlaylistVideosSubscription: Subscription;
 
+  private query: string;
+
   static updateComponent(component, index, list) {
     component.index = index;
     list.push(component);
@@ -37,39 +40,46 @@ export class YoutubeComponent implements OnInit, OnDestroy {
               private playlistService: PlaylistService,
               private userService: UserService,
               private notificationService: NotificationService,
-              private videoSearchService: VideoSearchService) {
+              private videoSearchService: VideoSearchService,
+              private route: ActivatedRoute,
+              private router: Router) {
   }
 
   ngOnInit() {
-    this.searchResultsSubscription = this.videoSearchService.getResultList().subscribe((searchResults) => {
-      if (searchResults != null) {
-        this.videoRecommendedService.recommended(searchResults[0].id);
-      }
-      this.videoList = [];
-      this.loadIncrementally(searchResults, this.videoList);
-    });
-    this.recommendedResultsSubscription = this.videoRecommendedService.getResultList().subscribe((recommendedResults) => {
-      this.recommendedList = [];
-      this.loadIncrementally(recommendedResults, this.recommendedList);
-    });
-    this.signInEventSubscription = this.userService.userSignedInEmitter$.subscribe((response) => {
-      const user: any = response;
-      if (user.valid) {
-        this.playlistService.getPlaylists().subscribe((response) => {
-          this.playlists = response;
-        });
-        this.videoSearchService.search('news');
-      }
-    });
-    this.playlistActionSubscription = this.audioPlayerService.triggerPlaylistActionEventEmitter$.subscribe((resp) => {
-      const action: any = resp;
-      if (action.action === 'next') {
-        console.log('NEXT');
-      }
-      if (action.action === 'prev') {
-        console.log('PREVIOUS');
-      }
-    });
+      this.searchResultsSubscription = this.videoSearchService.getResultList().subscribe((searchResults) => {
+        if (searchResults != null) {
+          this.videoRecommendedService.recommended(searchResults[0].id);
+        }
+        this.videoList = [];
+        this.loadIncrementally(searchResults, this.videoList);
+      });
+      this.recommendedResultsSubscription = this.videoRecommendedService.getResultList().subscribe((recommendedResults) => {
+        this.recommendedList = [];
+        this.loadIncrementally(recommendedResults, this.recommendedList);
+      });
+      this.signInEventSubscription = this.userService.userSignedInEmitter$.subscribe((response) => {
+        const user: any = response;
+        if (user.valid) {
+          this.playlistService.getPlaylists().subscribe((response) => {
+            this.playlists = response;
+          });
+        }
+      });
+      this.playlistActionSubscription = this.audioPlayerService.triggerPlaylistActionEventEmitter$.subscribe((resp) => {
+        const action: any = resp;
+        if (action.action === 'next') {
+          console.log('NEXT');
+        }
+        if (action.action === 'prev') {
+          console.log('PREVIOUS');
+        }
+      });
+      this.route.queryParams.subscribe(params => {
+        console.log(params);
+        this.query = params.q;
+        console.log(this.query);
+        this.videoSearchService.search(this.query ? this.query : 'cnn');
+      });
   }
 
   public handleVideoSelect($video) {
@@ -93,13 +103,12 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     }, (error) => {
       this.currentPlaylist = originalPlaylist;
       this.notificationService.showNotification({type: 'error', message: 'Uh oh, something went wrong. Try again.'});
-      console.log(JSON.stringify(error));
+
     });
   }
 
   public handleAddToCurrentPlaylist($video) {
     if (!this.currentPlaylist.videos) {
-      console.log('No playlist is set to add to');
       return;
     }
     if (this.currentPlaylist.videos.length > 0) {
@@ -118,12 +127,11 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     }, (error) => {
       this.currentPlaylist = originalPlaylist;
       this.notificationService.showNotification({type: 'error', message: 'Uh oh, something went wrong. Try again.'});
-      console.log(JSON.stringify(error));
     });
   }
 
   public handleRemoveFromPlaylist($event) {
-    const originalPlaylist = JSON.parse(JSON.stringify(this.currentPlaylist));
+    const originalPlaylist = JSON.parse(JSON.stringify(this.currentPlaylist)); // TODO Dont not do this shit, use 'npm install lodash' instead - https://stackoverflow.com/questions/34688517/whats-alternative-to-angular-copy-in-angular
     this.currentPlaylist.videos = this.currentPlaylist.videos.filter(video => video.id !== $event.video.id);
     this.audioPlayerService.triggerPlaylistUpdateEvent({playlist: this.currentPlaylist.videos});
     this.playlistUpdateSubscription = this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe(() => {
@@ -131,7 +139,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     }, (error) => {
       this.currentPlaylist = originalPlaylist;
       this.notificationService.showNotification({type: 'error', message: 'Uh oh, something went wrong. Try again.'});
-      console.log(JSON.stringify(error));
     });
   }
 
@@ -143,7 +150,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     }, (error) => {
       this.currentPlaylist = originalPlaylist;
       this.notificationService.showNotification({type: 'error', message: 'Uh oh, something went wrong. Try again.'});
-      console.log(JSON.stringify(error));
     });
   }
 
@@ -155,7 +161,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       this.audioPlayerService.triggerPlaylistUpdateEvent({playlist: videos});
     }, (error) => {
       this.notificationService.showNotification({type: 'error', message: 'Uh oh, couldn\'t retrieve playlist videos. Try again.'});
-      console.log(JSON.stringify(error));
+
     }, () => {
       this.playlistLoading = false;
     });

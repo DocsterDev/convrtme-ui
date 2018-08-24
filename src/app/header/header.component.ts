@@ -3,6 +3,7 @@ import {UserService} from '../service/user.service';
 import {Subscription} from 'rxjs/Subscription';
 import {VideoSearchService} from '../service/video-search.service';
 import {VideoAutoCompleteService} from '../service/video-autocomplete.service';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -21,6 +22,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   private userSignInSubscription: Subscription;
   private autoCompleteSubscription: Subscription;
+  private searchResultsSubscription: Subscription;
 
   @ViewChild('searchInput')
   public searchInput: ElementRef;
@@ -35,7 +37,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private videoSearchService: VideoSearchService,
     private videoAutoCompleteService: VideoAutoCompleteService,
-    private renderer:Renderer) {
+    private renderer:Renderer,
+    private route: ActivatedRoute,
+    private router: Router) {
   }
 
   ngOnInit() {
@@ -44,6 +48,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.user = user;
       // this.user.valid = false;
       this.loading = false;
+    });
+    this.route.queryParams.subscribe(params => {
+      this.searchQuery = params.q ? params.q : '';
     });
   }
 
@@ -64,11 +71,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   public handleSubmitSearch(searchQuery) {
-    this.showPredictionsContainer = false;
-    this.videoSearchService.search(searchQuery);
+    this.router.navigate(['.'], { relativeTo: this.route, queryParams: {q: searchQuery} });
     this.searchQuery = searchQuery;
-    this.renderer.invokeElementMethod(
-      this.searchInput.nativeElement, 'blur', []);
+    this.renderer.invokeElementMethod(this.searchInput.nativeElement, 'blur', []);
+    this.showPredictionsContainer = false;
   }
 
   @HostListener('window:click') onClick() {
@@ -80,6 +86,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.userSignInSubscription.unsubscribe();
     this.autoCompleteSubscription.unsubscribe();
+    this.searchResultsSubscription.unsubscribe();
   }
 
 }
