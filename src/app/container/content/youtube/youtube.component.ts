@@ -75,9 +75,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
         }
       });
       this.route.queryParams.subscribe(params => {
-        console.log(params);
         this.query = params.q;
-        console.log(this.query);
         this.videoSearchService.search(this.query ? this.query : 'cnn');
       });
   }
@@ -169,12 +167,13 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   }
 
   private loadIncrementally(data, list) {
+    let totalTime = 0;
     data.forEach((e, index) => {
-      const delay = Math.floor((Math.random() * 1100));
-      const maxMillis = 500;
-      const minMillis = 100;
-      // const delay = Math.floor(Math.random() * (maxMillis - minMillis + 1)) + minMillis;
-      setTimeout(YoutubeComponent.updateComponent, delay, e, index, list);
+      const maxMillis = 300;
+      const minMillis = 20;
+      const delay = Math.floor(Math.random() * (maxMillis - minMillis + 1)) + minMillis;
+      totalTime = totalTime + delay;
+      setTimeout(YoutubeComponent.updateComponent, totalTime, e, index, list);
     });
   }
 
