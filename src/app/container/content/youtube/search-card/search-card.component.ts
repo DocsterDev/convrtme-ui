@@ -22,6 +22,8 @@ export class SearchCardComponent implements OnInit, OnDestroy {
 
   public lastUpdated;
 
+  private titleTextLength = 55;
+
   private videoPlayingSubscription: Subscription;
   private videoLoadingSubscription: Subscription;
 
@@ -59,6 +61,14 @@ export class SearchCardComponent implements OnInit, OnDestroy {
   addedContent(event, video) {
     event.stopPropagation();
     this.added.emit(video);
+  }
+
+  truncateTitle(title: string) {
+    if (title.length > this.titleTextLength) {
+      const fmtTitle = title.substr(0, this.titleTextLength);
+      return fmtTitle.substr(0, fmtTitle.lastIndexOf(' ')) + '...';
+    }
+    return title;
   }
 
   ngOnDestroy() {

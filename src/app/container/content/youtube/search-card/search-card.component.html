@@ -6,12 +6,13 @@
         <div class="play-icon"><img src="assets/img/svg/ic-large-play-arrow.svg"/></div>
         <div class="duration-badge">{{video.duration}}</div>
     </div>
-    <div class="col">
+    <div class="col" style="min-width: 210px;">
         <div class="text-left c-font-circular c-small c-light title-text Mstart(0.5) Mt(0.5)" [ngClass]="{'c-accent-color': nowPlaying, 'c-color': !nowPlaying}" style="max-height: 90px !important">
-          <div class="title">{{video.title}}</div>
-          <div class="Pt(0.5)"></div>
-          <div class="subtitle" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{video.owner}}</div>
-          <div class="subtitle" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{video.publishedTimeAgo}}</div>
+          <div class="title">{{truncateTitle(video.title)}}</div>
+          <div class="Pt(0.25)"></div>
+          <div class="subtitle-owner c-smallest" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{video.owner}}</div>
+          <div class="subtitle c-smallest" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{video.publishedTimeAgo}} <span *ngIf="video.new">(NEW)</span></div>
+          <div class="subtitle c-smallest" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{video.viewCount}}</div>
         </div>
     </div>
     <div class="col align-self-start play-icon-active d-none d-md-block Mt(0.25)" style="max-width:35px;">
