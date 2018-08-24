@@ -51,6 +51,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
     this.route.queryParams.subscribe(params => {
       this.searchQuery = params.q ? params.q : '';
+      this.showPredictionsContainer = false;
     });
   }
 
@@ -67,7 +68,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         autoCompleteResponse[1].forEach((e) => this.predictions.push(e));
         this.showPredictionsContainer = true;
       });
-    });
+    },50);
   }
 
   public handleSubmitSearch(searchQuery) {
