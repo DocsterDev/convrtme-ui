@@ -72,7 +72,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   public handleSubmitSearch(searchQuery) {
     this.router.navigate(['.'], { relativeTo: this.route, queryParams: {q: searchQuery} });
-    this.searchQuery = searchQuery;
     this.renderer.invokeElementMethod(this.searchInput.nativeElement, 'blur', []);
     this.showPredictionsContainer = false;
   }

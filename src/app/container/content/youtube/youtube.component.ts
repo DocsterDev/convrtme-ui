@@ -41,8 +41,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
               private userService: UserService,
               private notificationService: NotificationService,
               private videoSearchService: VideoSearchService,
-              private route: ActivatedRoute,
-              private router: Router) {
+              private route: ActivatedRoute) {
   }
 
   ngOnInit() {
