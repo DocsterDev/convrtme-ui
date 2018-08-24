@@ -36,7 +36,6 @@ import {PlaylistService} from './service/playlist.service';
 import {VideoRecommendedService} from './service/video-recommended.service';
 import {VideoAutoCompleteService} from './service/video-autocomplete.service';
 import {VideoSearchService} from './service/video-search.service';
-import {VideoMetadataService} from './service/video-metadata.service';
 import {Ng2Webstorage} from 'ngx-webstorage';
 import {PlaylistCardComponent} from './container/content/youtube/playlist-card/playlist-card.component';
 import {NgxSmoothDnDModule} from 'ngx-smooth-dnd';
@@ -79,7 +78,6 @@ import {HeaderService} from './service/header.service';
     VideoService,
     VideoSearchService,
     VideoRecommendedService,
-    VideoMetadataService,
     VideoAutoCompleteService,
     NotificationService,
     AudioPlayerService,

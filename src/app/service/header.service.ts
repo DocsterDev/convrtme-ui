@@ -19,7 +19,9 @@ export class HeaderService {
         })
       };
     } else {
-      return null;
+      return {
+        headers: new HttpHeaders()
+      };
     }
   }
 

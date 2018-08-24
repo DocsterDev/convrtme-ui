@@ -1,9 +1,8 @@
-import {Component, ElementRef, OnDestroy, OnInit, Renderer, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AudioPlayerService} from './audio-player.service';
 import {Howl} from 'howler';
 import {NotificationService} from '../notification/notification.service';
 import {VideoRecommendedService} from '../../../service/video-recommended.service';
-import {VideoMetadataService} from '../../../service/video-metadata.service';
 import {ConfigService} from '../../../service/config.service';
 import {UtilsService} from '../../../service/utils.service';
 import {Subscription} from 'rxjs/Subscription';
@@ -14,8 +13,6 @@ import {Subscription} from 'rxjs/Subscription';
   styleUrls: ['./audio-player.component.sass']
 })
 export class AudioPlayerComponent implements OnInit, OnDestroy {
-  @ViewChild('togglePlayBtn') togglePlayBtn: ElementRef;
-
   public showNowPlayingBar: boolean;
   public video: any = {};
   public progress;
@@ -37,20 +34,15 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private videoPlayingEventSubscription: Subscription;
   private videoLoadingEventSubscription: Subscription;
   private playlistUpdateEventSubscription: Subscription;
-  private videoServiceSubscription: Subscription;
 
   constructor(private audioPlayerService: AudioPlayerService,
-              private videoMetadataService: VideoMetadataService,
               private notificationService: NotificationService,
               private videoRecommendedService: VideoRecommendedService,
-              private config: ConfigService,
-              private renderer: Renderer) {
+              private config: ConfigService) {
   }
 
   ngOnInit() {
-
     Howl.autoSuspend = false;
-
     this.progress = '0';
     this.videoEventSubscription = this.audioPlayerService.triggerVideoEventEmitter$.subscribe((e) => {
       this.isPlaylist = e.isPlaylist;
@@ -63,13 +55,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       this.isLoading = e.toggle;
     });
     this.playlistUpdateEventSubscription = this.audioPlayerService.triggerPlaylistUpdateEventEmitter$.subscribe((e) => {
-
-      if (this.isPlaying) {
-        console.log('Currently Playing: ' + this.audioPlayerService.getPlayingVideo().title);
-      }
       this.currentPlaylist = e.playlist;
       this.checkCurrentPlaylist();
-
     });
   }
 
@@ -133,36 +120,28 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     }
     this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: true});
     this.audioPlayerService.triggerTogglePlaying({id: video.id, toggle: false});
-    this.videoServiceSubscription = this.videoMetadataService.getVideo(video).subscribe(
-      (videoResponse) => {
-        this.video = videoResponse;
-        this.audioPlayerService.setPlaylingVideo(videoResponse);
-        this.checkCurrentPlaylist();
-        this.buildAudioObject(this.video);
-        this.activeSound.play();
-        // const event = new MouseEvent('click', {bubbles: true});
-        // this.renderer.invokeElementMethod(this.togglePlayBtn.nativeElement, 'dispatchEvent', [event]);
-      },
-      (error) => {
-        this.showNowPlayingBar = false;
-        this.videoServiceLock = false;
-        this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: false});
-        this.audioPlayerService.triggerTogglePlaying({id: video.id, toggle: false});
-      });
+    this.buildAudioObject(video);
   }
 
   private buildAudioObject(video) {
+    const streamUrl = this.config.getStreamAddress() + '/stream?' +
+      'v=' + video.id +
+      '&title=' + video.title +
+      '&owner=' + video.owner +
+      '&duration=' + video.duration;
     this.activeSound = new Howl({
-      src: [this.config.getStreamAddress() + '/stream?u=' + video.encodedStreamUrl],
+      src: [streamUrl],
       format: ['webm'],
       html5: true,
       buffer: true,
       preload: true,
-
       onplay: () => {
         this.duration = video.duration;
         this.showNowPlayingBar = true;
         this.audioPlayerService.triggerTogglePlaying({id: video.id, toggle: true});
+        this.video = video;
+        this.audioPlayerService.setPlaylingVideo(video);
+        this.checkCurrentPlaylist();
         requestAnimationFrame(this.step.bind(this));
       },
       onpause: () => {
@@ -193,6 +172,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.videoServiceLock = false;
       }
     });
+    this.activeSound.play();
   }
 
   private step() {

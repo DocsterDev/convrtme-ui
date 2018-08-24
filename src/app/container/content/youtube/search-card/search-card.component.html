@@ -1,7 +1,7 @@
 <div class="search-card" [ngClass]="{'now-playing': nowPlaying, 'now-loading': nowLoading}" (click)="selectContent(video)">
   <div class="row flex-nowrap no-gutters align-items-start">
     <div class="col thumbnail-container">
-        <img class="thumbnail" src="{{video.thumbnailUrl}}"/>
+        <img class="thumbnail" src="{{configService.getThumbnailEndpoint(video.id)}}"/>
         <div class="loading-icon"><img src="assets/img/svg/ic-video-loading.svg"/></div>
         <div class="play-icon"><img src="assets/img/svg/ic-large-play-arrow.svg"/></div>
         <div class="duration-badge">{{video.duration}}</div>

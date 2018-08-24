@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import * as moment from 'moment';
 import {AudioPlayerService} from '../../../../global/components/audio-player/audio-player.service';
 import {Subscription} from 'rxjs/Subscription';
+import {ConfigService} from '../../../../service/config.service';
 
 @Component({
   selector: 'app-search-card',
@@ -27,7 +28,7 @@ export class SearchCardComponent implements OnInit, OnDestroy {
   private videoPlayingSubscription: Subscription;
   private videoLoadingSubscription: Subscription;
 
-  constructor(private audioPlayerService: AudioPlayerService) {
+  constructor(private audioPlayerService: AudioPlayerService, public configService: ConfigService) {
   }
 
   ngOnInit() {
