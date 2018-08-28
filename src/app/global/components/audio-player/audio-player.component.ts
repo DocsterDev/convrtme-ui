@@ -6,6 +6,7 @@ import {VideoRecommendedService} from '../../../service/video-recommended.servic
 import {ConfigService} from '../../../service/config.service';
 import {UtilsService} from '../../../service/utils.service';
 import {Subscription} from 'rxjs/Subscription';
+import {VideoService} from '../../../service/video.service';
 
 @Component({
   selector: 'app-audio-player',
@@ -38,7 +39,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   constructor(private audioPlayerService: AudioPlayerService,
               private notificationService: NotificationService,
               private videoRecommendedService: VideoRecommendedService,
-              private config: ConfigService) {
+              private config: ConfigService,
+              private videoService: VideoService) {
   }
 
   ngOnInit() {
@@ -124,11 +126,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   private buildAudioObject(video) {
-    const streamUrl = this.config.getStreamAddress() + '/stream?' +
-      'v=' + video.id +
-      '&title=' + video.title +
-      '&owner=' + video.owner +
-      '&duration=' + video.duration;
+    const streamUrl = this.config.getStreamAddress() + '/stream?v=' + video.id;
     this.activeSound = new Howl({
       src: [streamUrl],
       format: ['webm'],
@@ -149,16 +147,20 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.isPlaying = false;
       },
       onplayerror: (e) => {
-        console.error(e);
+        console.error(JSON.stringify(e));
         this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: false});
         this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error playing this video.'});
         this.videoServiceLock = false;
       },
       onloaderror: (e) => {
-        console.error(e);
-        this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: false});
-        this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error loading this video.'});
-        this.videoServiceLock = false;
+        const isSafari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/);
+        const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        if (!isSafari && !iOS) {
+          console.error(JSON.stringify(e));
+          this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: false});
+          this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error loading this video.'});
+          this.videoServiceLock = false;
+        }
       },
       onend: () => {
         this.audioPlayerService.triggerTogglePlaying({id: video.id, toggle: false});
@@ -173,6 +175,11 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       }
     });
     this.activeSound.play();
+    this.videoService.updateVideoMetadata(video).subscribe((response) => {
+
+    }, (error) => {
+
+    });
   }
 
   private step() {
