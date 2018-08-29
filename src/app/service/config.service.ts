@@ -20,9 +20,4 @@ export class ConfigService {
   public getStreamAddress() {
     return 'http://' + this.host + ':' + this.streamPort;
   }
-
-  public getThumbnailEndpoint(videoId: string) {
-    return 'http://i.ytimg.com/vi/' + videoId + '/mqdefault.jpg';
-  }
-
 }
