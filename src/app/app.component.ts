@@ -18,32 +18,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private userInfo: any = {};
 
-  /*
-
-  {
-    "ip": "73.170.141.95",
-    "city": "Redwood City",
-    "region": "California",
-    "region_code": "CA",
-    "country": "US",
-    "country_name": "United States",
-    "continent_code": "NA",
-    "in_eu": false,
-    "postal": "94062",
-    "latitude": 37.4096,
-    "longitude": -122.2991,
-    "timezone": "America/Los_Angeles",
-    "utc_offset": "-0700",
-    "country_calling_code": "+1",
-    "currency": "USD",
-    "languages": "en-US,es-US,haw,fr",
-    "asn": "AS7922",
-    "org": "Comcast Cable Communications, LLC"
-}
-
-   */
-
-  constructor(private localStorage: LocalStorageService, private userService: UserService, private ipService: IpService) {
+  constructor(
+    private localStorage: LocalStorageService,
+    private userService: UserService,
+    private ipService: IpService) {
   }
 
   ngOnInit() {

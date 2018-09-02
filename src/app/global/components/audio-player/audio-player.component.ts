@@ -35,6 +35,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private videoPlayingEventSubscription: Subscription;
   private videoLoadingEventSubscription: Subscription;
   private playlistUpdateEventSubscription: Subscription;
+  private videoServiceSubscription: Subscription;
 
   constructor(private audioPlayerService: AudioPlayerService,
               private notificationService: NotificationService,
@@ -175,7 +176,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       }
     });
     this.activeSound.play();
-    this.videoService.updateVideoMetadata(video).subscribe((response) => {
+    this.videoServiceSubscription = this.videoService.updateVideoMetadata(video).subscribe((response) => {
 
     }, (error) => {
 
@@ -197,6 +198,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.videoPlayingEventSubscription.unsubscribe();
     this.videoLoadingEventSubscription.unsubscribe();
     this.playlistUpdateEventSubscription.unsubscribe();
+    this.videoServiceSubscription.unsubscribe();
   }
 
 }
