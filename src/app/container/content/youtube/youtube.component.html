@@ -1,7 +1,9 @@
 <div class="row no-gutters">
   <div class="col Mx(1) order-1 order-md-2">
     <div class="d-none d-md-block c-light text-left c-smaller Pb(0.5)">Search Results</div>
-    <app-search-card *ngFor="let video of videoList" (added)="handleAddToCurrentPlaylist($event)" (press)="handleAddToCurrentPlaylist(video)" (selected)="handleVideoSelect($event)" [video]="video"></app-search-card>
+    <div *ngFor="let video of videoList">
+      <app-search-card  (added)="handleAddToCurrentPlaylist($event)" (press)="handleAddToCurrentPlaylist(video)" (selected)="handleVideoSelect($event)" [video]="video"></app-search-card>
+    </div>
     <div class="d-block d-md-none Mb(1)"></div>
   </div>
 
@@ -42,6 +44,8 @@
   </div>
   <div class="col-md Mx(1) order-2 order-md-1">
     <div class="d-none d-md-block c-light text-left c-smaller Pb(0.5)">Recommended For You</div>
-    <app-search-card *ngFor="let video of recommendedList" (press)="handleAddToCurrentPlaylist(video)" (added)="handleAddToCurrentPlaylist($event)" (selected)="handleRecommendedVideoSelect($event)" [video]="video"></app-search-card>
+    <div *ngFor="let video of recommendedList">
+      <app-search-card  (press)="handleAddToCurrentPlaylist(video)" (added)="handleAddToCurrentPlaylist($event)" (selected)="handleRecommendedVideoSelect($event)" [video]="video"></app-search-card>
+    </div>
   </div>
 </div>

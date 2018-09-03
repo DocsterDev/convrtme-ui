@@ -154,14 +154,15 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.videoServiceLock = false;
       },
       onloaderror: (e) => {
-        const isSafari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/);
-        const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-        if (!isSafari && !iOS) {
-          console.error(JSON.stringify(e));
-          this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: false});
-          this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error loading this video.'});
-          this.videoServiceLock = false;
-        }
+        console.error('Load Error: ' + e);
+        // const isSafari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/);
+        // const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        // if (!isSafari && !iOS) {
+        //   console.error(JSON.stringify(e));
+        //   this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: false});
+        //   this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error loading this video.'});
+        //   this.videoServiceLock = false;
+        // }
       },
       onend: () => {
         this.audioPlayerService.triggerTogglePlaying({id: video.id, toggle: false});
