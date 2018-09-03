@@ -7,6 +7,7 @@ import {ConfigService} from '../../../service/config.service';
 import {UtilsService} from '../../../service/utils.service';
 import {Subscription} from 'rxjs/Subscription';
 import {VideoService} from '../../../service/video.service';
+import {Title} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-audio-player',
@@ -41,7 +42,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
               private notificationService: NotificationService,
               private videoRecommendedService: VideoRecommendedService,
               private config: ConfigService,
-              private videoService: VideoService) {
+              private videoService: VideoService,
+              private titleService: Title) {
   }
 
   ngOnInit() {
@@ -120,6 +122,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.progress = '0';
     if (this.activeSound) {
       this.activeSound.stop();
+      this.titleService.setTitle('Moup.io');
     }
     this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: true});
     this.audioPlayerService.triggerTogglePlaying({id: video.id, toggle: false});
@@ -140,6 +143,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.audioPlayerService.triggerTogglePlaying({id: video.id, toggle: true});
         this.video = video;
         this.audioPlayerService.setPlaylingVideo(video);
+        this.titleService.setTitle(this.video.title);
         this.checkCurrentPlaylist();
         requestAnimationFrame(this.step.bind(this));
       },
