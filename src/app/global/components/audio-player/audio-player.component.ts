@@ -143,7 +143,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.audioPlayerService.triggerTogglePlaying({id: video.id, toggle: true});
         this.video = video;
         this.audioPlayerService.setPlaylingVideo(video);
-        this.titleService.setTitle(this.video.title);
+        this.titleService.setTitle(this.video.owner + ' - ' + this.video.title);
         this.checkCurrentPlaylist();
         requestAnimationFrame(this.step.bind(this));
       },
