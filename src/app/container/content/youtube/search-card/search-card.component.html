@@ -11,8 +11,8 @@
           <div class="title truncate">{{video.title}}</div>
           <div class="Pt(0.25)"></div>
           <div class="subtitle-owner c-smallest" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{video.owner}}</div>
-          <div class="subtitle c-smallest" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{video.publishedTimeAgo}} <span *ngIf="video.new">(NEW)</span></div>
-          <div class="subtitle c-smallest" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{video.viewCount}}</div>
+          <div class="subtitle c-smallest" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{video.publishedTimeAgo}}</div>
+          <div class="subtitle c-smallest" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{video.viewCount}} <span class="label" *ngIf="video.new">New</span></div>
         </div>
     </div>
     <div class="col align-self-start play-icon-active d-none d-md-block Mt(0.25)" style="max-width:35px;">
