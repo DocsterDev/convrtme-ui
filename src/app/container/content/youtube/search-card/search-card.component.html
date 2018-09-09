@@ -8,11 +8,11 @@
     </div>
     <div class="col" style="min-width: 100px;">
         <div class="text-left c-font-circular c-small c-light title-text Mstart(0.5) Mt(0.5)" [ngClass]="{'c-accent-color': nowPlaying, 'c-color': !nowPlaying}" style="max-height: 90px !important">
-          <div class="title truncate">{{video.title}}</div>
+          <div class="title truncate-double-line">{{video.title}}</div>
           <div class="Pt(0.25)"></div>
-          <div class="subtitle-owner c-smallest" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{video.owner}}</div>
-          <div class="subtitle c-smallest" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{video.publishedTimeAgo}}</div>
-          <div class="subtitle c-smallest" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{video.viewCount}} <span class="label" *ngIf="video.new">New</span></div>
+          <div class="subtitle-owner c-smallest truncate-single-line" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{video.owner}}</div>
+          <div class="subtitle c-smallest truncate-single-line" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{video.publishedTimeAgo}}</div>
+          <div class="subtitle c-smallest truncate-single-line" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{video.viewCount}} <span class="label" *ngIf="video.new">New</span></div>
         </div>
     </div>
     <div class="col align-self-start play-icon-active d-none d-md-block Mt(0.25)" style="max-width:35px;">
