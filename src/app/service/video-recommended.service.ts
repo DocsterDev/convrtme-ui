@@ -2,21 +2,21 @@ import {Injectable, OnDestroy} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {HttpClient} from '@angular/common/http';
-import {ConfigService} from './config.service';
 import {Subscription} from 'rxjs/Subscription';
+import {environment} from '../../environments/environment';
 
 @Injectable()
 export class VideoRecommendedService implements OnDestroy{
 
-  private videoRecommendationSubscription:Subscription;
+  private videoRecommendationSubscription: Subscription;
 
-  constructor(private http: HttpClient, private config: ConfigService) {
+  constructor(private http: HttpClient) {
   }
 
   private resultList = new Subject<any>();
 
   getServiceObservable(videoId: string) {
-    return this.http.get(this.config.getAddress() + '/api/videos/recommended', {
+    return this.http.get(environment.apiUrl + '/api/videos/recommended', {
       params: {
         v: videoId
       }

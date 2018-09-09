@@ -1,8 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-// import {trigger,state,style,animate,transition}from '@angular/animations';
-
 
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './header/header.component';
@@ -31,7 +29,6 @@ import {NotificationService} from './global/components/notification/notification
 import {AudioPlayerComponent} from './global/components/audio-player/audio-player.component';
 import {AudioPlayerService} from './global/components/audio-player/audio-player.service';
 import {MomentModule} from 'angular2-moment';
-import {ConfigService} from './service/config.service';
 import {PlaylistService} from './service/playlist.service';
 import {VideoRecommendedService} from './service/video-recommended.service';
 import {VideoAutoCompleteService} from './service/video-autocomplete.service';
@@ -81,7 +78,6 @@ import {HeaderService} from './service/header.service';
     VideoAutoCompleteService,
     NotificationService,
     AudioPlayerService,
-    ConfigService,
     PlaylistService,
     IpService,
     HeaderService,

@@ -2,7 +2,6 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import * as moment from 'moment';
 import {AudioPlayerService} from '../../../../global/components/audio-player/audio-player.service';
 import {Subscription} from 'rxjs/Subscription';
-import {ConfigService} from '../../../../service/config.service';
 
 @Component({
   selector: 'app-search-card',
@@ -23,20 +22,15 @@ export class SearchCardComponent implements OnInit, OnDestroy {
 
   public lastUpdated;
 
-  private titleTextLength = 55;
-
   private videoPlayingSubscription: Subscription;
   private videoLoadingSubscription: Subscription;
 
-  constructor(private audioPlayerService: AudioPlayerService, public configService: ConfigService) {
+  constructor(private audioPlayerService: AudioPlayerService) {
   }
 
   ngOnInit() {
     this.lastUpdated = moment(this.video.timestamp);
-    this.nowPlaying = false;
-    if (this.audioPlayerService.getPlayingVideo().id === this.video.id) {
-      this.nowPlaying = true;
-    }
+    this.nowPlaying = this.audioPlayerService.getPlayingVideo().id === this.video.id;
     this.videoPlayingSubscription = this.audioPlayerService.triggerTogglePlayingEmitter$.subscribe((e) => {
       this.nowPlaying = false;
       if (e.toggle === false) {
@@ -62,14 +56,6 @@ export class SearchCardComponent implements OnInit, OnDestroy {
   addedContent(event, video) {
     event.stopPropagation();
     this.added.emit(video);
-  }
-
-  truncateTitle(title: string) {
-    if (title.length > this.titleTextLength) {
-      const fmtTitle = title.substr(0, this.titleTextLength);
-      return fmtTitle.substr(0, fmtTitle.lastIndexOf(' ')) + '...';
-    }
-    return title;
   }
 
   ngOnDestroy() {

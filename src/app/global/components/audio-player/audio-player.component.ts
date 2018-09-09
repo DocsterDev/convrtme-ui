@@ -3,11 +3,11 @@ import {AudioPlayerService} from './audio-player.service';
 import {Howl} from 'howler';
 import {NotificationService} from '../notification/notification.service';
 import {VideoRecommendedService} from '../../../service/video-recommended.service';
-import {ConfigService} from '../../../service/config.service';
 import {UtilsService} from '../../../service/utils.service';
 import {Subscription} from 'rxjs/Subscription';
 import {VideoService} from '../../../service/video.service';
-import {Title} from "@angular/platform-browser";
+import {Title} from '@angular/platform-browser';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-audio-player',
@@ -41,7 +41,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   constructor(private audioPlayerService: AudioPlayerService,
               private notificationService: NotificationService,
               private videoRecommendedService: VideoRecommendedService,
-              private config: ConfigService,
               private videoService: VideoService,
               private titleService: Title) {
   }
@@ -130,7 +129,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   private buildAudioObject(video) {
-    const streamUrl = this.config.getStreamAddress() + '/stream?v=' + video.id;
+    const streamUrl = environment.streamUrl + '/stream?v=' + video.id;
     this.activeSound = new Howl({
       src: [streamUrl],
       format: ['webm'],

@@ -1,14 +1,14 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {ConfigService} from "./config.service";
+import {environment} from '../../environments/environment';
 
 @Injectable()
 export class VideoAutoCompleteService {
-  constructor(private http: HttpClient, private config: ConfigService) {
+  constructor(private http: HttpClient) {
   }
 
   getAutoComplete(input: string) {
-    return this.http.get(this.config.getAddress() + '/api/autocomplete', {
+    return this.http.get(environment.apiUrl + '/api/autocomplete', {
       params: {
         input: input
       }

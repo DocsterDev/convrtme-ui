@@ -1,7 +1,7 @@
 import {EventEmitter, Injectable} from '@angular/core';
-import {ConfigService} from './config.service';
 import {HttpClient} from '@angular/common/http';
-import {HeaderService} from "./header.service";
+import {HeaderService} from './header.service';
+import {environment} from '../../environments/environment';
 
 @Injectable()
 export class UserService {
@@ -9,7 +9,7 @@ export class UserService {
   public validUser: boolean = false;
   public userSignedInEmitter$: EventEmitter<any>;
 
-  constructor(private http: HttpClient, private config: ConfigService, private headerService: HeaderService) {
+  constructor(private http: HttpClient, private headerService: HeaderService) {
     this.userSignedInEmitter$ = new EventEmitter();
   }
 
@@ -29,11 +29,11 @@ export class UserService {
       city: city,
       region: region
     };
-    return this.http.post(this.config.getAddress() + '/api/user/register', user);
+    return this.http.post(environment.apiUrl + '/api/user/register', user);
   }
 
   public authenticate() {
-    return this.http.post(this.config.getAddress() + '/api/context/authenticate', null, this.headerService.getTokenHeader());
+    return this.http.post(environment.apiUrl + '/api/context/authenticate', null, this.headerService.getTokenHeader());
   }
 
 }
