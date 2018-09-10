@@ -5,7 +5,6 @@ import {NotificationService} from '../notification/notification.service';
 import {VideoRecommendedService} from '../../../service/video-recommended.service';
 import {UtilsService} from '../../../service/utils.service';
 import {Subscription} from 'rxjs/Subscription';
-import {VideoService} from '../../../service/video.service';
 import {Title} from '@angular/platform-browser';
 import {environment} from '../../../../environments/environment';
 
@@ -36,12 +35,10 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private videoPlayingEventSubscription: Subscription;
   private videoLoadingEventSubscription: Subscription;
   private playlistUpdateEventSubscription: Subscription;
-  private videoServiceSubscription: Subscription;
 
   constructor(private audioPlayerService: AudioPlayerService,
               private notificationService: NotificationService,
               private videoRecommendedService: VideoRecommendedService,
-              private videoService: VideoService,
               private titleService: Title) {
   }
 
@@ -180,11 +177,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       }
     });
     this.activeSound.play();
-    this.videoServiceSubscription = this.videoService.updateVideoMetadata(video).subscribe((response) => {
-
-    }, (error) => {
-
-    });
   }
 
   private step() {
@@ -202,7 +194,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.videoPlayingEventSubscription.unsubscribe();
     this.videoLoadingEventSubscription.unsubscribe();
     this.playlistUpdateEventSubscription.unsubscribe();
-    this.videoServiceSubscription.unsubscribe();
   }
 
 }

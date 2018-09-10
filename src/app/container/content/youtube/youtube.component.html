@@ -1,7 +1,7 @@
 <div class="row no-gutters">
   <div class="col Mx(1) order-1 order-md-2">
-    <div class="d-none d-md-block text-left c-smaller c-bold Pb(0.5)">Search Results</div>
-    <div *ngFor="let video of videoList">
+    <div class="text-center text-md-left pb-3 c-smaller c-light c-bold section-text">Search Results</div>
+    <div *ngFor="let video of videoList" class="mb-2">
       <app-search-card  (added)="handleAddToCurrentPlaylist($event)" (press)="handleAddToCurrentPlaylist(video)" (selected)="handleVideoSelect($event)" [video]="video"></app-search-card>
     </div>
     <div class="d-block d-md-none Mb(1)"></div>
@@ -9,7 +9,7 @@
 
   <div class="col-md Mx(1) order-3">
     <div class="d-block d-md-none My(1)"></div>
-    <div class="d-none d-md-block text-left c-smaller c-bold">Playlists</div>
+    <div class="text-center text-md-left c-smaller c-bold c-light section-text">Playlists</div>
     <div class="row no-gutters Mt(0.25) d-flex flex-nowrap justify-content-center">
       <div *ngFor="let playlist of playlists" class="col d-flex align-items-center justify-content-center playlist-icon-col" (click)="setPlaylistActive(playlist)">
         <div class="playlist-icon" [ngClass]="{'playlist-active': currentPlaylist.uuid === playlist.uuid}" [style.background]="'#' + playlist.iconColor"></div>
@@ -43,8 +43,8 @@
     <div class="d-block d-md-none My(1.5)"></div>
   </div>
   <div class="col-md Mx(1) order-2 order-md-1">
-    <div class="d-none d-md-block text-left c-smaller c-bold Pb(0.5)">Recommended For You</div>
-    <div *ngFor="let video of recommendedList">
+    <div class="text-center text-md-left pb-3 c-smaller c-bold c-light section-text">Recommended For You</div>
+    <div *ngFor="let video of recommendedList" class="mb-2">
       <app-search-card  (press)="handleAddToCurrentPlaylist(video)" (added)="handleAddToCurrentPlaylist($event)" (selected)="handleRecommendedVideoSelect($event)" [video]="video"></app-search-card>
     </div>
   </div>

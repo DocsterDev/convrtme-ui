@@ -72,7 +72,6 @@ import {HeaderService} from './service/header.service';
     MetadataService,
     UserService,
     UtilsService,
-    VideoService,
     VideoSearchService,
     VideoRecommendedService,
     VideoAutoCompleteService,
