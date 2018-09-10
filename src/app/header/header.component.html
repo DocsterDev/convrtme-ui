@@ -34,7 +34,7 @@
         <input [(ngModel)]="searchQuery"
                (ngModelChange)="handleAutoCompleteLookup(searchQuery)"
                name="q"
-               class="search-input c-font-circular c-bold Px(1)"
+               class="search-input c-font-circular c-bold pl-3 pr-5 py-2"
                autocorrect="off"
                autocapitalize="off"
                spellcheck="false"
@@ -43,7 +43,7 @@
                #searchInput/>
         <button type="submit" style="display:none">hidden submit</button>
       </form>
-      <div class="position-absolute" style="right: 17px; top: 11px">
+      <div class="position-absolute" style="right: 16px; top: 12px" (click)="handleSubmitSearch(searchQuery)">
         <img src="assets/img/svg/ic-search.svg"/>
       </div>
     </div>
