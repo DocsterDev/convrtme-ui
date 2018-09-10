@@ -22,7 +22,6 @@ import {YoutubeComponent} from './container/content/youtube/youtube.component';
 import {UtilsService} from './service/utils.service';
 import {LoaderComponent} from './common/loader/loader.component';
 import {SearchCardComponent} from './container/content/youtube/search-card/search-card.component';
-import {VideoService} from './service/video.service';
 import {NotificationComponent} from './global/components/notification/notification.component';
 import {GlobalInterceptor} from './global/services/global-interceptor';
 import {NotificationService} from './global/components/notification/notification.service';

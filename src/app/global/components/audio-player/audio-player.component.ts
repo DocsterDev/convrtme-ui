@@ -139,7 +139,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.audioPlayerService.triggerTogglePlaying({id: video.id, toggle: true});
         this.video = video;
         this.audioPlayerService.setPlaylingVideo(video);
-        this.titleService.setTitle(this.video.owner + ' - ' + this.video.title);
+        this.titleService.setTitle(this.video.title + ' - ' + this.video.owner);
         this.checkCurrentPlaylist();
         requestAnimationFrame(this.step.bind(this));
       },
@@ -154,14 +154,14 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.videoServiceLock = false;
       },
       onloaderror: (e) => {
-        console.error('Load Error: ' + e);
+        // console.error('Load Error: ' + e);
         // const isSafari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/);
         // const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
         // if (!isSafari && !iOS) {
-        //   console.error(JSON.stringify(e));
-        //   this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: false});
-        //   this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error loading this video.'});
-        //   this.videoServiceLock = false;
+          console.error(JSON.stringify(e));
+          this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: false});
+          this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error loading this video.'});
+          this.videoServiceLock = false;
         // }
       },
       onend: () => {
