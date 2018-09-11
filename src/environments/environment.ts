@@ -8,3 +8,5 @@ export const environment = {
   apiUrl: 'http://localhost:8083',
   streamUrl: 'http://localhost:8084'
 };
+
+// HOW TO BUILD PROJECT: ng build --aot --prod --base-href=./
