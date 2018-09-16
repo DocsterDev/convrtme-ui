@@ -5,7 +5,7 @@
     <div class="text-center text-md-left pb-3 c-smaller c-light c-bold section-text">Search Results</div>
     <div (click)="currentPlayingPlaylist = 'SEARCH'">
       <div *ngFor="let video of videoList" class="mb-2">
-        <app-search-card  (added)="handleAddToCurrentPlaylist($event)" (press)="handleAddToCurrentPlaylist(video)" (selected)="handleVideoSelect($event)" [video]="video"></app-search-card>
+        <app-search-card (added)="handleAddToCurrentPlaylist($event)" (selected)="handleVideoSelect($event)" [video]="video"></app-search-card>
       </div>
     </div>
     <div class="d-block d-md-none Mb(1)"></div>
@@ -43,7 +43,7 @@
   <div class="col-md Mx(1) order-2 order-md-1">
     <div class="text-center text-md-left pb-3 c-smaller c-bold c-light section-text">Recommended For You</div>
     <div *ngFor="let video of recommendedList" class="mb-2">
-      <app-search-card  (press)="handleAddToCurrentPlaylist(video)" (added)="handleAddToCurrentPlaylist($event)" (selected)="handleRecommendedVideoSelect($event)" [video]="video"></app-search-card>
+      <app-search-card (added)="handleAddToCurrentPlaylist($event)" (selected)="handleRecommendedVideoSelect($event)" [video]="video"></app-search-card>
     </div>
   </div>
 
