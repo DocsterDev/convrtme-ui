@@ -1,4 +1,6 @@
 <div class="row no-gutters">
+
+  <!-- SEARCH MODULE -->
   <div class="col Mx(1) order-1 order-md-2">
     <div class="text-center text-md-left pb-3 c-smaller c-light c-bold section-text">Search Results</div>
     <div (click)="currentPlayingPlaylist = 'SEARCH'">
@@ -9,6 +11,7 @@
     <div class="d-block d-md-none Mb(1)"></div>
   </div>
 
+  <!-- PLAYLIST MODULE -->
   <div class="col-md Mx(1) order-3">
     <div class="d-block d-md-none My(1)"></div>
     <div class="text-center text-md-left c-smaller c-bold c-light section-text">Playlists</div>
@@ -33,21 +36,15 @@
     <div *ngIf="currentPlaylist.videos && currentPlaylist.videos.length === 0 && !playlistLoading" class="help-text">
       <div class="c-font-circular c-smaller c-light Py(2)">No videos in this playlist. Try adding some.</div>
     </div>
-    <!--<div class="row no-gutters dashed-border no-select align-content-center Mt(2)">-->
-      <!--<div class="col" style="align-self: center">-->
-        <!--<div class="row no-gutters align-content-center">-->
-          <!--<div class="col">-->
-            <!--<div class="c-font-circular c-bold c-smaller">Add Videos Here</div>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
     <div class="d-block d-md-none My(1.5)"></div>
   </div>
+
+  <!-- RECOMMENDED MODULE -->
   <div class="col-md Mx(1) order-2 order-md-1">
     <div class="text-center text-md-left pb-3 c-smaller c-bold c-light section-text">Recommended For You</div>
     <div *ngFor="let video of recommendedList" class="mb-2">
       <app-search-card  (press)="handleAddToCurrentPlaylist(video)" (added)="handleAddToCurrentPlaylist($event)" (selected)="handleRecommendedVideoSelect($event)" [video]="video"></app-search-card>
     </div>
   </div>
+
 </div>
