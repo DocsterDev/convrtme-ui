@@ -7,7 +7,7 @@
   min-width: 100px
   max-width: 550px
   overflow: hidden
-  max-height: 90px
+  max-height: $thumbnailHeightMobile
   @media screen and (min-width: 768px) /* Turn off hover on mobile */
     &:hover .thumbnail-container
       background-color: black
@@ -98,13 +98,30 @@
 
 .thumbnail-container
   background-color: white
-  max-width: 160px
-  height: 90px
-  width: 160px
+  max-width: $thumbnailWidthMobile
+  height: $thumbnailHeightMobile
+  width: $thumbnailWidthMobile
 
 .thumbnail
-  height: 90px
-  width: 160px
+  height: $thumbnailHeightMobile
+  width: $thumbnailWidthMobile
+
+@media screen and (min-width: 768px)
+  .thumbnail
+    height: $thumbnailHeightDesktop
+    width: $thumbnailWidthDesktop
+  .thumbnail-container
+    max-width: $thumbnailWidthDesktop
+    height: $thumbnailHeightDesktop
+    width: $thumbnailWidthDesktop
+  .search-card
+    max-height: $thumbnailHeightDesktop
+  .title
+    font-size: 14px
+  .subtitle
+    font-size: 13px
+  .subtitle-owner
+    font-size: 13px
 
 .playlist-icon-add
   transition: opacity $animationTimer ease

@@ -21,6 +21,8 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   public currentPlaylist: any = {id: ''};
   public playlistLoading = false;
 
+  public currentPlayingPlaylist; // Most recently added (9/11)
+
   private searchResultsSubscription: Subscription;
   private recommendedResultsSubscription: Subscription;
   private signInEventSubscription: Subscription;
