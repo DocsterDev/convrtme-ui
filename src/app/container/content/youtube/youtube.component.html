@@ -1,13 +1,13 @@
 <div class="container d-flex justify-content-center" style="max-width:1024px;">
   <div class="row no-gutters">
 
-    <!-- SEARCH MODULE -->
-    <div class="col Mx(1) order-1 solidify">
-      <div class="text-center text-md-left pb-3 c-smaller c-accent-color c-bold section-text">Search Results</div>
-        <div *ngFor="let video of videoList" class="mb-2">
-          <app-search-card (added)="handleAddToCurrentPlaylist($event)" (press)="handleAddToCurrentPlaylist(video)" (selected)="handleVideoSelect($event)" [video]="video"></app-search-card>
-        </div>
-      <div class="d-block d-md-none Mb(1)"></div>
+  <!-- SEARCH MODULE -->
+  <div class="col Mx(1) order-1 order-md-2">
+    <div class="text-center text-md-left pb-3 c-smaller c-light c-bold section-text">Search Results</div>
+    <div (click)="currentPlayingPlaylist = 'SEARCH'">
+      <div *ngFor="let video of videoList" class="mb-2">
+        <app-search-card (added)="handleAddToCurrentPlaylist($event)" (selected)="handleVideoSelect($event)" [video]="video"></app-search-card>
+      </div>
     </div>
 
     <!-- PLAYLIST MODULE -->
