@@ -39,12 +39,16 @@
   text-shadow: none
   -webkit-text-fill-color: initial
   font-weight: 700
+  color: #7584A1
 .search-input::-moz-placeholder
   font-weight: 700
+  color: #7584A1
 .search-input:-ms-input-placeholder
   font-weight: 700
+  color: #7584A1
 .search-input:-moz-placeholder
   font-weight: 700
+  color: #7584A1
 .search-input::-moz-selection
   background: $textHighlightColor
 .search-input::selection
@@ -70,3 +74,49 @@
   &:hover
     background: $tabHoverColor
     cursor: pointer
+
+.search-bar
+  background: #F0F1F5
+  height: 45px
+  width: 500px
+  &:hover
+    background: #ecedf1
+  .search-icon
+    height: 45px
+    width: 100%
+    &:hover
+      cursor: pointer
+      background: $textAccentColor
+    &:hover .search-icon-svg
+      fill: #FFFFFF !important
+      stroke: #FFFFFF !important
+  .placeholder
+    color: #7584A1
+
+.search-bar-input
+  padding: 0
+  border: 0
+  background: transparent
+  width: 100%
+  height: 45px
+  color: #7584A1
+  //&::-webkit-input-placeholder &::-moz-placeholder &:-ms-input-placeholder &-moz-placeholder
+  //  text-shadow: none
+  //  -webkit-text-fill-color: initial
+  //  font-weight: 700
+  //  color: #7584A1
+
+.search-bar-input::-webkit-input-placeholder
+  text-shadow: none
+  -webkit-text-fill-color: initial
+  font-weight: 700
+  color: #7584A1
+.search-bar-input::-moz-placeholder
+  font-weight: 700
+  color: #7584A1
+.search-bar-input:-ms-input-placeholder
+  font-weight: 700
+  color: #7584A1
+.search-bar-input:-moz-placeholder
+  font-weight: 700
+  color: #7584A1

@@ -1,81 +1,69 @@
-<!-- Mobile Header -->
-<!-- TODO: Figure out if i want to be able to navigate while on mobile with the tabs instead of everything on the same page -->
-<!--<div class="d-block d-md-none">-->
-<!--<div class="row no-gutters c-font-circular c-smaller c-bold">-->
-<!--<div class="col-5">-->
-<!--<div class="row flex-nowrap no-gutters align-items-center no-select" style="height: 50px !important">-->
-<!--<div class="col Mstart(1) Mend(0.5) no-outline text-center">-->
-<!--<img src="assets/img/svg/ic-logo-mobile.svg">-->
-<!--</div>-->
-<!--<div *ngFor="let option of navOptionsMobile" routerLinkActive="active" #rla="routerLinkActive"-->
-<!--class="col tab-mobile P(1) no-outline text-center" routerLink="{{option.value}}">-->
-<!--<img src="assets/img/svg/{{ rla.isActive ? option.activeIcon : option.icon}}"/>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-
-
-<!-- Desktop Header -->
-<!--<div class="d-none d-md-block">--> <!-- TODO Uncomment if i want to be able to switch between mobile and desktop -->
 <div class="row flex-nowrap no-gutters c-font-circular c-smaller c-bold header-shadow-desktop">
-
-  <div class="col d-flex d-md-none align-items-center justify-content-start Mstart(1)" style="max-width: 35px;">
-    <img src="assets/img/svg/ic-logo-mobile.svg">
+  <div class="col d-flex align-items-center justify-content-start Mstart(1)">
+    <img src="assets/img/svg/ic-logo2.svg" width="75">
   </div>
-  <div class="col d-none d-md-flex align-items-center justify-content-start Mstart(1)">
-    <img src="assets/img/svg/ic-logo2.svg">
-  </div>
-
-  <div class="col d-flex align-items-center justify-content-center Mx(1)" style="height: 65px;">
-    <div class="position-relative">
-      <form name="search" (submit)="handleSubmitSearch(searchQuery)">
+  <div class="col d-flex justify-content-center align-items-center" style="height: 65px;">
+    <div class="row d-flex align-items-center search-bar no-gutters">
+      <div class="col">
+        <!--<span class="placeholder ml-3">Search</span>-->
+        <form name="search" (submit)="handleSubmitSearch(searchQuery)">
         <input [(ngModel)]="searchQuery"
-               (ngModelChange)="handleAutoCompleteLookup(searchQuery)"
-               name="q"
-               class="search-input c-font-circular c-bold pl-3 pr-5 py-2"
-               autocorrect="off"
-               autocapitalize="off"
-               spellcheck="false"
-               autocomplete="off"
-               placeholder="Search"
-               #searchInput/>
+            (ngModelChange)="handleAutoCompleteLookup(searchQuery)"
+            name="q"
+            class="search-bar-input mx-3"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            autocomplete="off"
+            placeholder="Search"
+            #searchInput/>
         <button type="submit" style="display:none">hidden submit</button>
-      </form>
-      <div class="position-absolute" style="right: 16px; top: 12px" (click)="handleSubmitSearch(searchQuery)">
-        <img src="assets/img/svg/ic-search.svg"/>
+        </form>
       </div>
-    </div>
-    <div *ngIf="showPredictionsContainer && predictions.length > 0 "
-         class="search-auto-complete-container c-font-circular c-light">
-      <div *ngFor="let prediction of predictions" (click)="handleSubmitSearch(prediction)">
-        <div class="Px(1) Py(0.5) t-regular2">{{prediction}}</div>
+      <div class="col" style="max-width:50px;">
+        <div class="search-icon d-flex align-items-center justify-content-center" (click)="handleSubmitSearch(searchQuery)">
+          <svg width="19px" height="19px" viewBox="0 0 19 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+              <g id="Artboard" transform="translate(-1257.000000, -25.000000)" class="search-icon-svg" fill="#39A0ED" stroke="#39A0ED">
+                <g id="Group-4" transform="translate(758.000000, 12.000000)">
+                  <g id="search" transform="translate(500.000000, 14.000000)">
+                    <path d="M11.7,11 L11.4,10.7 C12.4,9.6 13,8.1 13,6.5 C13,2.9 10.1,0 6.5,0 C2.9,0 0,2.9 0,6.5 C0,10.1 2.9,13 6.5,13 C8.1,13 9.6,12.4 10.7,11.4 L11,11.7 L11,12.5 L16,17.5 L17.5,16 L12.5,11 L11.7,11 Z M6.5,11 C4,11 2,9 2,6.5 C2,4 4,2 6.5,2 C9,2 11,4 11,6.5 C11,9 9,11 6.5,11 L6.5,11 Z" id="Shape"></path>
+                  </g>
+                </g>
+              </g>
+            </g>
+          </svg>
+        </div>
       </div>
     </div>
   </div>
-
+  <!--<div class="col d-flex align-items-center justify-content-center Mx(1)" style="height: 65px;">-->
+    <!--<div class="position-relative">-->
+      <!--<form name="search" (submit)="handleSubmitSearch(searchQuery)">-->
+        <!--<input [(ngModel)]="searchQuery"-->
+               <!--(ngModelChange)="handleAutoCompleteLookup(searchQuery)"-->
+               <!--name="q"-->
+               <!--class="search-input c-font-circular c-bold pl-3 pr-5 py-2"-->
+               <!--autocorrect="off"-->
+               <!--autocapitalize="off"-->
+               <!--spellcheck="false"-->
+               <!--autocomplete="off"-->
+               <!--placeholder="Search"-->
+               <!--#searchInput/>-->
+        <!--<button type="submit" style="display:none">hidden submit</button>-->
+      <!--</form>-->
+      <!--<div class="position-absolute" style="right: 16px; top: 12px" (click)="handleSubmitSearch(searchQuery)">-->
+        <!--<img src="assets/img/svg/ic-search.svg"/>-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<div *ngIf="showPredictionsContainer && predictions.length > 0 "-->
+         <!--class="search-auto-complete-container c-font-circular c-light">-->
+      <!--<div *ngFor="let prediction of predictions" (click)="handleSubmitSearch(prediction)">-->
+        <!--<div class="Px(1) Py(0.5) t-regular2">{{prediction}}</div>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
   <div class="col d-none d-md-flex align-items-center justify-content-end Mend(1.5)">
     <div class="c-font-circular c-regular2 c-bold c-color">?</div>
   </div>
-
-  <!-- TODO: Uncomment this when i can figure out how to keep track of users - for now i will us users ip as a user name -->
-
-  <!--<div *ngIf="!user.valid && !loading" class="col d-flex align-items-center justify-content-center"-->
-  <!--style="height: 60px; max-width: 200px;">-->
-  <!--<div class="button">Sign Up</div>-->
-  <!--</div>-->
-  <!--<div *ngIf="!user.valid && !loading" class="col d-flex align-items-center justify-content-center"-->
-  <!--style="height: 60px; max-width: 120px;">-->
-  <!--<div class="tab-text text-nowrap">-->
-  <!--Log In-->
-  <!--</div>-->
-  <!--</div>-->
-  <!--<div *ngIf="user.valid && !loading" class="col d-flex align-items-center justify-content-end Mend(1.5)"-->
-  <!--style="height: 60px;">-->
-  <!--<div class="tab-text text-nowrap">-->
-  <!--{{user.email}}-->
-  <!--</div>-->
-  <!--</div>-->
 </div>
-<!--</div>-->
