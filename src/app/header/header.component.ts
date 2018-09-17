@@ -24,6 +24,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private autoCompleteSubscription: Subscription;
   private searchResultsSubscription: Subscription;
 
+  public isFocused: boolean = false;
+
   @ViewChild('searchInput')
   public searchInput: ElementRef;
 

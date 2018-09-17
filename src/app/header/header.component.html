@@ -3,7 +3,7 @@
     <img src="assets/img/svg/ic-logo2.svg" width="75">
   </div>
   <div class="col d-flex justify-content-center align-items-center" style="height: 65px;">
-    <div class="row d-flex align-items-center search-bar no-gutters">
+    <div class="row d-flex align-items-center search-bar no-gutters" [ngClass]="{'search-focus': isFocused}">
       <div class="col">
         <!--<span class="placeholder ml-3">Search</span>-->
         <form name="search" (submit)="handleSubmitSearch(searchQuery)">
@@ -11,12 +11,14 @@
             (ngModelChange)="handleAutoCompleteLookup(searchQuery)"
             name="q"
             class="search-bar-input mx-3"
+            [ngClass]="{'search-bar-input-focused': isFocused}"
             autocorrect="off"
             autocapitalize="off"
             spellcheck="false"
             autocomplete="off"
             placeholder="Search"
-            #searchInput/>
+            (focus)="isFocused = true;"
+            (blur)="isFocused = false;"/>
         <button type="submit" style="display:none">hidden submit</button>
         </form>
       </div>
@@ -37,32 +39,12 @@
       </div>
     </div>
   </div>
-  <!--<div class="col d-flex align-items-center justify-content-center Mx(1)" style="height: 65px;">-->
-    <!--<div class="position-relative">-->
-      <!--<form name="search" (submit)="handleSubmitSearch(searchQuery)">-->
-        <!--<input [(ngModel)]="searchQuery"-->
-               <!--(ngModelChange)="handleAutoCompleteLookup(searchQuery)"-->
-               <!--name="q"-->
-               <!--class="search-input c-font-circular c-bold pl-3 pr-5 py-2"-->
-               <!--autocorrect="off"-->
-               <!--autocapitalize="off"-->
-               <!--spellcheck="false"-->
-               <!--autocomplete="off"-->
-               <!--placeholder="Search"-->
-               <!--#searchInput/>-->
-        <!--<button type="submit" style="display:none">hidden submit</button>-->
-      <!--</form>-->
-      <!--<div class="position-absolute" style="right: 16px; top: 12px" (click)="handleSubmitSearch(searchQuery)">-->
-        <!--<img src="assets/img/svg/ic-search.svg"/>-->
-      <!--</div>-->
-    <!--</div>-->
-    <!--<div *ngIf="showPredictionsContainer && predictions.length > 0 "-->
-         <!--class="search-auto-complete-container c-font-circular c-light">-->
-      <!--<div *ngFor="let prediction of predictions" (click)="handleSubmitSearch(prediction)">-->
-        <!--<div class="Px(1) Py(0.5) t-regular2">{{prediction}}</div>-->
-      <!--</div>-->
-    <!--</div>-->
-  <!--</div>-->
+    <div *ngIf="showPredictionsContainer && predictions.length > 0 "
+         class="search-auto-complete-container c-font-circular c-light">
+      <div *ngFor="let prediction of predictions" (click)="handleSubmitSearch(prediction)">
+        <div class="Px(1) Py(0.5) t-regular2">{{prediction}}</div>
+      </div>
+    </div>
   <div class="col d-none d-md-flex align-items-center justify-content-end Mend(1.5)">
     <div class="c-font-circular c-regular2 c-bold c-color">?</div>
   </div>
