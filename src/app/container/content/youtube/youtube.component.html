@@ -2,12 +2,21 @@
   <div class="row no-gutters">
 
   <!-- SEARCH MODULE -->
-  <div class="col Mx(1) order-1 order-md-2">
-    <div class="text-center text-md-left pb-3 c-smaller c-light c-bold section-text">Search Results</div>
+  <div class="col Mx(1) order-1 solidify">
+    <div class="text-center text-md-left pb-3 c-smaller c-accent-color c-bold section-text">Search Results</div>
     <div (click)="currentPlayingPlaylist = 'SEARCH'">
       <div *ngFor="let video of videoList" class="mb-2">
         <app-search-card (added)="handleAddToCurrentPlaylist($event)" (selected)="handleVideoSelect($event)" [video]="video"></app-search-card>
       </div>
+    </div>
+  </div>
+
+    <!-- RECOMMENDED MODULE -->
+    <div class="col-md Mx(1) order-2 solidify">
+      <div class="text-center text-md-left pb-3 c-smaller c-bold c-accent-color section-text">Recommended For You</div>
+        <div *ngFor="let video of recommendedList" class="mb-2">
+          <app-search-card (added)="handleAddToCurrentPlaylist($event)" (selected)="handleRecommendedVideoSelect($event)" [video]="video"></app-search-card>
+        </div>
     </div>
 
     <!-- PLAYLIST MODULE -->
@@ -38,20 +47,6 @@
       <div class="d-block d-md-none My(1.5)"></div>
     </div>
 
-    <!-- RECOMMENDED MODULE -->
-    <div class="col-md Mx(1) order-2 solidify">
-      <div class="text-center text-md-left pb-3 c-smaller c-bold c-accent-color section-text">Recommended For You</div>
-        <div *ngFor="let video of recommendedList" class="mb-2">
-          <app-search-card  (press)="handleAddToCurrentPlaylist(video)" (added)="handleAddToCurrentPlaylist($event)" (selected)="handleRecommendedVideoSelect($event)" [video]="video"></app-search-card>
-        </div>
-    </div>
-
   </div>
-
-  <!--<div class="row">-->
-    <!--<div class="col">-->
-      <!--<div style="min-height:120px;max-height:120px;">Brosef</div>-->
-    <!--</div>-->
-  <!--</div>-->
-
 </div>
+
