@@ -1,13 +1,13 @@
-<div class="row flex-nowrap no-gutters c-font-circular c-smaller c-bold header-shadow-desktop">
-  <div class="col d-flex align-items-center justify-content-start Mstart(1)">
-    <img src="assets/img/svg/ic-logo2.svg" width="75">
+<div class="row flex-nowrap no-gutters c-font-circular c-smaller c-bold header-shadow-desktop" style="height: 65px;">
+  <div class="col-auto d-flex align-items-center justify-content-start Mstart(1)">
+    <img src="assets/img/svg/ic-logo.svg" width="75">
   </div>
-  <div class="col d-flex justify-content-center align-items-center" style="height: 65px;">
-    <div class="row d-flex align-items-center search-bar no-gutters" [ngClass]="{'search-focus': isFocused}">
+  <div class="col d-flex justify-content-center align-items-center">
+    <div class="row d-none d-md-flex align-items-center search-bar no-gutters" [ngClass]="{'search-focus': isFocused}">
       <div class="col">
-        <!--<span class="placeholder ml-3">Search</span>-->
         <form name="search" (submit)="handleSubmitSearch(searchQuery)">
-        <input [(ngModel)]="searchQuery"
+        <input
+            [(ngModel)]="searchQuery"
             (ngModelChange)="handleAutoCompleteLookup(searchQuery)"
             name="q"
             class="search-bar-input mx-3"
@@ -45,7 +45,44 @@
         <div class="Px(1) Py(0.5) t-regular2">{{prediction}}</div>
       </div>
     </div>
-  <div class="col d-none d-md-flex align-items-center justify-content-end Mend(1.5)">
-    <div class="c-font-circular c-regular2 c-bold c-color">?</div>
+  <div class="col-auto d-flex align-items-center justify-content-center action-header-tab">
+    <!--<img src="/assets/img/svg/ic-notification.svg" /> active-icon-svg -->
+    <svg width="25px" height="31px" viewBox="0 0 25 31" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" transform="translate(-1812.000000, -17.000000)">
+          <g id="ic-notification" transform="translate(1806.000000, 14.000000)">
+            <g id="Bounding_Boxes">
+              <polygon id="Shape" points="0 0 37 0 37 37 0 37"></polygon>
+            </g>
+            <g id="Outline" transform="translate(6.000000, 3.000000)" class="active-icon-svg" fill="#39A0ED" fill-rule="nonzero">
+              <path d="M12.5,31 C14.21875,31 15.625,29.605 15.625,27.9 L9.375,27.9 C9.375,29.605 10.78125,31 12.5,31 Z M21.875,21.7 L21.875,13.95 C21.875,9.1915 19.328125,5.208 14.84375,4.154 L14.84375,3.1 C14.84375,1.8135 13.796875,0.775 12.5,0.775 C11.203125,0.775 10.15625,1.8135 10.15625,3.1 L10.15625,4.154 C5.6875,5.208 3.125,9.176 3.125,13.95 L3.125,21.7 L0,24.8 L0,26.35 L25,26.35 L25,24.8 L21.875,21.7 Z M18.75,23.25 L6.25,23.25 L6.25,13.95 C6.25,10.106 8.609375,6.975 12.5,6.975 C16.390625,6.975 18.75,10.106 18.75,13.95 L18.75,23.25 Z" id="Shape"></path>
+            </g>
+          </g>
+        </g>
+      </g>
+    </svg>
+  </div>
+  <div class="col-auto d-none d-md-flex align-items-center justify-content-center action-header-tab">
+    <!--<img src="/assets/img/svg/ic-user.svg" />-->
+    <svg width="27px" height="27px" viewBox="0 0 27 27" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" transform="translate(-1866.000000, -18.000000)" class="active-icon-svg" fill="#39A0ED" fill-rule="nonzero">
+          <path d="M1879.5,21.7241379 C1881.29224,21.7241379 1882.75862,23.1905172 1882.75862,24.9827586 C1882.75862,26.775 1881.29224,28.2413793 1879.5,28.2413793 C1877.70776,28.2413793 1876.24138,26.775 1876.24138,24.9827586 C1876.24138,23.1905172 1877.70776,21.7241379 1879.5,21.7241379 Z M1879.96552,36.6206897 C1884.57414,36.6206897 1889.86552,38.6224138 1890.2069,39.7241379 L1890.2069,41.2758621 L1869.72414,41.2758621 L1869.72414,39.7396552 C1870.06552,38.6224138 1875.3569,36.6206897 1879.96552,36.6206897 Z M1879.5,18 C1875.64203,18 1872.51724,21.1247845 1872.51724,24.9827586 C1872.51724,28.8407328 1875.64203,31.9655172 1879.5,31.9655172 C1883.35797,31.9655172 1886.48276,28.8407328 1886.48276,24.9827586 C1886.48276,21.1247845 1883.35797,18 1879.5,18 Z M1879.5,32.8965517 C1874.99437,32.8965517 1866,35.2134975 1866,39.8128079 L1866,45 L1893,45 L1893,39.8128079 C1893,35.2134975 1884.00563,32.8965517 1879.5,32.8965517 Z" id="Shape"></path>
+        </g>
+      </g>
+    </svg>
+  </div>
+  <div class="col-auto d-flex d-md-none align-items-center justify-content-center action-header-tab">
+    <svg width="27px" height="27px" viewBox="0 0 19 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" transform="translate(-1257.000000, -25.000000)" class="active-icon-svg" fill="#39A0ED" stroke="#39A0ED">
+          <g id="Group-4" transform="translate(758.000000, 12.000000)">
+            <g id="search" transform="translate(500.000000, 14.000000)">
+              <path d="M11.7,11 L11.4,10.7 C12.4,9.6 13,8.1 13,6.5 C13,2.9 10.1,0 6.5,0 C2.9,0 0,2.9 0,6.5 C0,10.1 2.9,13 6.5,13 C8.1,13 9.6,12.4 10.7,11.4 L11,11.7 L11,12.5 L16,17.5 L17.5,16 L12.5,11 L11.7,11 Z M6.5,11 C4,11 2,9 2,6.5 C2,4 4,2 6.5,2 C9,2 11,4 11,6.5 C11,9 9,11 6.5,11 L6.5,11 Z" id="Shape"></path>
+            </g>
+          </g>
+        </g>
+      </g>
+    </svg>
   </div>
 </div>
