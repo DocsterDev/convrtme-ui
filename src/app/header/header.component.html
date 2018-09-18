@@ -1,8 +1,48 @@
 <div class="row flex-nowrap no-gutters c-font-circular c-smaller c-bold header-shadow-desktop" style="height: 65px;">
-  <div class="col-auto d-flex align-items-center justify-content-start Mstart(1)">
+  <div class="col-auto d-flex align-items-center justify-content-start Mstart(1)" *ngIf="!mobileSearchEnabled">
     <img src="assets/img/svg/ic-logo.svg" width="75">
   </div>
   <div class="col d-flex justify-content-center align-items-center">
+
+
+
+    <div class="row align-items-center search-bar no-gutters expand" *ngIf="mobileSearchEnabled">
+      <div class="col">
+        <form name="search" (submit)="handleSubmitSearch(searchQuery)">
+          <input
+            [(ngModel)]="searchQuery"
+            (ngModelChange)="handleAutoCompleteLookup(searchQuery)"
+            name="q"
+            class="search-bar-input mx-3"
+            [ngClass]="{'search-bar-input-focused': isFocused}"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            autocomplete="off"
+            placeholder="Search"
+            (focus)="isFocused = true;"
+            (blur)="isFocused = false;"/>
+          <button type="submit" style="display:none">hidden submit</button>
+        </form>
+      </div>
+      <div class="col" style="max-width:50px;" *ngIf="!mobileSearchEnabled">
+        <div class="search-icon d-flex align-items-center justify-content-center" (click)="handleSubmitSearch(searchQuery)">
+          <svg width="19px" height="19px" viewBox="0 0 19 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+              <g id="Artboard" transform="translate(-1257.000000, -25.000000)" class="search-icon-svg" fill="#39A0ED" stroke="#39A0ED">
+                <g id="Group-4" transform="translate(758.000000, 12.000000)">
+                  <g id="search" transform="translate(500.000000, 14.000000)">
+                    <path d="M11.7,11 L11.4,10.7 C12.4,9.6 13,8.1 13,6.5 C13,2.9 10.1,0 6.5,0 C2.9,0 0,2.9 0,6.5 C0,10.1 2.9,13 6.5,13 C8.1,13 9.6,12.4 10.7,11.4 L11,11.7 L11,12.5 L16,17.5 L17.5,16 L12.5,11 L11.7,11 Z M6.5,11 C4,11 2,9 2,6.5 C2,4 4,2 6.5,2 C9,2 11,4 11,6.5 C11,9 9,11 6.5,11 L6.5,11 Z" id="Shape"></path>
+                  </g>
+                </g>
+              </g>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+
     <div class="row d-none d-md-flex align-items-center search-bar no-gutters" [ngClass]="{'search-focus': isFocused}">
       <div class="col">
         <form name="search" (submit)="handleSubmitSearch(searchQuery)">
@@ -22,7 +62,7 @@
         <button type="submit" style="display:none">hidden submit</button>
         </form>
       </div>
-      <div class="col" style="max-width:50px;">
+      <div class="col" style="max-width:50px;" *ngIf="!mobileSearchEnabled">
         <div class="search-icon d-flex align-items-center justify-content-center" (click)="handleSubmitSearch(searchQuery)">
           <svg width="19px" height="19px" viewBox="0 0 19 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -38,6 +78,10 @@
         </div>
       </div>
     </div>
+
+
+
+
   </div>
     <div *ngIf="showPredictionsContainer && predictions.length > 0 "
          class="search-auto-complete-container c-font-circular c-light">
@@ -45,7 +89,7 @@
         <div class="Px(1) Py(0.5) t-regular2">{{prediction}}</div>
       </div>
     </div>
-  <div class="col-auto d-flex align-items-center justify-content-center action-header-tab">
+  <div class="col-auto d-flex align-items-center justify-content-center action-header-tab" style="width:65px;" *ngIf="!mobileSearchEnabled">
     <!--<img src="/assets/img/svg/ic-notification.svg" /> active-icon-svg -->
     <svg width="25px" height="31px" viewBox="0 0 25 31" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -62,7 +106,7 @@
       </g>
     </svg>
   </div>
-  <div class="col-auto d-none d-md-flex align-items-center justify-content-center action-header-tab">
+  <div class="col-auto d-none d-md-flex align-items-center justify-content-center action-header-tab" style="width:65px;" >
     <!--<img src="/assets/img/svg/ic-user.svg" />-->
     <svg width="27px" height="27px" viewBox="0 0 27 27" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -72,10 +116,10 @@
       </g>
     </svg>
   </div>
-  <div class="col-auto d-flex d-md-none align-items-center justify-content-center action-header-tab">
+  <div class="col-auto d-flex d-md-none align-items-center justify-content-center action-header-tab" [ngClass]="{'action-enabled-container': mobileSearchEnabled}" (click)="mobileSearchEnabled = !mobileSearchEnabled" style="width:65px;">
     <svg width="27px" height="27px" viewBox="0 0 19 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Artboard" transform="translate(-1257.000000, -25.000000)" class="active-icon-svg" fill="#39A0ED" stroke="#39A0ED">
+        <g id="Artboard" transform="translate(-1257.000000, -25.000000)" [ngClass]="{'action-enabled-icon': mobileSearchEnabled}" class="active-icon-svg" fill="#39A0ED" stroke="#39A0ED">
           <g id="Group-4" transform="translate(758.000000, 12.000000)">
             <g id="search" transform="translate(500.000000, 14.000000)">
               <path d="M11.7,11 L11.4,10.7 C12.4,9.6 13,8.1 13,6.5 C13,2.9 10.1,0 6.5,0 C2.9,0 0,2.9 0,6.5 C0,10.1 2.9,13 6.5,13 C8.1,13 9.6,12.4 10.7,11.4 L11,11.7 L11,12.5 L16,17.5 L17.5,16 L12.5,11 L11.7,11 Z M6.5,11 C4,11 2,9 2,6.5 C2,4 4,2 6.5,2 C9,2 11,4 11,6.5 C11,9 9,11 6.5,11 L6.5,11 Z" id="Shape"></path>
