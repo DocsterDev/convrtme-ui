@@ -118,7 +118,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.progress = '0';
     if (this.activeSound) {
       this.activeSound.stop();
-      this.titleService.setTitle('Moup.io');
+      this.titleService.setTitle('moup.io');
     }
     this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: true});
     this.audioPlayerService.triggerTogglePlaying({id: video.id, toggle: false});
