@@ -5,11 +5,12 @@
   <div class="col d-flex justify-content-center align-items-center">
 
 
-    <div class="row d-none d-md-flex align-items-center search-bar no-gutters" [ngClass]="{'search-focus': isFocused, 'expand': mobileSearchEnabled, 'd-flex': mobileSearchEnabled}">
+    <div class="row d-none d-md-flex align-items-center search-bar no-gutters" (click)="focusSearchBar()" [ngClass]="{'search-focus': isFocused, 'expand': mobileSearchEnabled, 'd-flex': mobileSearchEnabled}">
       <div class="col">
         <form name="search" (submit)="handleSubmitSearch(searchQuery)">
+          <!--[(ngModel)]="searchQuery"-->
         <input
-            [(ngModel)]="searchQuery"
+          [(ngModel)]="searchQuery"
             (ngModelChange)="handleAutoCompleteLookup(searchQuery)"
             name="q"
             class="search-bar-input mx-3"
@@ -20,7 +21,7 @@
             autocomplete="off"
             placeholder="Search"
             (focus)="isFocused = true;"
-            (blur)="isFocused = false; mobileSearchEnabled = false; clearAutoSuggestions();"/>
+            (blur)="isFocused = false; mobileSearchEnabled = false; clearAutoSuggestions();" #searchInput/>
         <button type="submit" style="display:none">hidden submit</button>
         </form>
       </div>
@@ -39,15 +40,13 @@
           </svg>
         </div>
       </div>
-    </div>
-
-  </div>
-    <div *ngIf="isFocused && predictions.length > 0 && searchQuery"
-         class="search-auto-complete-container c-font-circular c-light">
-      <div *ngFor="let prediction of predictions" (click)="handleSubmitSearch(prediction)">
-        <div class="Px(1) Py(0.5) t-regular2">{{prediction}}</div>
+      <div *ngIf="isFocused && searchQuery && predictions && predictions.length > 0" class="search-auto-complete-container c-font-circular c-light">
+        <div *ngFor="let prediction of predictions" (click)="handleSubmitSearch(prediction)">
+          <div class="Px(1) Py(0.5) t-regular2">{{prediction}}</div>
+        </div>
       </div>
     </div>
+  </div>
   <div class="col-auto d-flex align-items-center justify-content-center action-header-tab" style="width:65px;" *ngIf="!mobileSearchEnabled">
     <!--<img src="/assets/img/svg/ic-notification.svg" /> active-icon-svg -->
     <svg width="25px" height="31px" viewBox="0 0 25 31" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -75,7 +74,7 @@
       </g>
     </svg>
   </div>
-  <div class="col-auto d-flex d-md-none align-items-center justify-content-center action-header-tab" [ngClass]="{'action-enabled-container': mobileSearchEnabled}" (click)="mobileSearchEnabled = !mobileSearchEnabled" style="width:65px;">
+  <div class="col-auto d-flex d-md-none align-items-center justify-content-center action-header-tab" [ngClass]="{'action-enabled-container': mobileSearchEnabled}" (click)="mobileSearchEnabled = !mobileSearchEnabled; focusSearchBar();" style="width:65px;">
     <svg width="27px" height="27px" viewBox="0 0 19 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="Artboard" transform="translate(-1257.000000, -25.000000)" [ngClass]="{'action-enabled-icon': mobileSearchEnabled}" class="active-search-icon-svg" fill="#39A0ED" stroke="#39A0ED">

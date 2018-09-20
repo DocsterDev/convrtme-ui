@@ -16,8 +16,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public user: any = {};
 
   public predictions: Array<string>;
-  public searchQuery: string;
   private predictionsTimeout;
+
+  public searchQuery;
 
   private userSignInSubscription: Subscription;
   private autoCompleteSubscription: Subscription;
@@ -57,8 +58,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   public handleAutoCompleteLookup(searchQuery) {
+    console.log('QUERY: ' + searchQuery);
     clearTimeout(this.predictionsTimeout);
-    if (searchQuery === '') {
+    if (!searchQuery) {
       this.clearAutoSuggestions();
       return;
     }
@@ -71,16 +73,24 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   public handleSubmitSearch(searchQuery) {
-    this.clearAutoSuggestions();
+    console.log('Search : ' + searchQuery);
+    this.searchQuery = '';
     if (!searchQuery) {
+      this.clearAutoSuggestions();
       return;
     }
-    this.router.navigate(['.'], { relativeTo: this.route, queryParams: {q: searchQuery} });
+    this.clearAutoSuggestions();
     this.renderer.invokeElementMethod(this.searchInput.nativeElement, 'blur', []);
+    this.router.navigate(['.'], { relativeTo: this.route, queryParams: {q: searchQuery} });
   }
 
   public clearAutoSuggestions() {
     this.predictions = [];
+  }
+
+  public focusSearchBar() {
+    console.log('focus');
+    this.renderer.invokeElementMethod(this.searchInput.nativeElement, 'focus', []);
   }
 
   ngOnDestroy() {

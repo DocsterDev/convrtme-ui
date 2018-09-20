@@ -31,6 +31,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   private getPlaylistVideosSubscription: Subscription;
 
   public query: string;
+  public previousQuery: string;
 
   static updateComponent(component, index, list) {
     component.index = index;
@@ -51,6 +52,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
         if (searchResults != null) {
           this.videoRecommendedService.recommended(searchResults[0].id);
         }
+        this.previousQuery = this.query;
         this.videoList = [];
         this.loadIncrementally(searchResults, this.videoList);
       });

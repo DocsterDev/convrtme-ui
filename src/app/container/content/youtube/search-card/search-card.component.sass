@@ -5,7 +5,10 @@
   transition: opacity, transform $animationTimer ease
   will-change: opacity
   min-width: 100px
-  max-width: 550px
+  //width: 100%
+  @media screen and (min-width: 448px)
+    max-width: 448px
+  max-width: 348px
   overflow: hidden
   max-height: $thumbnailHeightMobile
   @media screen and (min-width: 768px) /* Turn off hover on mobile */

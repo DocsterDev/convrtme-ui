@@ -59,13 +59,15 @@
   font-size: 16px
   display: block
   position: absolute
-  top: 55px
+  top: 65px
   background: $colorWhite
-  min-width: 100%
-  max-width: 300px
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.3)
+  width: 500px
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2)
   border: 1px solid $tabHoverColor
   z-index: 999
+  @media screen and (max-width: 768px)
+    min-width: 100% !important
+    min-height: 100% !important
 
 .search-auto-complete-container div
   display: block
@@ -80,8 +82,10 @@
   height: 45px
   width: 500px
   border: solid 2px #F0F1F5
+  transition: background 100ms ease
   &:hover
     background: #ecedf1
+    cursor: text
   .search-icon
     height: 45px
     width: 100%

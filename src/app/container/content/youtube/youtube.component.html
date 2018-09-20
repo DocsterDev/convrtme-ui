@@ -1,22 +1,23 @@
 <div class="w-100 d-flex justify-content-center" >
-  <div class="row w-100 no-gutters mt-2 ml-4 ml-md-0 mb-4 mb-md-3" style="max-width:938px;">
-    <div class="col d-flex align-items-center">
-      <div class="c-bold">Showing results for: <span class="c-bold c-accent-color">{{query}}</span></div>
-    </div>
-  </div>
+  <!--<div class="row w-100 no-gutters mt-2 ml-4 ml-md-0 mb-4 mb-md-3" style="max-width:938px;" *ngIf="query">-->
+    <!--<div class="col d-flex align-items-center">-->
+      <!--<div class="c-bold c-smaller">Showing results for: <span class="c-bold c-smaller c-accent-color">{{query}}</span></div>-->
+    <!--</div>-->
+  <!--</div>-->
 </div>
 <div class="w-100 d-flex justify-content-center">
   <div class="row no-gutters" style="max-width:1024px;">
     <!-- SEARCH MODULE -->
     <div class="col Mx(1) order-1 solidify">
-      <div class="d-none d-md-flex text-md-left pb-3 c-smaller c-accent-color c-bold section-text">Search Results</div>
+      <!--<div class="d-none d-md-flex text-md-left pb-3 c-smaller c-accent-color c-bold section-text" *ngIf="previousQuery">Search Results</div>-->
+      <div class="text-left c-bold c-smaller section-text pb-3" *ngIf="previousQuery">Showing results for: <span class="c-bold c-smaller c-accent-color">{{previousQuery}}</span></div>
         <div *ngFor="let video of videoList" class="mb-2">
           <app-search-card (added)="handleAddToCurrentPlaylist($event)" (selected)="handleVideoSelect($event)" [video]="video"></app-search-card>
         </div>
     </div>
     <!-- RECOMMENDED MODULE -->
     <div class="col-md Mx(1) order-2 solidify">
-      <div class="text-center text-md-left pb-3 c-smaller c-bold c-accent-color section-text">Recommended For You</div>
+      <div class="text-center text-md-left pb-3 c-smaller c-bold c-accent-color section-text" *ngIf="previousQuery">Recommended For You</div>
       <div *ngFor="let video of recommendedList" class="mb-2">
         <app-search-card (added)="handleAddToCurrentPlaylist($event)" (selected)="handleRecommendedVideoSelect($event)" [video]="video"></app-search-card>
       </div>
