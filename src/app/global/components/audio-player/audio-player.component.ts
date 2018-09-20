@@ -133,6 +133,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       html5: true,
       buffer: true,
       preload: true,
+      autoplay: false,
       onplay: () => {
         this.duration = video.duration;
         this.showNowPlayingBar = true;

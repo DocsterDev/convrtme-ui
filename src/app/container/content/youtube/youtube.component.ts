@@ -30,7 +30,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   private playlistUpdateSubscription: Subscription;
   private getPlaylistVideosSubscription: Subscription;
 
-  private query: string;
+  public query: string;
 
   static updateComponent(component, index, list) {
     component.index = index;

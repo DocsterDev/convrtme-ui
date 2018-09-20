@@ -20,7 +20,7 @@
             autocomplete="off"
             placeholder="Search"
             (focus)="isFocused = true;"
-            (blur)="isFocused = false; mobileSearchEnabled = false"/>
+            (blur)="isFocused = false; mobileSearchEnabled = false; clearAutoSuggestions();"/>
         <button type="submit" style="display:none">hidden submit</button>
         </form>
       </div>
@@ -41,11 +41,8 @@
       </div>
     </div>
 
-
-
-
   </div>
-    <div *ngIf="showPredictionsContainer && predictions.length > 0 "
+    <div *ngIf="isFocused && predictions.length > 0 && searchQuery"
          class="search-auto-complete-container c-font-circular c-light">
       <div *ngFor="let prediction of predictions" (click)="handleSubmitSearch(prediction)">
         <div class="Px(1) Py(0.5) t-regular2">{{prediction}}</div>

@@ -15,7 +15,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public loading: boolean;
   public user: any = {};
 
-  public showPredictionsContainer: boolean;
   public predictions: Array<string>;
   public searchQuery: string;
   private predictionsTimeout;
@@ -40,7 +39,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private videoSearchService: VideoSearchService,
     private videoAutoCompleteService: VideoAutoCompleteService,
-    private renderer:Renderer,
+    private renderer: Renderer,
     private route: ActivatedRoute,
     private router: Router) {
   }
@@ -49,44 +48,39 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.userSignInSubscription = this.userService.userSignedInEmitter$.subscribe((user) => {
       this.user = user;
-      // this.user.valid = false;
       this.loading = false;
     });
     this.route.queryParams.subscribe(params => {
-      this.searchQuery = params.q ? params.q : '';
-      this.showPredictionsContainer = false;
+      // this.searchQuery = params.q ? params.q : '';
+      // Set this to the "showing results for"
     });
   }
 
   public handleAutoCompleteLookup(searchQuery) {
     clearTimeout(this.predictionsTimeout);
     if (searchQuery === '') {
-      this.showPredictionsContainer = false;
-      this.predictions = [];
+      this.clearAutoSuggestions();
       return;
     }
     this.predictionsTimeout = setTimeout(() => {
       this.autoCompleteSubscription = this.videoAutoCompleteService.getAutoComplete(searchQuery).subscribe((autoCompleteResponse) => {
-        this.predictions = [];
+        this.clearAutoSuggestions();
         autoCompleteResponse[1].forEach((e) => this.predictions.push(e));
-        this.showPredictionsContainer = true;
       });
-    },50);
+    }, 25);
   }
 
   public handleSubmitSearch(searchQuery) {
+    this.clearAutoSuggestions();
     if (!searchQuery) {
       return;
     }
     this.router.navigate(['.'], { relativeTo: this.route, queryParams: {q: searchQuery} });
     this.renderer.invokeElementMethod(this.searchInput.nativeElement, 'blur', []);
-    this.showPredictionsContainer = false;
   }
 
-  @HostListener('window:click') onClick() {
-    if (this.showPredictionsContainer && this.searchInput.nativeElement !== document.activeElement) {
-      this.showPredictionsContainer = false;
-    }
+  public clearAutoSuggestions() {
+    this.predictions = [];
   }
 
   ngOnDestroy() {

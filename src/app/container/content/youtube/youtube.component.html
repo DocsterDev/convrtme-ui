@@ -1,29 +1,26 @@
-<div class="w-100 d-flex justify-content-center">
-  <!--<div class="row">-->
-    <!--<div class="col d-flex align-items-center">-->
-      <!--<span class="">Showing results for: <span class="">{{searchQuery}}</span></span>-->
-    <!--</div>-->
-  <!--</div>-->
-  <div class="row no-gutters" style="max-width:1024px;">
-
-  <!-- SEARCH MODULE -->
-  <div class="col Mx(1) order-1 solidify">
-    <div class="text-center text-md-left pb-3 c-smaller c-accent-color c-bold section-text">Search Results</div>
-    <div (click)="currentPlayingPlaylist = 'SEARCH'">
-      <div *ngFor="let video of videoList" class="mb-2">
-        <app-search-card (added)="handleAddToCurrentPlaylist($event)" (selected)="handleVideoSelect($event)" [video]="video"></app-search-card>
-      </div>
+<div class="w-100 d-flex justify-content-center" >
+  <div class="row w-100 no-gutters mt-2 ml-4 ml-md-0 mb-4 mb-md-3" style="max-width:938px;">
+    <div class="col d-flex align-items-center">
+      <div class="c-bold">Showing results for: <span class="c-bold c-accent-color">{{query}}</span></div>
     </div>
   </div>
-
+</div>
+<div class="w-100 d-flex justify-content-center">
+  <div class="row no-gutters" style="max-width:1024px;">
+    <!-- SEARCH MODULE -->
+    <div class="col Mx(1) order-1 solidify">
+      <div class="d-none d-md-flex text-md-left pb-3 c-smaller c-accent-color c-bold section-text">Search Results</div>
+        <div *ngFor="let video of videoList" class="mb-2">
+          <app-search-card (added)="handleAddToCurrentPlaylist($event)" (selected)="handleVideoSelect($event)" [video]="video"></app-search-card>
+        </div>
+    </div>
     <!-- RECOMMENDED MODULE -->
     <div class="col-md Mx(1) order-2 solidify">
       <div class="text-center text-md-left pb-3 c-smaller c-bold c-accent-color section-text">Recommended For You</div>
-        <div *ngFor="let video of recommendedList" class="mb-2">
-          <app-search-card (added)="handleAddToCurrentPlaylist($event)" (selected)="handleRecommendedVideoSelect($event)" [video]="video"></app-search-card>
-        </div>
+      <div *ngFor="let video of recommendedList" class="mb-2">
+        <app-search-card (added)="handleAddToCurrentPlaylist($event)" (selected)="handleRecommendedVideoSelect($event)" [video]="video"></app-search-card>
+      </div>
     </div>
-
     <!-- PLAYLIST MODULE -->
     <div class="col-md Mx(1) order-3" style="display:none;">
       <div class="d-block d-md-none My(1)"></div>
@@ -51,7 +48,6 @@
       </div>
       <div class="d-block d-md-none My(1.5)"></div>
     </div>
-
   </div>
 </div>
 
