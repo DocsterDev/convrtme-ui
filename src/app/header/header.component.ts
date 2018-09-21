@@ -58,7 +58,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   public handleAutoCompleteLookup(searchQuery) {
-    console.log('QUERY: ' + searchQuery);
     clearTimeout(this.predictionsTimeout);
     if (!searchQuery) {
       this.clearAutoSuggestions();
@@ -73,7 +72,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   public handleSubmitSearch(searchQuery) {
-    console.log('Search : ' + searchQuery);
     this.searchQuery = '';
     if (!searchQuery) {
       this.clearAutoSuggestions();
@@ -89,7 +87,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   public focusSearchBar() {
-    console.log('focus');
     this.renderer.invokeElementMethod(this.searchInput.nativeElement, 'focus', []);
   }
 

@@ -32,6 +32,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   private isPlaylist = false;
 
+  private retryCount: number = 0;
+
   private videoEventSubscription: Subscription;
   private videoPlayingEventSubscription: Subscription;
   private videoLoadingEventSubscription: Subscription;
@@ -125,20 +127,13 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     }
     this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: true});
     this.audioPlayerService.triggerTogglePlaying({id: video.id, toggle: false});
-    this.streamValidatorSubscription = this.streamValidator.validateMediaStream(video.id).subscribe((response) => {
-      console.log('Video stream fetch successful');
-      this.buildAudioObject(video);
-      this.activeSound.play();
-    }, (error) => {
-      // Here this means that we cant play the video because the stream url is not found. So cancel the loading graphics and display error message.
-      console.error('ERROR FETCHING VIDEO STREAM URL: ' + error);
-      this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: false});
-      this.videoServiceLock = false;
-    });
+    this.retryCount = 0;
+    this.video = video; // THIS IS NEW - KEEP AN EYE ON THIS
+    this.buildAudioObject();
   }
 
-  private buildAudioObject(video) {
-    const streamUrl = environment.streamUrl + '/stream?v=' + video.id;
+  private buildAudioObject() {
+    const streamUrl = environment.streamUrl + '/stream?v=' + this.video.id;
     this.activeSound = new Howl({
       src: [streamUrl],
       format: ['webm'],
@@ -147,11 +142,11 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       preload: true,
       autoplay: false,
       onplay: () => {
-        this.duration = video.duration;
+        this.duration = this.video.duration;
         this.showNowPlayingBar = true;
-        this.audioPlayerService.triggerTogglePlaying({id: video.id, toggle: true});
-        this.video = video;
-        this.audioPlayerService.setPlaylingVideo(video);
+        this.audioPlayerService.triggerTogglePlaying({id: this.video.id, toggle: true});
+        // this.video = video;
+        this.audioPlayerService.setPlaylingVideo(this.video);
         this.titleService.setTitle(this.video.title + ' - ' + this.video.owner);
         this.checkCurrentPlaylist();
         requestAnimationFrame(this.step.bind(this));
@@ -162,33 +157,48 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       },
       onplayerror: (e) => {
         console.error(JSON.stringify(e));
-        this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: false});
+        this.audioPlayerService.triggerToggleLoading({id: this.video.id, toggle: false});
         this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error playing this video.'});
         this.videoServiceLock = false;
       },
       onloaderror: (e) => {
-        // console.error('Load Error: ' + e);
-        // const isSafari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/);
-        // const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-        // if (!isSafari && !iOS) {
-          console.error(JSON.stringify(e));
-          this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: false});
-          this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error loading this video.'});
-          this.videoServiceLock = false;
-        // }
+        this.streamValidatorSubscription = this.streamValidator.validateMediaStream(this.video.id).subscribe((response) => {
+          let resp: any = response;
+          if (resp.valid) {
+            const isSafari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/);
+            const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            if (!isSafari && !iOS) {
+              this.retryCount = this.retryCount + 1;
+              if (this.retryCount > 3) {
+                console.error('Could not play video ' + this.video.id + ' after ' + this.retryCount + ' attempts.');
+                return;
+              }
+              console.log('Received error in fetching video stream but stream is valid. Retry attempt ' + this.retryCount);
+              this.buildAudioObject();
+            }
+          } else {
+            // ERROR SECTION
+            this.audioPlayerService.triggerToggleLoading({id: this.video.id, toggle: false});
+            this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error loading this video.'});
+            this.videoServiceLock = false;
+          }
+        }, (error) => {
+          console.log(JSON.stringify(error));
+        });
       },
       onend: () => {
-        this.audioPlayerService.triggerTogglePlaying({id: video.id, toggle: false});
+        this.audioPlayerService.triggerTogglePlaying({id: this.video.id, toggle: false});
           this.playNextVideo();
       },
       onload: () => {
-        if (video.isRecommended === false && video.isPlaylist === false) {
-          this.videoRecommendedService.recommended(video.id);
+        if (this.video.isRecommended === false && this.video.isPlaylist === false) {
+          this.videoRecommendedService.recommended(this.video.id);
         }
-        this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: false});
+        this.audioPlayerService.triggerToggleLoading({id: this.video.id, toggle: false});
         this.videoServiceLock = false;
       }
     });
+    this.activeSound.play();
   }
 
   private step() {
