@@ -14,7 +14,6 @@ import {RouterModule} from '@angular/router';
 import {appRoutes} from './app.routes';
 import {TileComponent} from './common/tile/tile.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {MetadataService} from './service/metadata.service';
 import {UserService} from './service/user.service';
 import {FormsModule} from '@angular/forms';
 import {ModalModule} from 'ngx-bootstrap';
@@ -37,6 +36,7 @@ import {PlaylistCardComponent} from './container/content/youtube/playlist-card/p
 import {NgxSmoothDnDModule} from 'ngx-smooth-dnd';
 import {IpService} from './service/ip.service';
 import {HeaderService} from './service/header.service';
+import {StreamValidatorService} from './service/stream-validator.service';
 
 @NgModule({
   declarations: [
@@ -68,7 +68,7 @@ import {HeaderService} from './service/header.service';
     BrowserAnimationsModule
   ],
   providers: [
-    MetadataService,
+    StreamValidatorService,
     UserService,
     UtilsService,
     VideoSearchService,

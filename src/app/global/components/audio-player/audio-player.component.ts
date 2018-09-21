@@ -7,6 +7,7 @@ import {UtilsService} from '../../../service/utils.service';
 import {Subscription} from 'rxjs/Subscription';
 import {Title} from '@angular/platform-browser';
 import {environment} from '../../../../environments/environment';
+import {StreamValidatorService} from '../../../service/stream-validator.service';
 
 @Component({
   selector: 'app-audio-player',
@@ -35,11 +36,13 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private videoPlayingEventSubscription: Subscription;
   private videoLoadingEventSubscription: Subscription;
   private playlistUpdateEventSubscription: Subscription;
+  private streamValidatorSubscription: Subscription;
 
   constructor(private audioPlayerService: AudioPlayerService,
               private notificationService: NotificationService,
               private videoRecommendedService: VideoRecommendedService,
-              private titleService: Title) {
+              private titleService: Title,
+              private streamValidator: StreamValidatorService) {
   }
 
   ngOnInit() {
@@ -106,7 +109,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   public playMedia(video) {
-    if (this.videoServiceLock === true) {
+    if (this.videoServiceLock) {
       console.log('Cant select another video right now');
       return;
     }
@@ -122,7 +125,16 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     }
     this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: true});
     this.audioPlayerService.triggerTogglePlaying({id: video.id, toggle: false});
-    this.buildAudioObject(video);
+    this.streamValidatorSubscription = this.streamValidator.validateMediaStream(video.id).subscribe((response) => {
+      console.log('Video stream fetch successful');
+      this.buildAudioObject(video);
+      this.activeSound.play();
+    }, (error) => {
+      // Here this means that we cant play the video because the stream url is not found. So cancel the loading graphics and display error message.
+      console.error('ERROR FETCHING VIDEO STREAM URL: ' + error);
+      this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: false});
+      this.videoServiceLock = false;
+    });
   }
 
   private buildAudioObject(video) {
@@ -177,7 +189,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.videoServiceLock = false;
       }
     });
-    this.activeSound.play();
   }
 
   private step() {
@@ -195,6 +206,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.videoPlayingEventSubscription.unsubscribe();
     this.videoLoadingEventSubscription.unsubscribe();
     this.playlistUpdateEventSubscription.unsubscribe();
+    this.streamValidatorSubscription.unsubscribe();
   }
 
 }
