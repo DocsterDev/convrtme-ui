@@ -165,24 +165,17 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.streamValidatorSubscription = this.streamValidator.validateMediaStream(this.video.id).subscribe((response) => {
           let resp: any = response;
           if (resp.valid) {
+            console.log('Received false error');
             // FAKE ERROR
+            // const isSafari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/);
+            // const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            // if (!isSafari && !iOS) {
+            //   this.handleError();
+            // }
           } else {
             // ERROR SECTION
-            const isSafari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/);
-            const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-            if (!isSafari && !iOS) {
-              this.retryCount = this.retryCount + 1;
-              if (this.retryCount > 3) {
-                console.error('Could not play video ' + this.video.id + ' after ' + this.retryCount + ' attempts.');
-                return;
-              }
-              console.log('Received error in fetching video stream but stream is valid. Retry attempt ' + this.retryCount);
-              this.buildAudioObject();
-            } else {
-              this.audioPlayerService.triggerToggleLoading({id: this.video.id, toggle: false});
-              this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error loading this video.'});
-              this.videoServiceLock = false;
-            }
+            console.log('Received real error');
+            this.handleError();
           }
         }, (error) => {
           console.log(JSON.stringify(error));
@@ -201,6 +194,18 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       }
     });
     this.activeSound.play();
+  }
+
+  private handleError() {
+    this.retryCount = this.retryCount + 1;
+    if (this.retryCount > 1) {
+      this.audioPlayerService.triggerToggleLoading({id: this.video.id, toggle: false});
+      this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error loading this video.'});
+      this.videoServiceLock = false;
+      return;
+    }
+    console.log('Received error in fetching video stream. Retry attempt ' + this.retryCount);
+    this.buildAudioObject();
   }
 
   private step() {
