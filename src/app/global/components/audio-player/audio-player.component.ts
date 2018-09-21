@@ -165,6 +165,9 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.streamValidatorSubscription = this.streamValidator.validateMediaStream(this.video.id).subscribe((response) => {
           let resp: any = response;
           if (resp.valid) {
+            // FAKE ERROR
+          } else {
+            // ERROR SECTION
             const isSafari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/);
             const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
             if (!isSafari && !iOS) {
@@ -175,12 +178,11 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
               }
               console.log('Received error in fetching video stream but stream is valid. Retry attempt ' + this.retryCount);
               this.buildAudioObject();
+            } else {
+              this.audioPlayerService.triggerToggleLoading({id: this.video.id, toggle: false});
+              this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error loading this video.'});
+              this.videoServiceLock = false;
             }
-          } else {
-            // ERROR SECTION
-            this.audioPlayerService.triggerToggleLoading({id: this.video.id, toggle: false});
-            this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error loading this video.'});
-            this.videoServiceLock = false;
           }
         }, (error) => {
           console.log(JSON.stringify(error));
