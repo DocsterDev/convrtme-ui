@@ -120,26 +120,26 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     }
     this.videoServiceLock = true;
     this.showNowPlayingBar = false;
-    this.progress = '0';
-    if (this.activeSound) {
-      this.activeSound.stop();
-      this.titleService.setTitle('moup.io');
-    }
     this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: true});
     this.audioPlayerService.triggerTogglePlaying({id: video.id, toggle: false});
     this.retryCount = 0;
+    this.progress = '0';
     this.video = video; // THIS IS NEW - KEEP AN EYE ON THIS
     this.buildAudioObject();
   }
 
   private buildAudioObject() {
+    if (this.activeSound) {
+      this.activeSound.stop();
+      this.titleService.setTitle('moup.io');
+    }
     const streamUrl = environment.streamUrl + '/stream?v=' + this.video.id;
     this.activeSound = new Howl({
       src: [streamUrl],
       format: ['webm'],
       html5: true,
       buffer: true,
-      preload: true,
+      preload: false,
       autoplay: false,
       onplay: () => {
         this.duration = this.video.duration;
@@ -162,24 +162,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.videoServiceLock = false;
       },
       onloaderror: (e) => {
-        this.streamValidatorSubscription = this.streamValidator.validateMediaStream(this.video.id).subscribe((response) => {
-          let resp: any = response;
-          if (resp.valid) {
-            console.log('Received false error');
-            // FAKE ERROR
-            // const isSafari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/);
-            // const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-            // if (!isSafari && !iOS) {
-            //   this.handleError();
-            // }
-          } else {
-            // ERROR SECTION
-            console.log('Received real error');
-            this.handleError();
-          }
-        }, (error) => {
-          console.log(JSON.stringify(error));
-        });
+        console.log('Error Code: ' + e);
+        this.handleError();
       },
       onend: () => {
         this.audioPlayerService.triggerTogglePlaying({id: this.video.id, toggle: false});
