@@ -21,7 +21,7 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
       if (this.elementRef.nativeElement.contains(event.target)) {
         console.log('Clicked Inside');
       } else {
-        
+
         console.log('Clicked Outside');
         this.open = false;
         this.closed.emit(null);

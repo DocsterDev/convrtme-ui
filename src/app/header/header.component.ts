@@ -31,12 +31,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   @ViewChild('searchInput')
   public searchInput: ElementRef;
 
-  public navOptionsMobile = [
-    {display: 'Audio', icon: 'ic-volume-mute.svg', activeIcon: 'ic-volume-mute-active.svg', value: 'app/audio'},
-    {display: 'Video', icon: 'ic-videocam.svg', activeIcon: 'ic-videocam-active.svg', value: 'app/video'},
-    {display: 'YouTube', icon: 'ic-video-youtube.svg', activeIcon: 'ic-video-youtube-active.svg', value: 'app/youtube'}
-  ];
-
   constructor(
     private userService: UserService,
     private videoSearchService: VideoSearchService,
@@ -58,11 +52,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
   }
 
-  // @HostListener('window:click', ['$event'])
-  // public onClick(btn) {
-  //   console.log('Clicked');
-  // }
-
   public handleAutoCompleteLookup(searchQuery) {
     clearTimeout(this.predictionsTimeout);
     if (!searchQuery) {
@@ -71,10 +60,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
     this.predictionsTimeout = setTimeout(() => {
       this.autoCompleteSubscription = this.videoAutoCompleteService.getAutoComplete(searchQuery).subscribe((autoCompleteResponse) => {
-        this.clearAutoSuggestions();
-        autoCompleteResponse[1].forEach((e) => this.predictions.push(e));
+        if (autoCompleteResponse && autoCompleteResponse[1]) {
+          this.clearAutoSuggestions();
+          autoCompleteResponse[1].forEach((e) => this.predictions.push(e));
+        }
       });
-    }, 25);
+    });
   }
 
   public handleSubmitSearch(searchQuery) {
