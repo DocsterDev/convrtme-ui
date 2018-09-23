@@ -163,7 +163,9 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       },
       onloaderror: (e) => {
         console.log('Error Code: ' + e);
-        this.handleError();
+        setTimeout(() => {
+          this.handleError();
+        }, 500);
       },
       onend: () => {
         this.audioPlayerService.triggerTogglePlaying({id: this.video.id, toggle: false});
