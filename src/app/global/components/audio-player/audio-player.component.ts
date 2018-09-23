@@ -7,7 +7,6 @@ import {UtilsService} from '../../../service/utils.service';
 import {Subscription} from 'rxjs/Subscription';
 import {Title} from '@angular/platform-browser';
 import {environment} from '../../../../environments/environment';
-import {StreamValidatorService} from '../../../service/stream-validator.service';
 
 @Component({
   selector: 'app-audio-player',
@@ -32,7 +31,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   private isPlaylist = false;
 
-  private retryCount: number = 0;
+  private retryCount = 0;
 
   private videoEventSubscription: Subscription;
   private videoPlayingEventSubscription: Subscription;
@@ -43,8 +42,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   constructor(private audioPlayerService: AudioPlayerService,
               private notificationService: NotificationService,
               private videoRecommendedService: VideoRecommendedService,
-              private titleService: Title,
-              private streamValidator: StreamValidatorService) {
+              private titleService: Title) {
   }
 
   ngOnInit() {

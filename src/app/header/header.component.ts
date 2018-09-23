@@ -24,8 +24,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private autoCompleteSubscription: Subscription;
   private searchResultsSubscription: Subscription;
 
-  public isFocused: boolean = false;
-  public mobileSearchEnabled: boolean = false;
+  public isFocused = false;
+  public mobileSearchEnabled = false;
+  public isNotificationBodyOpen = false;
 
   @ViewChild('searchInput')
   public searchInput: ElementRef;
@@ -56,6 +57,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
       // Set this to the "showing results for"
     });
   }
+
+  // @HostListener('window:click', ['$event'])
+  // public onClick(btn) {
+  //   console.log('Clicked');
+  // }
 
   public handleAutoCompleteLookup(searchQuery) {
     clearTimeout(this.predictionsTimeout);
@@ -88,6 +94,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   public focusSearchBar() {
     this.renderer.invokeElementMethod(this.searchInput.nativeElement, 'focus', []);
+  }
+
+  public openNotificationBody() {
+    this.isNotificationBodyOpen = !this.isNotificationBodyOpen;
   }
 
   ngOnDestroy() {

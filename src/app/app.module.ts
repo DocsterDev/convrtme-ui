@@ -37,6 +37,7 @@ import {NgxSmoothDnDModule} from 'ngx-smooth-dnd';
 import {IpService} from './service/ip.service';
 import {HeaderService} from './service/header.service';
 import {StreamValidatorService} from './service/stream-validator.service';
+import {NotificationCenterComponent} from './header/notification-center/notification-center.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import {StreamValidatorService} from './service/stream-validator.service';
     PlaylistCardComponent,
     NotificationComponent,
     AudioPlayerComponent,
+    NotificationCenterComponent,
   ],
   imports: [
     FormsModule,

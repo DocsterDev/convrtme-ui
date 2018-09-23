@@ -21,7 +21,7 @@
     background: $tabHoverColor !important
 
 .header-shadow-mobile
-  box-shadow: 0 16px 24px 2px rgba(0, 0, 0, .14), 0 6px 30px 5px rgba(0, 0, 0, .12), 0 8px 10px -5px rgba(0, 0, 0, .2)
+  box-shadow: 0 12px 20px 2px rgba(0, 0, 0, .06), 0 6px 30px 5px rgba(0, 0, 0, .05), 0 8px 10px -5px rgba(0, 0, 0, .09)
 
 .header-shadow-desktop
   box-shadow: 0 7px 9px 1px rgba(0, 0, 0, .01), 0 3px 10px 2px rgba(0, 0, 0, .01), 0 5px 5px -3px rgba(0, 0, 0, .01)
@@ -109,9 +109,12 @@
       background: $textAccentColor
       cursor: pointer
 
-.action-enabled-icon
+.action-enabled-icon-stroke
   fill: #FFFFFF
   stroke: #FFFFFF
+
+.action-enabled-icon
+  fill: #FFFFFF
 
 .action-enabled-container
   background: $textAccentColor
@@ -141,7 +144,7 @@
   font-weight: 700
   color: $textPlaceholderColor
 
-// Will aftect the search bar when text box is focused
+// Will affect the search bar when text box is focused
 .search-focus
   background: #FFFFFF !important
   //background: #f9fafe !important
@@ -162,3 +165,21 @@
 .expand
   width: 100%
   height: 100%
+
+.notification-body
+  position: absolute
+  top: 65px
+  right: 0
+  width: 400px
+  height: 600px
+  background: #ffffff
+  display: none
+  border: 0
+  z-index: 999
+  @media screen and (max-width: 768px)
+    width: 100% !important
+    height: 100% !important
+    border: solid #dedede 1px
+
+.open-notification-body
+  display: flex !important
