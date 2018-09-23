@@ -10,22 +10,20 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
   @Input()
   public open = false;
 
-  @Output()
-  public closed: EventEmitter<any> = new EventEmitter();
+  private internalOpen: boolean;
 
   @Output()
-  public opened: EventEmitter<any> = new EventEmitter();
+  public closed: EventEmitter<boolean> = new EventEmitter();
 
   @HostListener('document:click', ['$event'])
   handleClick(event) {
-      if (this.elementRef.nativeElement.contains(event.target)) {
-        console.log('Clicked Inside');
-      } else {
-
-        console.log('Clicked Outside');
-        this.open = false;
-        this.closed.emit(null);
+      if (!this.elementRef.nativeElement.contains(event.target)) {
+        if(this.internalOpen === true){
+          this.open = false;
+          this.closed.emit(false);
+        }
       }
+      this.internalOpen = this.open;
   }
 
   constructor(private elementRef: ElementRef) {
@@ -33,8 +31,6 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
   }
-
-
 
   ngOnDestroy() {
 
