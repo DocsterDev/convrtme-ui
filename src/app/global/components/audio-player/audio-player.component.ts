@@ -119,7 +119,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       this.isPlaylist = true;
     }
     this.videoServiceLock = true;
-    this.showNowPlayingBar = false;
     this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: true});
     this.audioPlayerService.triggerTogglePlaying({id: video.id, toggle: false});
     this.retryCount = 0;
@@ -129,6 +128,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   private buildAudioObject() {
+    this.showNowPlayingBar = false;
     if (this.activeSound) {
       this.activeSound.stop();
       this.titleService.setTitle('moup.io');
