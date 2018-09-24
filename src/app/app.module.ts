@@ -38,6 +38,9 @@ import {IpService} from './service/ip.service';
 import {HeaderService} from './service/header.service';
 import {StreamValidatorService} from './service/stream-validator.service';
 import {NotificationCenterComponent} from './header/notification-center/notification-center.component';
+import {ClickStopPropagationDirective} from './directives/click-stop-propagation.directive';
+import {SearchAutoCompleteComponent} from './header/search-auto-complete/search-auto-complete.component';
+import {ClickPreventDefaultDirective} from './directives/click-prevent-default.directive';
 
 @NgModule({
   declarations: [
@@ -57,6 +60,9 @@ import {NotificationCenterComponent} from './header/notification-center/notifica
     NotificationComponent,
     AudioPlayerComponent,
     NotificationCenterComponent,
+    SearchAutoCompleteComponent,
+    ClickStopPropagationDirective,
+    ClickPreventDefaultDirective
   ],
   imports: [
     FormsModule,

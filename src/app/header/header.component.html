@@ -8,9 +8,8 @@
     <div class="row d-none d-md-flex align-items-center search-bar no-gutters" (click)="focusSearchBar()" [ngClass]="{'search-focus': isFocused, 'expand': mobileSearchEnabled, 'd-flex': mobileSearchEnabled}">
       <div class="col">
         <form name="search" (submit)="handleSubmitSearch(searchQuery)">
-          <!--[(ngModel)]="searchQuery"-->
         <input
-          [(ngModel)]="searchQuery"
+            [(ngModel)]="searchQuery"
             (ngModelChange)="handleAutoCompleteLookup(searchQuery)"
             name="q"
             class="search-bar-input mx-3"
@@ -20,8 +19,9 @@
             spellcheck="false"
             autocomplete="off"
             placeholder="Search"
-            (focus)="isFocused = true;"
-            (blur)="isFocused = false; mobileSearchEnabled = false; clearAutoSuggestions();" #searchInput/>
+            tabindex="1"
+            (focus)="this.isFocused = true; this.isSearchAutoCompleteOpen = true;"
+            (blur)="handleSearchInputBlur(); this.mobileSearchEnabled = false;" #searchInputText/>
         <button type="submit" style="display:none">hidden submit</button>
         </form>
       </div>
@@ -40,11 +40,7 @@
           </svg>
         </div>
       </div>
-      <div *ngIf="isFocused && searchQuery && predictions && predictions.length > 0" class="search-auto-complete-container c-font-circular c-light">
-        <div *ngFor="let prediction of predictions" (click)="handleSubmitSearch(prediction)">
-          <div class="Px(1) Py(0.5) t-regular2">{{prediction}}</div>
-        </div>
-      </div>
+        <app-search-auto-complete [open]="isSearchAutoCompleteOpen" [predictions]="this.predictions" class="search-auto-complete-container" (closed)="handleAutoCompleteClose()" (selected)="handleSubmitSearch($event)"></app-search-auto-complete>
     </div>
   </div>
   <!-- NOTIFICATION -->

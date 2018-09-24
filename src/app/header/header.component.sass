@@ -54,29 +54,6 @@
 .search-input::selection
   background: $textHighlightColor
 
-.search-auto-complete-container
-  color: $textColor !important
-  font-size: 16px
-  display: block
-  position: absolute
-  top: 65px
-  background: $colorWhite
-  width: 500px
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2)
-  border: 1px solid $tabHoverColor
-  z-index: 999
-  @media screen and (max-width: 768px)
-    min-width: 100% !important
-    min-height: 100% !important
-
-.search-auto-complete-container div
-  display: block
-  float: none
-  text-align: left
-  &:hover
-    background: $tabHoverColor
-    cursor: pointer
-
 .search-bar
   background: #F0F1F5
   height: 45px
@@ -183,3 +160,12 @@
 
 .open-notification-body
   display: flex !important
+
+.search-auto-complete-container
+  position: absolute
+  top: 65px
+  width: 500px
+  z-index: 999
+  @media screen and (max-width: 768px)
+    min-width: 100% !important
+    min-height: 100% !important

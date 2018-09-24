@@ -4,6 +4,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {VideoSearchService} from '../service/video-search.service';
 import {VideoAutoCompleteService} from '../service/video-autocomplete.service';
 import {ActivatedRoute, Router} from '@angular/router';
+import {P} from "@angular/core/src/render3";
 
 @Component({
   selector: 'app-header',
@@ -27,9 +28,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public isFocused = false;
   public mobileSearchEnabled = false;
   public isNotificationBodyOpen = false;
+  public isSearchAutoCompleteOpen = false;
 
-  @ViewChild('searchInput')
-  public searchInput: ElementRef;
+  @ViewChild('searchInputText')
+  public searchInputText: ElementRef;
 
   constructor(
     private userService: UserService,
@@ -68,6 +70,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
   }
 
+  public handleAutoCompleteClose() {
+    if (this.searchQuery) {
+      this.isSearchAutoCompleteOpen = false;
+      this.isFocused = false;
+      this.renderer.invokeElementMethod(this.searchInputText.nativeElement, 'blur', []);
+    }
+  }
+
+  public handleSearchInputBlur() {
+    if (!this.searchQuery) {
+      this.isSearchAutoCompleteOpen = false;
+      this.isFocused = false;
+      this.renderer.invokeElementMethod(this.searchInputText.nativeElement, 'blur', []);
+    }
+  }
+
   public handleSubmitSearch(searchQuery) {
     this.searchQuery = '';
     if (!searchQuery) {
@@ -75,7 +93,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
       return;
     }
     this.clearAutoSuggestions();
-    this.renderer.invokeElementMethod(this.searchInput.nativeElement, 'blur', []);
+    this.isFocused = false;
+    this.renderer.invokeElementMethod(this.searchInputText.nativeElement, 'blur', []);
     this.router.navigate(['.'], { relativeTo: this.route, queryParams: {q: searchQuery} });
   }
 
@@ -84,7 +103,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   public focusSearchBar() {
-    this.renderer.invokeElementMethod(this.searchInput.nativeElement, 'focus', []);
+    this.searchInputText.nativeElement.focus();
+    this.renderer.invokeElementMethod(this.searchInputText.nativeElement, 'focus', []);
   }
 
   public openNotificationBody() {

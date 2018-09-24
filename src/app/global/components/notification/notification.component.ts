@@ -14,7 +14,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
   public type: string;
   private notificationTimeout;
 
-  private notificationSubscription:Subscription;
+  private notificationSubscription: Subscription;
 
   constructor(private notificationService: NotificationService) {
   }
