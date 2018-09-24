@@ -73,6 +73,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   public handleAutoCompleteClose() {
     if (this.searchQuery) {
+      this.clearAutoSuggestions();
       this.isSearchAutoCompleteOpen = false;
       this.isFocused = false;
       this.renderer.invokeElementMethod(this.searchInputText.nativeElement, 'blur', []);
@@ -81,6 +82,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   public handleSearchInputBlur() {
     if (!this.searchQuery) {
+      this.clearAutoSuggestions();
       this.isSearchAutoCompleteOpen = false;
       this.isFocused = false;
       this.renderer.invokeElementMethod(this.searchInputText.nativeElement, 'blur', []);

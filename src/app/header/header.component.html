@@ -20,7 +20,7 @@
             autocomplete="off"
             placeholder="Search"
             tabindex="1"
-            (focus)="this.isFocused = true; this.isSearchAutoCompleteOpen = true;"
+            (focus)="this.isFocused = true; this.isSearchAutoCompleteOpen = true; handleAutoCompleteLookup(searchQuery);"
             (blur)="handleSearchInputBlur(); this.mobileSearchEnabled = false;" #searchInputText/>
         <button type="submit" style="display:none">hidden submit</button>
         </form>
