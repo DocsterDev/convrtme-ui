@@ -4,7 +4,6 @@ import {Subscription} from 'rxjs/Subscription';
 import {VideoSearchService} from '../service/video-search.service';
 import {VideoAutoCompleteService} from '../service/video-autocomplete.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {P} from "@angular/core/src/render3";
 
 @Component({
   selector: 'app-header',
@@ -29,6 +28,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public mobileSearchEnabled = false;
   public isNotificationBodyOpen = false;
   public isSearchAutoCompleteOpen = false;
+
+  public numAlertNotifications = 1;
 
   @ViewChild('searchInputText')
   public searchInputText: ElementRef;
