@@ -9,6 +9,11 @@ export class HeaderService {
 
   }
 
+  public getToken() {
+    const token = this.localStorage.retrieve('token');
+    return token ? token : null;
+  }
+
   public getTokenHeader() {
     const token = this.localStorage.retrieve('token');
 

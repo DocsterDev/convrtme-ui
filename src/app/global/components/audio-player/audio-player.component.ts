@@ -7,6 +7,7 @@ import {UtilsService} from '../../../service/utils.service';
 import {Subscription} from 'rxjs/Subscription';
 import {Title} from '@angular/platform-browser';
 import {environment} from '../../../../environments/environment';
+import {HeaderService} from '../../../service/header.service';
 
 @Component({
   selector: 'app-audio-player',
@@ -42,7 +43,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   constructor(private audioPlayerService: AudioPlayerService,
               private notificationService: NotificationService,
               private videoRecommendedService: VideoRecommendedService,
-              private titleService: Title) {
+              private titleService: Title,
+              private headerService: HeaderService) {
   }
 
   ngOnInit() {
@@ -131,7 +133,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       this.activeSound.stop();
       this.titleService.setTitle('moup.io');
     }
-    const streamUrl = environment.streamUrl + '/stream?v=' + this.video.id;
+    const streamUrl = environment.streamUrl + '/stream?v=' + this.video.id + (this.headerService.getToken() ? '&token=' + this.headerService.getToken() : '');
     this.activeSound = new Howl({
       src: [streamUrl],
       format: ['webm'],
