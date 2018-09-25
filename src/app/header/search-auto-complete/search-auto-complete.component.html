@@ -1,5 +1,5 @@
-<div *ngIf="open && predictions && predictions.length > 0" class="search-auto-complete-container c-font-circular c-bold">
-  <div appClickStopPropagation *ngFor="let prediction of predictions" (click)="handleSuggestionSelect(prediction)">
+<div *ngIf="open" class="search-auto-complete-container c-font-circular c-bold">
+  <div *ngFor="let prediction of predictions" (click)="handleSuggestionSelect(prediction)">
     <div class="Px(1) Py(0.5) t-regular2">{{prediction}}</div>
   </div>
 </div>

@@ -5,7 +5,7 @@
   <div class="col d-flex justify-content-center align-items-center">
 
 
-    <div class="row d-none d-md-flex align-items-center search-bar no-gutters" (click)="focusSearchBar()" [ngClass]="{'search-focus': isFocused, 'expand': mobileSearchEnabled, 'd-flex': mobileSearchEnabled}">
+    <div class="row d-none d-md-flex align-items-center search-bar no-gutters" (click)="focusSearchBar()" [ngClass]="{'search-focus': isFocused, 'expand d-flex': mobileSearchEnabled}">
       <div class="col">
         <form name="search" (submit)="handleSubmitSearch(searchQuery)">
         <input
@@ -21,7 +21,7 @@
             placeholder="Search"
             tabindex="1"
             (focus)="this.isFocused = true; this.isSearchAutoCompleteOpen = true; handleAutoCompleteLookup(searchQuery);"
-            (blur)="handleSearchInputBlur(); this.mobileSearchEnabled = false;" #searchInputText/>
+            (blur)="handleSearchInputBlur();" #searchInputText/>
         <button type="submit" style="display:none">hidden submit</button>
         </form>
       </div>
@@ -40,7 +40,7 @@
           </svg>
         </div>
       </div>
-        <app-search-auto-complete [open]="isSearchAutoCompleteOpen" [predictions]="this.predictions" class="search-auto-complete-container" (closed)="handleAutoCompleteClose()" (selected)="handleSubmitSearch($event)"></app-search-auto-complete>
+        <app-search-auto-complete *ngIf="predictions && predictions.length > 0"  [open]="isSearchAutoCompleteOpen" [predictions]="this.predictions" class="search-auto-complete-container" (closed)="handleAutoCompleteClose()" (selected)="handleSubmitSearch($event)"></app-search-auto-complete>
     </div>
   </div>
   <!-- NOTIFICATION -->
@@ -64,15 +64,16 @@
         </svg>
       </div>
       <div class="notification-badge" *ngIf="numAlertNotifications > 0">
-        <!--<img src="/assets/img/svg/ic-notification-alert.svg" />-->
-        <svg class="notification-badge-hover" width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <svg class="position-absolute notification-badge-hover" width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
           <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
             <g id="notification-badge-svg" transform="translate(-1829.000000, -7.000000)" fill="#13C4A3" fill-rule="nonzero">
               <circle id="Oval-2" cx="1839" cy="17" r="10"></circle>
             </g>
           </g>
         </svg>
-        <div class="text">{{numAlertNotifications}}</div>
+        <div style="width:20px;height:20px;" class="position-relative d-flex align-items-center justify-content-center">
+          <div class="text">{{numAlertNotifications}}</div>
+        </div>
       </div>
 
     </div>
@@ -88,7 +89,7 @@
     </svg>
   </div>
   <!-- SEARCH (MOBILE ONLY) -->
-  <div class="col-auto d-flex d-md-none align-items-center justify-content-center action-header-tab" [ngClass]="{'action-enabled-container': mobileSearchEnabled}" (click)="mobileSearchEnabled = !mobileSearchEnabled; focusSearchBar();" style="width:65px;">
+  <div class="col-auto d-flex d-md-none align-items-center justify-content-center action-header-tab" *ngIf="!mobileSearchEnabled" (click)="mobileSearchEnabled = !mobileSearchEnabled; focusSearchBar();" style="width:65px;">
     <svg width="27px" height="27px" viewBox="0 0 19 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="Artboard" transform="translate(-1257.000000, -25.000000)" [ngClass]="{'action-enabled-icon-stroke': mobileSearchEnabled}" class="active-search-icon-svg" fill="#39A0ED" stroke="#39A0ED">

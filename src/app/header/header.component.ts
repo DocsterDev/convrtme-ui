@@ -29,7 +29,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public isNotificationBodyOpen = false;
   public isSearchAutoCompleteOpen = false;
 
-  public numAlertNotifications = 1;
+  public numAlertNotifications = 3;
 
   @ViewChild('searchInputText')
   public searchInputText: ElementRef;
@@ -63,6 +63,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
     this.predictionsTimeout = setTimeout(() => {
       this.autoCompleteSubscription = this.videoAutoCompleteService.getAutoComplete(searchQuery).subscribe((autoCompleteResponse) => {
+        console.log(JSON.stringify(autoCompleteResponse));
         if (autoCompleteResponse && autoCompleteResponse[1]) {
           this.clearAutoSuggestions();
           autoCompleteResponse[1].forEach((e) => this.predictions.push(e));
@@ -77,6 +78,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.isSearchAutoCompleteOpen = false;
       this.isFocused = false;
       this.renderer.invokeElementMethod(this.searchInputText.nativeElement, 'blur', []);
+      this.mobileSearchEnabled = false;
     }
   }
 
@@ -86,6 +88,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.isSearchAutoCompleteOpen = false;
       this.isFocused = false;
       this.renderer.invokeElementMethod(this.searchInputText.nativeElement, 'blur', []);
+      this.mobileSearchEnabled = false;
     }
   }
 
@@ -106,8 +109,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   public focusSearchBar() {
-    this.searchInputText.nativeElement.focus();
-    this.renderer.invokeElementMethod(this.searchInputText.nativeElement, 'focus', []);
+    // if (!this.mobileSearchEnabled) {
+    //   return;
+    // }
+    setTimeout(()=>{
+      this.renderer.invokeElementMethod(this.searchInputText.nativeElement, 'focus', []);
+    });
   }
 
   public openNotificationBody() {

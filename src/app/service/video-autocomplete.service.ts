@@ -15,5 +15,11 @@ export class VideoAutoCompleteService {
     });
   }
 
+  // return this.http.get('http://suggestqueries.google.com/complete/search?client=firefox&ds=yt', {
+  //   params: {
+  //     q: q
+  //   }
+  // });
+
 }
 

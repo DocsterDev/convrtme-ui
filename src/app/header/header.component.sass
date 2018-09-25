@@ -31,28 +31,26 @@
   color: $textColorLight !important
   text-shadow: 0 0 0 $textColor
   -webkit-text-fill-color: transparent
-  //min-width: 250px
   height: 46px
   font-size: 16px
-
-.search-input::-webkit-input-placeholder
-  text-shadow: none
-  -webkit-text-fill-color: initial
-  font-weight: 700
-  color: #7584A1
-.search-input::-moz-placeholder
-  font-weight: 700
-  color: #7584A1
-.search-input:-ms-input-placeholder
-  font-weight: 700
-  color: #7584A1
-.search-input:-moz-placeholder
-  font-weight: 700
-  color: #7584A1
-.search-input::-moz-selection
-  background: $textHighlightColor
-.search-input::selection
-  background: $textHighlightColor
+  &::-webkit-input-placeholder
+    text-shadow: none
+    -webkit-text-fill-color: initial
+    font-weight: 700
+    color: #7584A1
+  &::-moz-placeholder
+    font-weight: 700
+    color: #7584A1
+  &:-ms-input-placeholder
+    font-weight: 700
+    color: #7584A1
+  &:-moz-placeholder
+    font-weight: 700
+    color: #7584A1
+  &::-moz-selection
+    background: $textHighlightColor
+  &::selection
+    background: $textHighlightColor
 
 .search-bar
   background: #F0F1F5
@@ -75,8 +73,16 @@
   .placeholder
     color: #7584A1
 
-@media screen and (min-width: 768px)
-  .action-header-tab
+.action-header-tab
+  &:focus .active-icon-svg
+    fill: #FFFFFF
+  &:focus .active-search-icon-svg
+    fill: #FFFFFF
+    stroke: #FFFFFF
+  &:focus
+    background: $textAccentColor
+    cursor: pointer
+  @media screen and (min-width: 768px)
     &:hover .active-icon-svg
       fill: #FFFFFF
     &:hover .active-search-icon-svg
@@ -109,21 +115,20 @@
   height: 45px
   color: $textPlaceholderColor
   font-weight: 700
-
-.search-bar-input::-webkit-input-placeholder
-  text-shadow: none
-  -webkit-text-fill-color: initial
-  font-weight: 700
-  color: $textPlaceholderColor
-.search-bar-input::-moz-placeholder
-  font-weight: 700
-  color: $textPlaceholderColor
-.search-bar-input:-ms-input-placeholder
-  font-weight: 700
-  color: $textPlaceholderColor
-.search-bar-input:-moz-placeholder
-  font-weight: 700
-  color: $textPlaceholderColor
+  &::-webkit-input-placeholder
+    text-shadow: none
+    -webkit-text-fill-color: initial
+    font-weight: 700
+    color: $textPlaceholderColor
+  &::-moz-placeholder
+    font-weight: 700
+    color: $textPlaceholderColor
+  &:-ms-input-placeholder
+    font-weight: 700
+    color: $textPlaceholderColor
+  &:-moz-placeholder
+    font-weight: 700
+    color: $textPlaceholderColor
 
 // Will affect the search bar when text box is focused
 .search-focus
@@ -134,14 +139,14 @@
 
 .search-bar-input-focused
   opacity: 0.85
-.search-bar-input-focused::-webkit-input-placeholder
-  opacity: 0.85
-.search-bar-input-focused::-moz-placeholder
-  opacity: 0.85
-.search-bar-input-focused:-ms-input-placeholder
-  opacity: 0.85
-.search-bar-input-focused:-moz-placeholder
-  opacity: 0.85
+  &::-webkit-input-placeholder
+    opacity: 0.85
+  &::-moz-placeholder
+    opacity: 0.85
+  &:-ms-input-placeholder
+    opacity: 0.85
+  &:-moz-placeholder
+    opacity: 0.85
 
 .expand
   width: 100%
@@ -173,6 +178,7 @@
   @media screen and (max-width: 768px)
     min-width: 100% !important
     min-height: 100% !important
+    width: 100% !important
 
 
 .notification-alert-container
@@ -185,12 +191,12 @@
     left: 37px
     z-index: 9
     .text
-      font-size: 14px
-      color: #FFFFFF
+      font-size: 12px
+      color: #ffffff
       letter-spacing: 0
-      text-align: left
-      position: absolute
-      top: 2px
-      left: 6px
+      //text-align: left
+      //position: absolute
+      //top: 1px
+      //left: 7px
       z-index: 10
 
