@@ -173,12 +173,12 @@
 .search-auto-complete-container
   position: absolute
   top: 65px
-  width: 500px
+  width: 100%
+  // min-width: 100% !important
+  min-height: 100% !important
   z-index: 999
-  @media screen and (max-width: 768px)
-    min-width: 100% !important
-    min-height: 100% !important
-    width: 100% !important
+  @media screen and (min-width: 768px)
+    width: 500px !important
 
 
 .notification-alert-container
@@ -187,8 +187,8 @@
   z-index: 8
   .notification-badge
     position: absolute
-    top: 3px
-    left: 37px
+    top: 7px
+    left: 35px
     z-index: 9
     .text
       font-size: 12px

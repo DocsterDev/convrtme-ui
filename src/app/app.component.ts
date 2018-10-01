@@ -22,8 +22,7 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private localStorage: LocalStorageService,
     private userService: UserService,
-    private ipService: IpService,
-    private meta: Meta) {
+    private ipService: IpService) {
   }
 
   ngOnInit() {
@@ -34,11 +33,6 @@ export class AppComponent implements OnInit, OnDestroy {
       console.error('Could not fetch IP address / city /region for current user');
       this.initAuthentication();
     });
-    // this.meta.addTags([
-    //   { name: 'author',   content: 'Moup.io'},
-    //   { name: 'keywords', content: 'youtube, you tube, moup, moup.io, youtube.com, play, video, audio-only, audio only, audio'},
-    //   { name: 'description', content: 'Listen to your favorite videos with audio only to bring with you on the go.' }
-    // ]);
   }
 
   private initAuthentication() {

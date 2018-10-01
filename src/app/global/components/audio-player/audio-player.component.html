@@ -2,37 +2,37 @@
   <div *ngIf="!isLoading">
     <div class="container" style="max-width:1024px;">
     <div class="row d-flex align-content-center justify-content-center text-center My(1)">
-        <div class="col">
+        <div class="col d-flex align-items-center justify-content-end mr-5 mr-sm-0">
           <img (click)="seekPrev()" class="playback-action" src="/assets/img/svg/ic-skip-previous.svg">
         </div>
-        <div class="col">
+        <div class="col d-flex align-items-center justify-content-center" style="max-width:210px;">
           <div (click)="toggle()" class="playback-action">
-            <img *ngIf="!isPlaying" src="/assets/img/svg/ic-play-arrow.svg">
-            <img *ngIf="isPlaying" src="/assets/img/svg/ic-pause.svg">
+            <img *ngIf="!isPlaying" src="/assets/img/svg/ic-play-circle.svg" rel="prefetch">
+            <img *ngIf="isPlaying" src="/assets/img/svg/ic-pause-circle.svg" rel="prefetch">
           </div>
         </div>
-        <div class="col">
+        <div class="col d-flex align-items-center justify-content-start ml-5 ml-sm-0">
           <img (click)="seekNext()" class="playback-action" src="/assets/img/svg/ic-skip-next.svg">
         </div>
     </div>
     <div class="row align-items-center text-center Mx(1.5)">
       <div class="col">
-        <div class="c-font-circular c-accent-color c-smaller truncate Px(1.5)">{{video.title}}</div>
+        <div class="c-font-circular title truncate Px(1.5)">{{video.title}}</div>
       </div>
     </div>
     <div class="row align-items-center text-center Mx(1.5)">
       <div class="col">
-        <div class="c-font-circular c-accent-color c-smaller truncate Px(1.5)" style="opacity: 0.5;">{{video.owner}}</div>
+        <div class="c-font-circular sub-title truncate Px(1.5)">{{video.owner}}</div>
       </div>
     </div>
-    <div class="row align-items-center text-center no-gutters mt-1 Px(0.5)">
-      <div class="col-auto text-left Mstart(1)"><div class="c-font-circular c-accent-color c-smaller" style="opacity: 0.8;">{{timer}}</div></div>
+    <div class="row align-items-center no-gutters mt-2 Px(0.5)">
+      <div class="col-auto text-right Mstart(1)"><div class="c-font-circular timer" style="min-width:35px;">{{timer}}</div></div>
       <div class="col mx-2">
         <div class="playback-seek-bar">
           <div [ngStyle]="{'width': progress + '%'}" class="playback-seek-bar-progress"></div>
         </div>
       </div>
-      <div class="col-auto text-right Mend(1)"><div class="c-font-circular c-accent-color c-smaller" style="opacity: 0.8;">{{duration}}</div></div>
+      <div class="col-auto text-left Mend(1)"><div class="c-font-circular timer" style="min-width:35px;">{{duration}}</div></div>
     </div>
     </div>
   </div>

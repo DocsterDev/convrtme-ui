@@ -29,7 +29,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public isNotificationBodyOpen = false;
   public isSearchAutoCompleteOpen = false;
 
-  public numAlertNotifications = 3;
+  public numAlertNotifications = 0;
 
   @ViewChild('searchInputText')
   public searchInputText: ElementRef;
