@@ -24,11 +24,13 @@
   transform: scale(1)
   transform-origin: center
   transform-style: preserve-3D
-  -webkit-transition: transform 0.08s ease
-  transition: transform 0.08s ease
+  -webkit-transition: opacity 100ms ease
+  transition: opacity 100ms ease
+  will-change: opacity
   &:hover
     //transform: scale(1.1)
-    cursor: pointer
+    opacity: 0.8
+    // cursor: pointer
 
 .playback-seek-bar
   width: 100%
@@ -50,11 +52,15 @@
 
 .title
   color: #4C6085
-  font-size: 14px
+  font-size: 13px
+  @media screen and (min-width: 768px)
+    font-size: 14px
 
 .sub-title
   color: #A0ABBF
-  font-size: 14px
+  font-size: 13px
+  @media screen and (min-width: 768px)
+    font-size: 14px
 
 .timer
   color: #97A3B8
