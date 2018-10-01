@@ -7,8 +7,25 @@
         </div>
         <div class="col d-flex align-items-center justify-content-center" style="max-width:210px;">
           <div (click)="toggle()" class="playback-action">
-            <img *ngIf="!isPlaying" src="/assets/img/svg/ic-play-circle.svg" rel="prefetch">
-            <img *ngIf="isPlaying" src="/assets/img/svg/ic-pause-circle.svg" rel="prefetch">
+            <!--<img *ngIf="!isPlaying" src="/assets/img/svg/ic-play-circle.svg" rel="prefetch">-->
+            <svg *ngIf="!isPlaying" width="50px" height="50px" viewBox="0 0 50 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g id="play-arrow" transform="translate(22.000000, 16.000000)" fill="#39A0ED">
+                  <polygon id="Shape" points="0 0 0 17 9 8.5"></polygon>
+                </g>
+                <circle id="Oval" stroke="#39A0ED" stroke-width="2" fill-rule="nonzero" cx="25" cy="25" r="24"></circle>
+              </g>
+            </svg>
+
+            <!--<img *ngIf="isPlaying" src="/assets/img/svg/ic-pause-circle.svg" rel="prefetch">-->
+            <svg *ngIf="isPlaying" width="50px" height="50px" viewBox="0 0 50 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <circle id="Oval" stroke="#39A0ED" stroke-width="2" fill-rule="nonzero" cx="25" cy="25" r="24"></circle>
+                <g id="pause" transform="translate(19.000000, 18.000000)" fill="#39A0ED">
+                  <path d="M0,14 L4,14 L4,0 L0,0 L0,14 L0,14 Z M8,0 L8,14 L12,14 L12,0 L8,0 L8,0 Z" id="Shape"></path>
+                </g>
+              </g>
+            </svg>
           </div>
         </div>
         <div class="col d-flex align-items-center justify-content-start ml-5 ml-sm-0">

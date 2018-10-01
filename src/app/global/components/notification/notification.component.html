@@ -1,4 +1,4 @@
-<div (click)="showNotificationHeader = false" [ngClass]="{'open-notification-header': showNotificationHeader, 'error-red': type=='error', 'warning-orange': type=='warn', 'success-green': type=='success'}" class="fixed-top notification-header">
+<div (click)="showNotificationHeader = false" [ngClass]="{'open-notification-header': message && showNotificationHeader, 'error-red': type=='error', 'warning-orange': type=='warn', 'success-green': type=='success'}" class="fixed-top notification-header">
   <div class="row align-items-center text-center h-100">
     <div class="col">
       <div class="c-font-circular c-smaller c-regular">{{message}}</div>

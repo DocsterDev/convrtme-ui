@@ -3,14 +3,14 @@
     <img style="margin-bottom: -5px;" src="assets/img/svg/ic-logo.svg" width="65">
   </div>
   <div class="col d-flex justify-content-center align-items-center">
-    <div class="row d-none d-md-flex align-items-center search-bar no-gutters" (click)="focusSearchBar()" [ngClass]="{'search-focus': isFocused, 'expand d-flex': mobileSearchEnabled}">
+    <div class="row d-none d-md-flex align-items-center search-bar" (click)="focusSearchBar()" [ngClass]="{'search-focus': isFocused, 'expand d-flex': mobileSearchEnabled}">
       <div class="col">
         <form name="search" (submit)="handleSubmitSearch(searchQuery)">
         <input
             [(ngModel)]="searchQuery"
             (ngModelChange)="handleAutoCompleteLookup(searchQuery)"
             name="q"
-            class="search-bar-input mx-3"
+            class="search-bar-input px-3"
             [ngClass]="{'search-bar-input-focused': isFocused}"
             autocorrect="off"
             autocapitalize="off"
@@ -90,7 +90,7 @@
   <div class="col-auto d-flex d-md-none align-items-center justify-content-center action-header-tab" *ngIf="!mobileSearchEnabled" (click)="mobileSearchEnabled = !mobileSearchEnabled; focusSearchBar();" style="width:65px;">
     <svg width="27px" height="27px" viewBox="0 0 19 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Artboard" transform="translate(-1257.000000, -25.000000)" [ngClass]="{'action-enabled-icon-stroke': mobileSearchEnabled}" class="active-search-icon-svg" fill="#9BA2AF" stroke="none">
+        <g id="Artboard" transform="translate(-1257.000000, -25.000000)" class="active-search-icon-svg" fill="#9BA2AF" stroke="none">
           <g id="Group-4" transform="translate(758.000000, 12.000000)">
             <g id="search" transform="translate(500.000000, 14.000000)">
               <path d="M11.7,11 L11.4,10.7 C12.4,9.6 13,8.1 13,6.5 C13,2.9 10.1,0 6.5,0 C2.9,0 0,2.9 0,6.5 C0,10.1 2.9,13 6.5,13 C8.1,13 9.6,12.4 10.7,11.4 L11,11.7 L11,12.5 L16,17.5 L17.5,16 L12.5,11 L11.7,11 Z M6.5,11 C4,11 2,9 2,6.5 C2,4 4,2 6.5,2 C9,2 11,4 11,6.5 C11,9 9,11 6.5,11 L6.5,11 Z" id="Shape"></path>
