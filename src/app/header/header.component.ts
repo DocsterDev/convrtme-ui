@@ -60,11 +60,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   private pollNotificiations() {
     this.notificationCenterService.pollNotifications().subscribe((response) => {
-      console.log(JSON.stringify(response));
       const resp:any = response;
       this.numAlertNotifications = resp.count;
       setTimeout(() => {
-        // this.pollNotificiations();
+        this.pollNotificiations();
       }, 10000);
     }, (error) => {
       console.error(JSON.stringify(error));
