@@ -1,6 +1,6 @@
 <!-- NOTIFICATION -->
 <div class="notification-body header-shadow-mobile" [ngClass]="{'open-notification-body': open}">
-  <div *ngIf="loaded" class="container loading-container" [ngClass]="{'fade-in-load': fadeIn}">
+  <div *ngIf="loaded && notificationGroups && notificationKeys(notificationGroups).length > 0" class="container loading-container" [ngClass]="{'fade-in-load': fadeIn}">
     <div class="row mt-4 mb-1">
       <div class="col d-flex align-items-center justify-content-start">
         &nbsp;
@@ -22,6 +22,13 @@
     <div class="row my-4">
       <div class="col d-flex align-items-center justify-content-center">
         <span class="c-font-circular c-accent-color c-smaller">View All</span>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="loaded && notificationGroups && notificationKeys(notificationGroups).length === 0" class="container loading-container" [ngClass]="{'fade-in-load': fadeIn}">
+    <div class="row h-100">
+      <div class="col d-flex align-items-center justify-content-center">
+        <span class="c-font-circular c-light text-center c-smaller">Nothing to see here.<br/>Let&rsquo;s change that by adding channel subscriptions.</span>
       </div>
     </div>
   </div>
