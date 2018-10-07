@@ -6,7 +6,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {environment} from '../../environments/environment';
 
 @Injectable()
-export class VideoRecommendedService implements OnDestroy{
+export class VideoRecommendedService implements OnDestroy {
 
   private videoRecommendationSubscription: Subscription;
 
@@ -38,5 +38,4 @@ export class VideoRecommendedService implements OnDestroy{
   ngOnDestroy() {
     this.videoRecommendationSubscription.unsubscribe();
   }
-
 }

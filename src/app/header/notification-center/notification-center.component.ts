@@ -11,6 +11,7 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
   public open = false;
 
   private internalOpen: boolean;
+  public loaded: boolean;
 
   @Output()
   public closed: EventEmitter<boolean> = new EventEmitter();
@@ -30,6 +31,7 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+
   }
 
   ngOnDestroy() {

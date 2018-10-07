@@ -112,7 +112,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     // if (!this.mobileSearchEnabled) {
     //   return;
     // }
-    setTimeout(()=>{
+    setTimeout(() => {
       this.renderer.invokeElementMethod(this.searchInputText.nativeElement, 'focus', []);
     });
   }
@@ -126,5 +126,4 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.autoCompleteSubscription.unsubscribe();
     this.searchResultsSubscription.unsubscribe();
   }
-
 }

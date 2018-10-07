@@ -4,12 +4,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './header/header.component';
-import {FooterComponent} from './footer/footer.component';
 import {ContainerComponent} from './container/container.component';
-import {VideoComponent} from './container/content/video/video.component';
-import {AudioComponent} from './container/content/audio/audio.component';
 import {ContentComponent} from './container/content/content.component';
-import {SideNavComponent} from './container/side-nav/side-nav.component';
 import {RouterModule} from '@angular/router';
 import {appRoutes} from './app.routes';
 import {TileComponent} from './common/tile/tile.component';
@@ -41,17 +37,16 @@ import {NotificationCenterComponent} from './header/notification-center/notifica
 import {ClickStopPropagationDirective} from './directives/click-stop-propagation.directive';
 import {SearchAutoCompleteComponent} from './header/search-auto-complete/search-auto-complete.component';
 import {ClickPreventDefaultDirective} from './directives/click-prevent-default.directive';
+import {NotificationGroupComponent} from './header/notification-center/notification-group/notification-group.component';
+import {NotificationVideoComponent} from './header/notification-center/notification-group/notification-video/notification-video.component';
+import {NotificationCenterService} from './service/notification-center.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    FooterComponent,
     ContentComponent,
-    SideNavComponent,
     ContainerComponent,
-    VideoComponent,
-    AudioComponent,
     TileComponent,
     YoutubeComponent,
     LoaderComponent,
@@ -61,6 +56,8 @@ import {ClickPreventDefaultDirective} from './directives/click-prevent-default.d
     AudioPlayerComponent,
     NotificationCenterComponent,
     SearchAutoCompleteComponent,
+    NotificationGroupComponent,
+    NotificationVideoComponent,
     ClickStopPropagationDirective,
     ClickPreventDefaultDirective
   ],
@@ -87,6 +84,7 @@ import {ClickPreventDefaultDirective} from './directives/click-prevent-default.d
     PlaylistService,
     IpService,
     HeaderService,
+    NotificationCenterService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: GlobalInterceptor,

@@ -3,14 +3,14 @@
     <img style="margin-bottom: -5px;" src="assets/img/svg/ic-logo.svg" width="65">
   </div>
   <div class="col d-flex justify-content-center align-items-center">
-    <div class="row d-none d-md-flex align-items-center search-bar" (click)="focusSearchBar()" [ngClass]="{'search-focus': isFocused, 'expand d-flex': mobileSearchEnabled}">
+    <div class="row no-gutters d-none d-md-flex align-items-center search-bar" (click)="focusSearchBar()" [ngClass]="{'search-focus': isFocused, 'expand d-flex': mobileSearchEnabled}">
       <div class="col">
         <form name="search" (submit)="handleSubmitSearch(searchQuery)">
         <input
             [(ngModel)]="searchQuery"
             (ngModelChange)="handleAutoCompleteLookup(searchQuery)"
             name="q"
-            class="search-bar-input px-3"
+            class="search-bar-input px-4"
             [ngClass]="{'search-bar-input-focused': isFocused}"
             autocorrect="off"
             autocapitalize="off"

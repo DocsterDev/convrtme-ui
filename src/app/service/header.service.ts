@@ -1,12 +1,11 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {LocalStorageService} from "ngx-webstorage";
+import {LocalStorageService} from 'ngx-webstorage';
 
 @Injectable()
 export class HeaderService {
 
   constructor(private http: HttpClient, private localStorage: LocalStorageService) {
-
   }
 
   public getToken() {
