@@ -4,6 +4,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {VideoSearchService} from '../service/video-search.service';
 import {VideoAutoCompleteService} from '../service/video-autocomplete.service';
 import {ActivatedRoute, Router} from '@angular/router';
+import {NotificationCenterService} from '../service/notification-center.service';
 
 @Component({
   selector: 'app-header',
@@ -40,7 +41,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private videoAutoCompleteService: VideoAutoCompleteService,
     private renderer: Renderer,
     private route: ActivatedRoute,
-    private router: Router) {
+    private router: Router,
+    private notificationCenterService: NotificationCenterService) {
   }
 
   ngOnInit() {
@@ -52,6 +54,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.route.queryParams.subscribe(params => {
       // this.searchQuery = params.q ? params.q : '';
       // Set this to the "showing results for"
+    });
+    this.pollNotificiations();
+  }
+
+  private pollNotificiations() {
+    this.notificationCenterService.pollNotifications().subscribe((response) => {
+      console.log(JSON.stringify(response));
+      const resp:any = response;
+      this.numAlertNotifications = resp.count;
+      setTimeout(() => {
+        // this.pollNotificiations();
+      }, 10000);
+    }, (error) => {
+      console.error(JSON.stringify(error));
     });
   }
 

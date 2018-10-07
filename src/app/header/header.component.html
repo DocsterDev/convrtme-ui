@@ -42,7 +42,7 @@
     </div>
   </div>
   <!-- NOTIFICATION -->
-  <app-notification-center (closed)="isNotificationBodyOpen = false;" [open]="isNotificationBodyOpen"></app-notification-center>
+  <app-notification-center (closed)="isNotificationBodyOpen = false;" [open]="isNotificationBodyOpen" *ngIf="isNotificationBodyOpen"></app-notification-center>
   <div class="col-auto action-header-tab" [ngClass]="{'action-enabled-container': isNotificationBodyOpen}" (click)="openNotificationBody()" style="width:65px;" *ngIf="!mobileSearchEnabled">
     <div class="notification-alert-container">
       <div class="h-100 w-100 d-flex align-items-center justify-content-center">

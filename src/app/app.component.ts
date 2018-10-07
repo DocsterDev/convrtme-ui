@@ -58,9 +58,11 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private handleSuccess(user) {
-    this.userService.triggerUserSignedInEvent({email: user.email, valid: true});
-    this.localStorage.store('email', user.email);
-    this.userService.setUserValid(true);
+    if (user) {
+      this.userService.triggerUserSignedInEvent({email: user.email, valid: true});
+      this.localStorage.store('email', user.email);
+      this.userService.setUserValid(true);
+    }
   }
 
   private handleError() {

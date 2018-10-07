@@ -1,4 +1,6 @@
 import {Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {NotificationCenterService} from '../../service/notification-center.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-notification-center',
@@ -9,9 +11,13 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
 
   @Input()
   public open = false;
-
   private internalOpen: boolean;
   public loaded: boolean;
+  public loading: boolean;
+  public fadeIn: boolean;
+  public notificationKeys = Object.keys;
+  public notificationGroups: any = [];
+  private notificationCenterSubscription: Subscription;
 
   @Output()
   public closed: EventEmitter<boolean> = new EventEmitter();
@@ -27,15 +33,27 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
       this.internalOpen = this.open;
   }
 
-  constructor(private elementRef: ElementRef) {
+  constructor(private elementRef: ElementRef, private notificationCenterService: NotificationCenterService) {
   }
 
   ngOnInit() {
-
+    this.notificationCenterSubscription = this.notificationCenterService.fetchNotifications('channel').subscribe((response) => {
+      setTimeout(() => {
+        this.notificationGroups = response;
+        console.log(JSON.stringify(response));
+        this.loaded = true;
+        setTimeout(() => {
+          this.fadeIn = true;
+        },0);
+        this.loading = false;
+      },1000);
+    }, (error) => {
+      console.log(JSON.stringify(error));
+    });
+    this.loading = true;
   }
 
   ngOnDestroy() {
-
+    this.notificationCenterSubscription.unsubscribe();
   }
-
 }
