@@ -31,6 +31,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public isSearchAutoCompleteOpen = false;
 
   public numAlertNotifications = 0;
+  public notificaitonsOpened = false; // TODO - have it so when you click on the notifications icon it turns off the dot - and then start polling for new subscriptions. When the dot is on do not poll for new subscriptions
 
   @ViewChild('searchInputText')
   public searchInputText: ElementRef;
@@ -63,7 +64,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       const resp:any = response;
       this.numAlertNotifications = resp.count;
       setTimeout(() => {
-        this.pollNotificiations();
+        this.pollNotificiations(); // TODO - I only really need to poll when the notifications have been clicked
       }, 10000);
     }, (error) => {
       console.error(JSON.stringify(error));
