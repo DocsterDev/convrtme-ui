@@ -79,7 +79,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
     this.predictionsTimeout = setTimeout(() => {
       this.autoCompleteSubscription = this.videoAutoCompleteService.getAutoComplete(searchQuery).subscribe((autoCompleteResponse) => {
-        console.log(JSON.stringify(autoCompleteResponse));
         if (autoCompleteResponse && autoCompleteResponse[1]) {
           this.clearAutoSuggestions();
           autoCompleteResponse[1].forEach((e) => this.predictions.push(e));
