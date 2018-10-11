@@ -1,4 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {AudioPlayerService} from '../../../global/components/audio-player/audio-player.service';
 
 @Component({
   selector: 'app-notification-group',
@@ -13,9 +14,17 @@ export class NotificationGroupComponent implements OnInit {
   @Input()
   public groupTitle: string;
 
-  constructor() { }
+  @Output()
+  public selected = new EventEmitter<any>();
+
+  constructor(private audioPlayerService: AudioPlayerService) { }
 
   ngOnInit() {
+  }
+
+  public selectVideo(video) {
+    this.selected.emit();
+    this.audioPlayerService.triggerVideoEvent(video);
   }
 
 }

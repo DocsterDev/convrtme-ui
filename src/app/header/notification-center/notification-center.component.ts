@@ -40,7 +40,6 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
     this.notificationCenterSubscription = this.notificationCenterService.fetchNotifications('date').subscribe((response) => {
       setTimeout(() => {
         this.notificationGroups = response;
-        console.log(JSON.stringify(response));
         this.loaded = true;
         setTimeout(() => {
           this.fadeIn = true;
@@ -51,6 +50,11 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
       console.log(JSON.stringify(error));
     });
     this.loading = true;
+  }
+
+  public selected() {
+    this.open = false;
+    this.closed.emit(false);
   }
 
   ngOnDestroy() {

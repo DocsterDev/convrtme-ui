@@ -10,7 +10,10 @@ export class NotificationCenterService {
   }
 
   public pollNotifications() {
-    return this.http.get(environment.apiUrl + '/api/subscriptions/poll', this.headerService.getTokenHeader());
+    if (this.headerService.getToken()) {
+      return this.http.get(environment.apiUrl + '/api/subscriptions/poll', this.headerService.getTokenHeader());
+    }
+    return;
   }
 
   public fetchNotifications(groupBy: string) {

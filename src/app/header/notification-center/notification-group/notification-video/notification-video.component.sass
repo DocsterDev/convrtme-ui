@@ -22,15 +22,15 @@
       opacity: 0.7
     &:hover .playlist-icon-add
       opacity: 0.7
-    &:hover .play-icon
-      opacity: 1
+    //&:hover .play-icon
+    //  opacity: 1
     &:hover
       cursor: pointer
   .title
-    //color: $secondaryBtnColor !important
+    color: #4C6085
     line-height: 1.2
   .subtitle
-    color: $textColorLight
+    color: #A0ABBF
     line-height: 1.2
   .subtitle-owner
     color: $textColorLight
@@ -41,8 +41,8 @@
 .subtitle
   transition: opacity $animationTimer ease
 
-.now-playing .play-icon
-  opacity: 1 !important
+//.now-playing .play-icon
+//  opacity: 1 !important
 .now-playing .thumbnail-container
   background-color: black
 .now-playing .thumbnail
@@ -101,24 +101,24 @@
 
 .thumbnail-container
   background-color: white
-  max-width: $thumbnailWidthMobile
-  height: $thumbnailHeightMobile
-  width: $thumbnailWidthMobile
+  max-width: 120px
+  height: 68px
+  width: 120px
 
 .thumbnail
-  height: $thumbnailHeightMobile
-  width: $thumbnailWidthMobile
+  height: 68px
+  width: 120px
 
 @media screen and (min-width: 768px)
   .thumbnail
-    height: $thumbnailHeightMobile
-    width: $thumbnailWidthMobile
+    height: 68px
+    width: 120px
   .thumbnail-container
-    max-width: $thumbnailWidthMobile
-    height: $thumbnailHeightMobile
-    width: $thumbnailWidthMobile
+    max-width: 120px
+    height: 68px
+    width: 120px
   .search-card
-    max-height: $thumbnailHeightMobile
+    max-height: 68px
   .title
     font-size: 14px
   .subtitle
