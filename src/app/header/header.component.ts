@@ -56,16 +56,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
       // this.searchQuery = params.q ? params.q : '';
       // Set this to the "showing results for"
     });
-    this.pollNotificiations();
+    this.pollNotificiations(); // TODO Figure out how to only poll when there are no notifications
   }
 
   private pollNotificiations() {
     this.notificationCenterService.pollNotifications().subscribe((response) => {
       const resp:any = response;
       this.numAlertNotifications = resp.count;
-      setTimeout(() => {
-        this.pollNotificiations(); // TODO - I only really need to poll when the notifications have been clicked
-      }, 10000);
+        setTimeout(() => {
+          this.pollNotificiations(); // TODO - I only really need to poll when the notifications have been clicked
+        }, 1800000);
     }, (error) => {
       console.error(JSON.stringify(error));
     });

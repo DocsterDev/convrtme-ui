@@ -19,4 +19,8 @@ export class NotificationCenterService {
   public fetchNotifications(groupBy: string) {
     return this.http.get(environment.apiUrl + '/api/subscriptions/videos?groupBy=' + groupBy, this.headerService.getTokenHeader());
   }
+
+  public addSubscription(channel: string) {
+    return this.http.post(environment.apiUrl + '/api/subscriptions', {name: channel}, this.headerService.getTokenHeader());
+  }
 }

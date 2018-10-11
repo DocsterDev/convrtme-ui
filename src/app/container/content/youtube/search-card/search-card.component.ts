@@ -2,6 +2,8 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import * as moment from 'moment';
 import {AudioPlayerService} from '../../../../global/components/audio-player/audio-player.service';
 import {Subscription} from 'rxjs/Subscription';
+import {NotificationCenterService} from '../../../../service/notification-center.service';
+import {NotificationService} from '../../../../global/components/notification/notification.service';
 
 @Component({
   selector: 'app-search-card',
@@ -24,8 +26,11 @@ export class SearchCardComponent implements OnInit, OnDestroy {
 
   private videoPlayingSubscription: Subscription;
   private videoLoadingSubscription: Subscription;
+  private notificationSubscription: Subscription;
 
-  constructor(private audioPlayerService: AudioPlayerService) {
+  constructor(private audioPlayerService: AudioPlayerService,
+              private notificationCenterService: NotificationCenterService,
+              private notificationService: NotificationService) {
   }
 
   ngOnInit() {
@@ -56,6 +61,17 @@ export class SearchCardComponent implements OnInit, OnDestroy {
   addedContent(event, video) {
     event.stopPropagation();
     this.added.emit(video);
+  }
+
+  public subscribe($event, channel) {
+    $event.stopPropagation();
+    this.notificationSubscription = this.notificationCenterService.addSubscription(channel).subscribe((resp) => {
+      const response: any = resp;
+      this.notificationService.showNotification({type: 'success', message: 'Successfully added ' + response.channel.name});
+      this.notificationSubscription.unsubscribe();
+    }, (error) => {
+      console.error(error);
+    });
   }
 
   ngOnDestroy() {
