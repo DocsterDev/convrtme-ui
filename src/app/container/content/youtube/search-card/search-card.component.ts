@@ -64,14 +64,14 @@ export class SearchCardComponent implements OnInit, OnDestroy {
   }
 
   public subscribe($event, channel) {
-    $event.stopPropagation();
-    this.notificationSubscription = this.notificationCenterService.addSubscription(channel).subscribe((resp) => {
-      const response: any = resp;
-      this.notificationService.showNotification({type: 'success', message: 'Successfully added ' + response.channel.name});
-      this.notificationSubscription.unsubscribe();
-    }, (error) => {
-      console.error(error);
-    });
+    // $event.stopPropagation();
+    // this.notificationSubscription = this.notificationCenterService.addSubscription(channel).subscribe((resp) => {
+    //   const response: any = resp;
+    //   this.notificationService.showNotification({type: 'success', message: 'Successfully added ' + response.channel.name});
+    //   this.notificationSubscription.unsubscribe();
+    // }, (error) => {
+    //   console.error(error);
+    // });
   }
 
   ngOnDestroy() {
