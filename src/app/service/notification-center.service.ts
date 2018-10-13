@@ -24,6 +24,10 @@ export class NotificationCenterService {
     return this.http.post(environment.apiUrl + '/api/subscriptions', {name: channel, avatarUrl: avatarUrl}, this.headerService.getTokenHeader());
   }
 
+  public removeSubscription(uuid: string) {
+    return this.http.delete(environment.apiUrl + '/api/subscriptions/' + uuid, this.headerService.getTokenHeader());
+  }
+
   public getSubscriptions() {
     return this.http.get(environment.apiUrl + '/api/subscriptions', this.headerService.getTokenHeader());
   }

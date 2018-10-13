@@ -1,6 +1,7 @@
 import {Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {NotificationCenterService} from '../../service/notification-center.service';
 import {Subscription} from 'rxjs/Subscription';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-notification-center',
@@ -80,7 +81,7 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
         this.loaded = true;
         setTimeout(() => {
           this.fadeIn = true;
-        },0);
+        }, 0);
       }, 300);
     }, (error) => {
       console.error(error);
@@ -88,6 +89,24 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.loaded = false;
     this.fadeIn = false;
+  }
+
+  public removeSubscription(subscription) {
+    const originalSubscriptions = JSON.parse(JSON.stringify(this.subscriptions)); // TODO Dont not do this shit, use 'npm install lodash' instead - https://stackoverflow.com/questions/34688517/whats-alternative-to-angular-copy-in-angular
+    this.subscriptions.filter(sub => sub.uuid !== subscription.uuid);
+    this.notificationCenterSubscription = this.notificationCenterService.removeSubscription(subscription.uuid).subscribe((resp) => {
+      this.showSubscriptionManager();
+    }, (error) => {
+      this.subscriptions = originalSubscriptions;
+      console.error(error);
+    });
+  }
+
+  public formatDate(date) {
+    if (date) {
+      return moment(date).local().format('MM/DD/YYYY');
+    }
+    return '';
   }
 
   ngOnDestroy() {
