@@ -16,11 +16,14 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
   public loading: boolean;
   public fadeIn: boolean;
   public notificationKeys = Object.keys;
-  public notificationGroups: any = [];
+  public notificationGroups: any = {};
+  public subscriptions: any = [];
   private notificationCenterSubscription: Subscription;
 
   @Output()
   public closed: EventEmitter<boolean> = new EventEmitter();
+
+  public showManageSubs:boolean;
 
   @HostListener('document:click', ['$event'])
   handleClick(event) {
@@ -37,6 +40,13 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.showSubscriptions();
+  }
+
+  public showSubscriptions() {
+    setTimeout(()=>{
+      this.showManageSubs = false;
+    });
     this.notificationCenterSubscription = this.notificationCenterService.fetchNotifications('channel').subscribe((response) => {
       setTimeout(() => {
         this.notificationGroups = response;
@@ -45,16 +55,39 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
           this.fadeIn = true;
         },0);
         this.loading = false;
-      },700);
+      },300);
     }, (error) => {
-      console.log(JSON.stringify(error));
+      console.error(error);
     });
     this.loading = true;
+    this.loaded = false;
+    this.fadeIn = false;
   }
 
   public selected() {
     this.open = false;
     this.closed.emit(false);
+  }
+
+  public showSubscriptionManager() {
+    setTimeout(()=>{
+      this.showManageSubs = true;
+    });
+    this.notificationCenterSubscription = this.notificationCenterService.getSubscriptions().subscribe((resp) => {
+      this.subscriptions = resp;
+      setTimeout(() => {
+        this.loading = false;
+        this.loaded = true;
+        setTimeout(() => {
+          this.fadeIn = true;
+        },0);
+      }, 300);
+    }, (error) => {
+      console.error(error);
+    });
+    this.loading = true;
+    this.loaded = false;
+    this.fadeIn = false;
   }
 
   ngOnDestroy() {
