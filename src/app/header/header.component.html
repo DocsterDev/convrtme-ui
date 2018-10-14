@@ -1,6 +1,17 @@
 <div class="row flex-nowrap no-gutters c-font-circular c-smaller c-bold header-shadow-desktop" style="height: 65px;">
-  <div class="col-auto d-flex align-items-center justify-content-start Mstart(1)" *ngIf="!mobileSearchEnabled">
+  <div class="col-auto d-flex align-items-center justify-content-start Mstart(1)" *ngIf="!mobileSearchEnabled && !isNotificationBodyOpen">
     <img style="margin-bottom: -5px;" src="assets/img/svg/ic-logo.svg" width="65">
+  </div>
+  <div class="col-auto d-flex align-items-center justify-content-start Mstart(1)" *ngIf="isMobile && (isNotificationBodyOpen || mobileSearchEnabled)">
+    <svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Core" transform="translate(-424.000000, -4.000000)" fill="#3890dc">
+          <g id="arrow-back" transform="translate(424.000000, 4.000000)">
+            <polygon id="Shape" points="16 7 3.8 7 9.4 1.4 8 0 0 8 8 16 9.4 14.6 3.8 9 16 9"></polygon>
+          </g>
+        </g>
+      </g>
+    </svg>
   </div>
   <div class="col d-flex justify-content-center align-items-center">
     <div class="row no-gutters d-none d-md-flex align-items-center search-bar" (click)="focusSearchBar()" [ngClass]="{'search-focus': isFocused, 'expand d-flex': mobileSearchEnabled}">
@@ -38,9 +49,10 @@
           </svg>
         </div>
       </div>
-        <app-search-auto-complete *ngIf="predictions && predictions.length > 0"  [open]="isSearchAutoCompleteOpen" [predictions]="this.predictions" class="search-auto-complete-container" (closed)="handleAutoCompleteClose()" (selected)="handleSubmitSearch($event)"></app-search-auto-complete>
     </div>
   </div>
+  <app-search-auto-complete *ngIf="predictions && predictions.length > 0"  [open]="isSearchAutoCompleteOpen" [predictions]="this.predictions" class="search-auto-complete-container" (closed)="handleAutoCompleteClose()" (selected)="handleSubmitSearch($event)"></app-search-auto-complete>
+
   <!-- NOTIFICATION -->
   <app-notification-center (closed)="isNotificationBodyOpen = false;" [open]="isNotificationBodyOpen" *ngIf="isNotificationBodyOpen"></app-notification-center>
   <div class="col-auto action-header-tab" [ngClass]="{'action-enabled-container': isNotificationBodyOpen}" (click)="openNotificationBody()" style="width:65px;" *ngIf="!mobileSearchEnabled">

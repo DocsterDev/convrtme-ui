@@ -29,12 +29,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public mobileSearchEnabled = false;
   public isNotificationBodyOpen = false;
   public isSearchAutoCompleteOpen = false;
+  public isMobile = false;
 
   public numAlertNotifications = 0;
   public notificaitonsOpened = false; // TODO - have it so when you click on the notifications icon it turns off the dot - and then start polling for new subscriptions. When the dot is on do not poll for new subscriptions
 
   @ViewChild('searchInputText')
   public searchInputText: ElementRef;
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.isMobile = window.innerWidth < 768;
+  }
 
   constructor(
     private userService: UserService,
@@ -47,6 +53,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.isMobile = window.innerWidth < 768;
     this.loading = true;
     this.userSignInSubscription = this.userService.userSignedInEmitter$.subscribe((user) => {
       this.user = user;

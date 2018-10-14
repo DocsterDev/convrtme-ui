@@ -10,19 +10,22 @@
   position: absolute
   top: 65px
   right: 0
-  width: 400px
   min-height: 500px
   background: #ffffff
-  // border: 0
+  width: 400px
+  border: 0
   z-index: 999
   display: none
   transition: opacity 100ms ease
   will-change: opacity
-  border: solid 1px #dedede
+  //border: solid 1px #eeeeee
   @media screen and (max-width: 768px)
-    width: 100% !important
-    height: 100% !important
-    border: solid #dedede 1px
+    //width: 100% !important
+    //height: 100% !important
+    height: -webkit-calc(100% - 65px)
+    height:    -moz-calc(100% - 65px)
+    height:         calc(100% - 65px)
+    // border: solid #dedede 1px
 
 .open-notification-body
   display: flex
@@ -52,11 +55,15 @@
   &:hover
     //border: solid 1px #dedede
 
+.notification-action
+  fill: #CED3DE
+  transition: fill 100ms ease
+
 .notification-container
   &:hover
     cursor: pointer
   &:hover .notification-action
-    fill: #CED3DE
+    fill: #EAECF1
     cursor: pointer
   &:active .notification-action
-    fill: #CED3DE
+    fill: #3890dc

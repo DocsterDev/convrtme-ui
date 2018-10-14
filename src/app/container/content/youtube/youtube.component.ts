@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs/Subscription';
 import {VideoSearchService} from '../../../service/video-search.service';
 import {AudioPlayerService} from '../../../global/components/audio-player/audio-player.service';
@@ -20,6 +20,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   public playlists: any = [];
   public currentPlaylist: any = {id: ''};
   public playlistLoading = false;
+  public isPlaying: boolean;
 
   public currentPlayingPlaylist; // Most recently added (9/11)
 
@@ -29,9 +30,17 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   private playlistActionSubscription: Subscription;
   private playlistUpdateSubscription: Subscription;
   private getPlaylistVideosSubscription: Subscription;
+  private audioPlayingEventSubscription: Subscription;
 
   public query: string;
   public previousQuery: string;
+
+  public isMobile: boolean;
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.isMobile = window.innerWidth < 768;
+  }
 
   static updateComponent(component, index, list) {
     component.index = index;
@@ -48,6 +57,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+      this.isMobile = window.innerWidth < 768;
       this.searchResultsSubscription = this.videoSearchService.getResultList().subscribe((searchResults) => {
         if (searchResults != null) {
           this.videoRecommendedService.recommended(searchResults[0].id);
@@ -80,6 +90,9 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       this.route.queryParams.subscribe(params => {
         this.query = params.q;
         this.videoSearchService.search(this.query ? this.query : 'cnn');
+      });
+      this.audioPlayingEventSubscription = this.audioPlayerService.triggerTogglePlayingEmitter$.subscribe((e) => {
+        this.isPlaying = e.toggle;
       });
   }
 
@@ -205,6 +218,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     this.playlistActionSubscription.unsubscribe();
     this.playlistUpdateSubscription.unsubscribe();
     this.getPlaylistVideosSubscription.unsubscribe();
+    this.audioPlayingEventSubscription.unsubscribe();
   }
 
 }

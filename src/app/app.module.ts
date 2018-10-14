@@ -32,7 +32,6 @@ import {PlaylistCardComponent} from './container/content/youtube/playlist-card/p
 import {NgxSmoothDnDModule} from 'ngx-smooth-dnd';
 import {IpService} from './service/ip.service';
 import {HeaderService} from './service/header.service';
-import {StreamValidatorService} from './service/stream-validator.service';
 import {NotificationCenterComponent} from './header/notification-center/notification-center.component';
 import {ClickStopPropagationDirective} from './directives/click-stop-propagation.directive';
 import {SearchAutoCompleteComponent} from './header/search-auto-complete/search-auto-complete.component';
@@ -40,6 +39,7 @@ import {ClickPreventDefaultDirective} from './directives/click-prevent-default.d
 import {NotificationGroupComponent} from './header/notification-center/notification-group/notification-group.component';
 import {NotificationVideoComponent} from './header/notification-center/notification-group/notification-video/notification-video.component';
 import {NotificationCenterService} from './service/notification-center.service';
+import {FadeAnimationDirective} from './directives/fade-animation.directive';
 
 @NgModule({
   declarations: [
@@ -59,7 +59,8 @@ import {NotificationCenterService} from './service/notification-center.service';
     NotificationGroupComponent,
     NotificationVideoComponent,
     ClickStopPropagationDirective,
-    ClickPreventDefaultDirective
+    ClickPreventDefaultDirective,
+    FadeAnimationDirective
   ],
   imports: [
     FormsModule,
@@ -73,7 +74,6 @@ import {NotificationCenterService} from './service/notification-center.service';
     BrowserAnimationsModule
   ],
   providers: [
-    StreamValidatorService,
     UserService,
     UtilsService,
     VideoSearchService,

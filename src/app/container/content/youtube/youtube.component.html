@@ -1,12 +1,6 @@
-<div class="w-100 d-flex justify-content-center" >
-  <!--<div class="row w-100 no-gutters mt-2 ml-4 ml-md-0 mb-4 mb-md-3" style="max-width:938px;" *ngIf="query">-->
-    <!--<div class="col d-flex align-items-center">-->
-      <!--<div class="c-bold c-smaller">Showing results for: <span class="c-bold c-smaller c-accent-color">{{query}}</span></div>-->
-    <!--</div>-->
-  <!--</div>-->
-</div>
 <div class="w-100 d-flex justify-content-center">
-  <div class="row no-gutters" style="max-width:1024px;">
+  <div class="container" style="padding:0!important;">
+  <div class="row no-gutters" *ngIf="!isMobile">
     <!-- SEARCH MODULE -->
     <div class="col Mx(1) order-1 solidify">
       <!--<div class="d-none d-md-flex text-md-left pb-3 c-smaller c-accent-color c-bold section-text" *ngIf="previousQuery">Search Results</div>-->
@@ -17,7 +11,7 @@
     </div>
     <!-- RECOMMENDED MODULE -->
     <div class="col-md Mx(1) order-2 solidify">
-      <div class="text-center text-md-left pb-3 c-smaller c-bold c-accent-color section-text" *ngIf="previousQuery">Recommended For You</div>
+      <div class="text-center text-md-left pb-3 pt-2 pt-md-0 c-smaller c-bold c-accent-color section-text" *ngIf="previousQuery">Recommended For You</div>
       <div *ngFor="let video of recommendedList" class="mb-2">
         <app-search-card (added)="handleAddToCurrentPlaylist($event)" (selected)="handleRecommendedVideoSelect($event)" [video]="video"></app-search-card>
       </div>
@@ -48,6 +42,12 @@
         <div class="c-font-circular c-smaller c-light Py(2)">No videos in this playlist. Try adding some.</div>
       </div>
       <div class="d-block d-md-none My(1.5)"></div>
+    </div>
+  </div>
+  <div class="row no-gutters h-100" [ngStyle]="{'max-height': isPlaying ? '200px' : '60px'}">
+    <div class="col">
+      &nbsp;
+    </div>
     </div>
   </div>
 </div>

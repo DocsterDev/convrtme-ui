@@ -53,10 +53,12 @@
     background: $textHighlightColor
 
 .search-bar
-  background: #F0F1F5
+  background: #FFFFFF
+  @media screen and (min-width: 768px)
+    background: #F0F1F5 !important
+    border: solid 2px #F0F1F5
   height: 45px
   width: 500px
-  border: solid 2px #F0F1F5
   transition: background 100ms ease
   &:hover
     background: #ecedf1
@@ -175,7 +177,10 @@
 .search-auto-complete-container
   position: absolute
   top: 65px
-  width: 100%
+  left: 0
+  right: 0
+  width: 100% !important
+  min-width: 100%;
   // min-width: 100% !important
   min-height: 100% !important
   z-index: 999
