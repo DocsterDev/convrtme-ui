@@ -19,6 +19,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   public showNowPlayingBar: boolean = true;
   public video: any = {};
   public progress;
+  public seekPositionX: number;
   public duration: string;
   public timer: string;
 
@@ -38,6 +39,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private isMobile: boolean;
   private isSearchModeEnabled: boolean;
   private savedShowNowPlayingBar: any;
+
+  public seekBarHandlePosX: number;
 
   private videoEventSubscription: Subscription;
   private videoPlayingEventSubscription: Subscription;
@@ -82,6 +85,13 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.showNowPlayingBar = this.savedShowNowPlayingBar;
       }
     });
+  }
+
+  public bindMouseMoveSeekBar ($event, elementWidth) {
+    this.seekBarHandlePosX = ($event.offsetX/elementWidth)*100;
+    this.seekPositionX = this.seekBarHandlePosX;
+    console.log($event.offsetX);
+    $event.stopPropagation();
   }
 
   private checkCurrentPlaylist() {
