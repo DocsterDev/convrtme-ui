@@ -5,6 +5,7 @@ import {VideoSearchService} from '../service/video-search.service';
 import {VideoAutoCompleteService} from '../service/video-autocomplete.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NotificationCenterService} from '../service/notification-center.service';
+import {EventBusService} from '../service/event-bus.service';
 
 @Component({
   selector: 'app-header',
@@ -24,23 +25,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private userSignInSubscription: Subscription;
   private autoCompleteSubscription: Subscription;
   private searchResultsSubscription: Subscription;
+  private eventBusSubscription: Subscription;
 
-  public isFocused = false;
-  public mobileSearchEnabled = false;
-  public isNotificationBodyOpen = false;
-  public isSearchAutoCompleteOpen = false;
-  public isMobile = false;
+  public isFocused: boolean;
+  public mobileSearchEnabled: boolean;
+  public isNotificationCenterModeEnabled: boolean;
+  public isSearchAutoCompleteOpen: boolean;
+
+  public isMobile: boolean;
+  public isSearchModeEnabled: boolean;
+
+  public notificationDirty: boolean;
 
   public numAlertNotifications = 0;
-  public notificaitonsOpened = false; // TODO - have it so when you click on the notifications icon it turns off the dot - and then start polling for new subscriptions. When the dot is on do not poll for new subscriptions
 
   @ViewChild('searchInputText')
   public searchInputText: ElementRef;
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event) {
-    this.isMobile = window.innerWidth < 768;
-  }
 
   constructor(
     private userService: UserService,
@@ -49,27 +49,36 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private renderer: Renderer,
     private route: ActivatedRoute,
     private router: Router,
-    private notificationCenterService: NotificationCenterService) {
+    private notificationCenterService: NotificationCenterService,
+    private eventBusService: EventBusService) {
   }
 
   ngOnInit() {
-    this.isMobile = window.innerWidth < 768;
     this.loading = true;
+    this.isMobile = this.eventBusService.isDeviceMobile();
+    this.eventBusSubscription = this.eventBusService.deviceListenerEvent$.subscribe((isMobile) => {
+      this.isMobile = isMobile;
+      if (!this.isMobile) {
+        this.handleSearchInputBlur();
+      }
+    });
+    this.eventBusSubscription = this.eventBusService.searchModeEvent$.subscribe((isSearchModeEnabled) => this.isSearchModeEnabled = isSearchModeEnabled);
+    this.eventBusSubscription = this.eventBusService.notificationCenterEvent$.subscribe((isNotificationCenterModeEnabled) => {
+      this.isNotificationCenterModeEnabled = isNotificationCenterModeEnabled;
+      this.notificationDirty = true;
+    });
     this.userSignInSubscription = this.userService.userSignedInEmitter$.subscribe((user) => {
       this.user = user;
       this.loading = false;
     });
-    this.route.queryParams.subscribe(params => {
-      // this.searchQuery = params.q ? params.q : '';
-      // Set this to the "showing results for"
-    });
-    this.pollNotificiations(); // TODO Figure out how to only poll when there are no notifications
+    this.pollNotificiations();
   }
 
   private pollNotificiations() {
     this.notificationCenterService.pollNotifications().subscribe((response) => {
-      const resp:any = response;
+      const resp: any = response;
       this.numAlertNotifications = resp.count;
+      this.notificationDirty = false;
         setTimeout(() => {
           this.pollNotificiations(); // TODO - I only really need to poll when the notifications have been clicked
         }, 1800000);
@@ -104,6 +113,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
+  public handleSearchInputFocus(searchQuery) {
+    this.eventBusService.triggerSearchModeEvent(true);
+    this.isFocused = true;
+    this.isSearchAutoCompleteOpen = true;
+    this.handleAutoCompleteLookup(searchQuery);
+  }
+
   public handleSearchInputBlur() {
     if (!this.searchQuery) {
       this.clearAutoSuggestions();
@@ -112,6 +128,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.renderer.invokeElementMethod(this.searchInputText.nativeElement, 'blur', []);
       this.mobileSearchEnabled = false;
     }
+    this.eventBusService.triggerSearchModeEvent(false);
   }
 
   public handleSubmitSearch(searchQuery) {
@@ -131,21 +148,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   public focusSearchBar() {
-    // if (!this.mobileSearchEnabled) {
-    //   return;
-    // }
     setTimeout(() => {
       this.renderer.invokeElementMethod(this.searchInputText.nativeElement, 'focus', []);
     });
   }
 
-  public openNotificationBody() {
-    this.isNotificationBodyOpen = !this.isNotificationBodyOpen;
+  public toggleNotificationCenter() {
+    this.eventBusService.triggerNotificationCenterEvent(!this.isNotificationCenterModeEnabled);
   }
 
   ngOnDestroy() {
     this.userSignInSubscription.unsubscribe();
     this.autoCompleteSubscription.unsubscribe();
     this.searchResultsSubscription.unsubscribe();
+    this.eventBusSubscription.unsubscribe();
   }
 }

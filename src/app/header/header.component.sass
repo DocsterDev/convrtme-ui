@@ -3,7 +3,6 @@
 .tab-text
   color: $textColorLight
   &:hover
-    // background: $tabHoverColor
     cursor: pointer
     color: $textAccentColor
 
@@ -55,56 +54,49 @@
 .search-bar
   background: #FFFFFF
   @media screen and (min-width: 768px)
-    background: #F0F1F5 !important
+    background: #F0F1F5
+    transition: background 100ms ease
     border: solid 2px #F0F1F5
   height: 45px
   width: 500px
-  transition: background 100ms ease
   &:hover
     background: #ecedf1
     cursor: text
   .search-icon
     height: 45px
     width: 100%
+    background: transparent
+    fill: $textAccentColor
+    stroke: $textAccentColor
     &:hover
       cursor: pointer
-      background: $textAccentColor
-    &:hover .search-icon-svg
-      fill: #FFFFFF
-      stroke: #FFFFFF
   .placeholder
     color: #7584A1
 
 .action-header-tab
-  &:focus .active-icon-svg
+  transition: background 100ms ease
+  background: transparent
+  will-change: background
+  &:active .active-icon-svg
     fill: #FFFFFF
-  &:focus .active-search-icon-svg
-    fill: #FFFFFF
-    stroke: #FFFFFF
-  &:focus
+  &:active
     background: $textAccentColor
     cursor: pointer
   @media screen and (min-width: 768px)
     &:hover .active-icon-svg
       fill: #FFFFFF
-    &:hover .active-search-icon-svg
-      fill: #FFFFFF
-      stroke: #FFFFFF
-    //&:hover #notification-badge-svg
-    //  fill: #FFFFFF
     //&:hover .notification-badge > .text
     //  color: $textAccentColor
     &:hover
       background: $textAccentColor
       cursor: pointer
 
-.action-enabled-icon-stroke
-  fill: #FFFFFF
-  stroke: #FFFFFF
+.active-icon-svg
+  transition: fill 100ms ease
+  will-change: fill
 
 .action-enabled-icon
   fill: #FFFFFF
-
 .action-enabled-container
   background: $textAccentColor
   cursor: pointer
@@ -135,7 +127,6 @@
 // Will affect the search bar when text box is focused
 .search-focus
   background: #FFFFFF !important
-  //background: #f9fafe !important
 .search-bar-input
   color: $textColor
 
@@ -181,12 +172,10 @@
   right: 0
   width: 100% !important
   min-width: 100%;
-  // min-width: 100% !important
   min-height: 100% !important
   z-index: 999
   @media screen and (min-width: 768px)
     width: 500px !important
-
 
 .notification-alert-container
   width: 100%
@@ -194,8 +183,10 @@
   z-index: 8
   .notification-badge
     position: absolute
-    top: 7px
-    left: 35px
+    //top: 7px
+    //left: 35px
+    top: 12px
+    left: 32px
     z-index: 9
     .text
       font-size: 12px

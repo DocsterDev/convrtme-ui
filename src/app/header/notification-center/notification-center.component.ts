@@ -11,7 +11,7 @@ import * as moment from 'moment';
 export class NotificationCenterComponent implements OnInit, OnDestroy {
 
   @Input()
-  public open = false;
+  public open: boolean;
   private internalOpen: boolean;
   public loaded: boolean;
   public loading: boolean;
@@ -24,12 +24,12 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
   @Output()
   public closed: EventEmitter<boolean> = new EventEmitter();
 
-  public showManageSubs:boolean;
+  public showManageSubs: boolean;
 
   @HostListener('document:click', ['$event'])
   handleClick(event) {
       if (!this.elementRef.nativeElement.contains(event.target)) {
-        if(this.internalOpen === true){
+        if(this.internalOpen === true) {
           this.open = false;
           this.closed.emit(false);
         }
@@ -54,9 +54,9 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
         this.loaded = true;
         setTimeout(() => {
           this.fadeIn = true;
-        },0);
+        }, 0);
         this.loading = false;
-      },300);
+      }, 300);
     }, (error) => {
       console.error(error);
     });

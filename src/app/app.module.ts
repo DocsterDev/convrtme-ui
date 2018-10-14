@@ -40,6 +40,7 @@ import {NotificationGroupComponent} from './header/notification-center/notificat
 import {NotificationVideoComponent} from './header/notification-center/notification-group/notification-video/notification-video.component';
 import {NotificationCenterService} from './service/notification-center.service';
 import {FadeAnimationDirective} from './directives/fade-animation.directive';
+import {EventBusService} from "./service/event-bus.service";
 
 @NgModule({
   declarations: [
@@ -85,6 +86,7 @@ import {FadeAnimationDirective} from './directives/fade-animation.directive';
     IpService,
     HeaderService,
     NotificationCenterService,
+    EventBusService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: GlobalInterceptor,

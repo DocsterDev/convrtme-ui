@@ -1,10 +1,10 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {LocalStorageService} from 'ngx-webstorage';
 import {UserService} from './service/user.service';
 import {UtilsService} from './service/utils.service';
 import {Subscription} from 'rxjs/Subscription';
 import {IpService} from './service/ip.service';
-import {Meta} from "@angular/platform-browser";
+import {EventBusService} from "./service/event-bus.service";
 
 @Component({
   selector: 'app-root',
@@ -19,10 +19,23 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private userInfo: any = {};
 
+  private isMobile: boolean;
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    const isMobile = window.innerWidth < 768;
+    if (isMobile !== this.isMobile) {
+      this.isMobile = isMobile;
+      console.log('Change: Is Mobile: ' + this.isMobile);
+      this.eventBusService.triggerDeviceListener(this.isMobile);
+    }
+  }
+
   constructor(
     private localStorage: LocalStorageService,
     private userService: UserService,
-    private ipService: IpService) {
+    private ipService: IpService,
+    private eventBusService: EventBusService) {
   }
 
   ngOnInit() {

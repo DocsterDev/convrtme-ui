@@ -1,8 +1,8 @@
 <div class="row flex-nowrap no-gutters c-font-circular c-smaller c-bold header-shadow-desktop" style="height: 65px;">
-  <div class="col-auto d-flex align-items-center justify-content-start Mstart(1)" *ngIf="!mobileSearchEnabled && !isNotificationBodyOpen">
+  <div class="col-auto d-flex align-items-center justify-content-start Mstart(1)" *ngIf="!mobileSearchEnabled && !(isMobile && isNotificationCenterModeEnabled)">
     <img style="margin-bottom: -5px;" src="assets/img/svg/ic-logo.svg" width="65">
   </div>
-  <div class="col-auto d-flex align-items-center justify-content-start Mstart(1)" *ngIf="isMobile && (isNotificationBodyOpen || mobileSearchEnabled)">
+  <div class="col-auto d-flex align-items-center justify-content-start Mstart(1)" *ngIf="isMobile && (isNotificationCenterModeEnabled || mobileSearchEnabled)">
     <svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="Core" transform="translate(-424.000000, -4.000000)" fill="#3890dc">
@@ -29,8 +29,8 @@
             autocomplete="off"
             placeholder="Search"
             tabindex="1"
-            (focus)="this.isFocused = true; this.isSearchAutoCompleteOpen = true; handleAutoCompleteLookup(searchQuery);"
-            (blur)="handleSearchInputBlur();" #searchInputText/>
+            (focus)="handleSearchInputFocus(searchQuery)"
+            (blur)="handleSearchInputBlur()" #searchInputText/>
         <button type="submit" style="display:none">hidden submit</button>
         </form>
       </div>
@@ -54,8 +54,8 @@
   <app-search-auto-complete *ngIf="predictions && predictions.length > 0"  [open]="isSearchAutoCompleteOpen" [predictions]="this.predictions" class="search-auto-complete-container" (closed)="handleAutoCompleteClose()" (selected)="handleSubmitSearch($event)"></app-search-auto-complete>
 
   <!-- NOTIFICATION -->
-  <app-notification-center (closed)="isNotificationBodyOpen = false;" [open]="isNotificationBodyOpen" *ngIf="isNotificationBodyOpen"></app-notification-center>
-  <div class="col-auto action-header-tab" [ngClass]="{'action-enabled-container': isNotificationBodyOpen}" (click)="openNotificationBody()" style="width:65px;" *ngIf="!mobileSearchEnabled">
+  <app-notification-center (closed)="toggleNotificationCenter()" [open]="isNotificationCenterModeEnabled" *ngIf="isNotificationCenterModeEnabled"></app-notification-center>
+  <div class="col-auto action-header-tab" [ngClass]="{'action-enabled-container': isNotificationCenterModeEnabled}" (click)="toggleNotificationCenter()" style="width:65px;" *ngIf="!mobileSearchEnabled">
     <div class="notification-alert-container">
       <div class="h-100 w-100 d-flex align-items-center justify-content-center">
         <svg width="25px" height="31px" viewBox="0 0 25 31" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -65,7 +65,7 @@
                 <g id="Bounding_Boxes">
                   <polygon id="Shape" points="0 0 37 0 37 37 0 37"></polygon>
                 </g>
-                <g id="Outline" transform="translate(6.000000, 3.000000)" [ngClass]="{'action-enabled-icon': isNotificationBodyOpen}" class="active-icon-svg" fill="#9BA2AF" fill-rule="nonzero">
+                <g id="Outline" transform="translate(6.000000, 3.000000)" [ngClass]="{'action-enabled-icon': isNotificationCenterModeEnabled}" class="active-icon-svg" fill="#9BA2AF" fill-rule="nonzero">
                   <path d="M12.5,31 C14.21875,31 15.625,29.605 15.625,27.9 L9.375,27.9 C9.375,29.605 10.78125,31 12.5,31 Z M21.875,21.7 L21.875,13.95 C21.875,9.1915 19.328125,5.208 14.84375,4.154 L14.84375,3.1 C14.84375,1.8135 13.796875,0.775 12.5,0.775 C11.203125,0.775 10.15625,1.8135 10.15625,3.1 L10.15625,4.154 C5.6875,5.208 3.125,9.176 3.125,13.95 L3.125,21.7 L0,24.8 L0,26.35 L25,26.35 L25,24.8 L21.875,21.7 Z M18.75,23.25 L6.25,23.25 L6.25,13.95 C6.25,10.106 8.609375,6.975 12.5,6.975 C16.390625,6.975 18.75,10.106 18.75,13.95 L18.75,23.25 Z" id="Shape"></path>
                 </g>
               </g>
@@ -73,10 +73,10 @@
           </g>
         </svg>
       </div>
-      <div class="notification-badge" *ngIf="numAlertNotifications > 0">
+      <div class="notification-badge" *ngIf="numAlertNotifications > 0 && !notificationDirty">
         <svg width="15px" height="15px" viewBox="0 0 15 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
           <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-            <g id="notification-badge-svg" fill="#39A0ED" fill-rule="nonzero">
+            <g class="active-icon-svg" [ngClass]="{'action-enabled-icon': isNotificationCenterModeEnabled}" fill="#39A0ED" fill-rule="nonzero">
               <circle id="Oval-2" cx="7.5" cy="7.5" r="7.5"></circle>
             </g>
           </g>
@@ -102,7 +102,7 @@
   <div class="col-auto d-flex d-md-none align-items-center justify-content-center action-header-tab" *ngIf="!mobileSearchEnabled" (click)="mobileSearchEnabled = !mobileSearchEnabled; focusSearchBar();" style="width:65px;">
     <svg width="27px" height="27px" viewBox="0 0 19 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Artboard" transform="translate(-1257.000000, -25.000000)" class="active-search-icon-svg" fill="#9BA2AF" stroke="none">
+        <g id="Artboard" transform="translate(-1257.000000, -25.000000)" class="active-icon-svg" fill="#9BA2AF" stroke="none">
           <g id="Group-4" transform="translate(758.000000, 12.000000)">
             <g id="search" transform="translate(500.000000, 14.000000)">
               <path d="M11.7,11 L11.4,10.7 C12.4,9.6 13,8.1 13,6.5 C13,2.9 10.1,0 6.5,0 C2.9,0 0,2.9 0,6.5 C0,10.1 2.9,13 6.5,13 C8.1,13 9.6,12.4 10.7,11.4 L11,11.7 L11,12.5 L16,17.5 L17.5,16 L12.5,11 L11.7,11 Z M6.5,11 C4,11 2,9 2,6.5 C2,4 4,2 6.5,2 C9,2 11,4 11,6.5 C11,9 9,11 6.5,11 L6.5,11 Z" id="Shape"></path>

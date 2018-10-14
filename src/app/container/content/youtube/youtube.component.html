@@ -1,6 +1,6 @@
 <div class="w-100 d-flex justify-content-center">
   <div class="container" style="padding:0!important;">
-  <div class="row no-gutters" *ngIf="!isMobile">
+  <div class="row no-gutters" *ngIf="!isMobile || (isMobile && !isSearchModeEnabled && !isNotificationCenterModeEnabled)">
     <!-- SEARCH MODULE -->
     <div class="col Mx(1) order-1 solidify">
       <!--<div class="d-none d-md-flex text-md-left pb-3 c-smaller c-accent-color c-bold section-text" *ngIf="previousQuery">Search Results</div>-->

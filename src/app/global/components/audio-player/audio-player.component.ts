@@ -8,6 +8,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {Title} from '@angular/platform-browser';
 import {environment} from '../../../../environments/environment';
 import {HeaderService} from '../../../service/header.service';
+import {EventBusService} from '../../../service/event-bus.service';
 
 @Component({
   selector: 'app-audio-player',
@@ -34,17 +35,23 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   private retryCount = 0;
 
+  private isMobile: boolean;
+  private isSearchModeEnabled: boolean;
+  private savedShowNowPlayingBar: any;
+
   private videoEventSubscription: Subscription;
   private videoPlayingEventSubscription: Subscription;
   private videoLoadingEventSubscription: Subscription;
   private playlistUpdateEventSubscription: Subscription;
   private streamValidatorSubscription: Subscription;
+  private eventBusSubscription: Subscription;
 
   constructor(private audioPlayerService: AudioPlayerService,
               private notificationService: NotificationService,
               private videoRecommendedService: VideoRecommendedService,
               private titleService: Title,
-              private headerService: HeaderService) {
+              private headerService: HeaderService,
+              private eventBusService: EventBusService) {
   }
 
   ngOnInit() {
@@ -63,6 +70,17 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.playlistUpdateEventSubscription = this.audioPlayerService.triggerPlaylistUpdateEventEmitter$.subscribe((e) => {
       this.currentPlaylist = e.playlist;
       this.checkCurrentPlaylist();
+    });
+    this.isMobile = this.eventBusService.isDeviceMobile();
+    this.eventBusSubscription = this.eventBusService.deviceListenerEvent$.subscribe((isMobile) => this.isMobile = isMobile);
+    this.eventBusSubscription = this.eventBusService.searchModeEvent$.subscribe((isSearchModeEnabled) => {
+      this.isSearchModeEnabled = isSearchModeEnabled;
+      if (this.isSearchModeEnabled && this.isMobile) {
+        this.savedShowNowPlayingBar = this.showNowPlayingBar;
+        this.showNowPlayingBar = false;
+      } else {
+        this.showNowPlayingBar = this.savedShowNowPlayingBar;
+      }
     });
   }
 
@@ -130,7 +148,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private buildAudioObject() {
     this.showNowPlayingBar = false;
     if (this.activeSound) {
-      this.activeSound.stop();
+      this.activeSound.unload();
       this.titleService.setTitle('moup.io');
     }
     const streamUrl = environment.streamUrl + '/stream?v=' + this.video.id + (this.headerService.getToken() ? '&token=' + this.headerService.getToken() : '');
@@ -210,6 +228,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.videoLoadingEventSubscription.unsubscribe();
     this.playlistUpdateEventSubscription.unsubscribe();
     this.streamValidatorSubscription.unsubscribe();
+    this.eventBusSubscription.unsubscribe();
   }
 
 }

@@ -7,6 +7,7 @@ import {PlaylistService} from '../../../service/playlist.service';
 import {UserService} from '../../../service/user.service';
 import {NotificationService} from '../../../global/components/notification/notification.service';
 import {ActivatedRoute, Router} from '@angular/router';
+import {EventBusService} from "../../../service/event-bus.service";
 
 @Component({
   selector: 'app-youtube',
@@ -31,16 +32,14 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   private playlistUpdateSubscription: Subscription;
   private getPlaylistVideosSubscription: Subscription;
   private audioPlayingEventSubscription: Subscription;
+  private eventBusSubscription: Subscription;
 
   public query: string;
   public previousQuery: string;
 
   public isMobile: boolean;
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event) {
-    this.isMobile = window.innerWidth < 768;
-  }
+  public isSearchModeEnabled: boolean;
+  public isNotificationCenterModeEnabled: boolean;
 
   static updateComponent(component, index, list) {
     component.index = index;
@@ -53,11 +52,18 @@ export class YoutubeComponent implements OnInit, OnDestroy {
               private userService: UserService,
               private notificationService: NotificationService,
               private videoSearchService: VideoSearchService,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private eventBusService: EventBusService) {
   }
 
   ngOnInit() {
-      this.isMobile = window.innerWidth < 768;
+      this.isMobile = this.eventBusService.isDeviceMobile();
+      this.eventBusSubscription = this.eventBusService.deviceListenerEvent$.subscribe((isMobile) => this.isMobile = isMobile);
+      this.eventBusSubscription = this.eventBusService.searchModeEvent$.subscribe((isSearchModeEnabled) => this.isSearchModeEnabled = isSearchModeEnabled);
+      this.eventBusSubscription = this.eventBusService.notificationCenterEvent$.subscribe((isNotificationCenterModeEnabled) => {
+        this.isNotificationCenterModeEnabled = isNotificationCenterModeEnabled;
+        console.log('Notificiaiton Center Open: ' + this.isNotificationCenterModeEnabled);
+      });
       this.searchResultsSubscription = this.videoSearchService.getResultList().subscribe((searchResults) => {
         if (searchResults != null) {
           this.videoRecommendedService.recommended(searchResults[0].id);
@@ -219,6 +225,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     this.playlistUpdateSubscription.unsubscribe();
     this.getPlaylistVideosSubscription.unsubscribe();
     this.audioPlayingEventSubscription.unsubscribe();
+    this.eventBusSubscription.unsubscribe();
   }
 
 }
