@@ -1,6 +1,6 @@
 <div *ngIf="open" class="search-auto-complete-container c-font-circular c-bold">
   <div class="py-2">
-    <div *ngFor="let prediction of predictions; let i = index" [ngClass]="{'highlight-item':showHighlight && highlightedIndex != null && highlightedIndex === i}" (mouseleave)="highlightedIndex = null; showHighlight = false;" (mouseenter)="highlightedIndex = i; showHighlight = true;" (click)="handleSuggestionSelect(prediction); highlightedIndex = i;">
+    <div *ngFor="let prediction of predictions; let i = index" [ngClass]="{'highlight-item':showHighlight && highlightedIndex != null && highlightedIndex === i}" (mouseleave)="highlightedIndex = null; showHighlight = false; selectOnEnter = true;" (mouseenter)="highlightedIndex = i; showHighlight = true; selectOnEnter = false;" (click)="handleSuggestionSelect(prediction); highlightedIndex = i;">
       <div class="px-4 py-3 py-md-2 t-regular2">{{prediction}}</div>
     </div>
   </div>

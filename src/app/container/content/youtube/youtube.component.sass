@@ -50,6 +50,7 @@
   max-height: 185px
 
 .truncate-single-line
-  overflow: hidden
-  white-space: nowrap
-  text-overflow: ellipsis
+  @media screen and (min-width: 768px)
+    overflow: hidden
+    white-space: nowrap
+    text-overflow: ellipsis

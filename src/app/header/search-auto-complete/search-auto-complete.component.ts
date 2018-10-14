@@ -26,6 +26,7 @@ export class SearchAutoCompleteComponent implements OnInit, OnDestroy {
 
   public highlightedIndex: number = null;
   public showHighlight: boolean;
+  public selectOnEnter: boolean;
 
   @HostListener('document:click', ['$event'])
   handleClick(event) {
@@ -65,6 +66,9 @@ export class SearchAutoCompleteComponent implements OnInit, OnDestroy {
       this.onHighlighted.emit(this.predictions[this.highlightedIndex]);
     }
     if (event.key == 'Enter') {
+      if (!this.selectOnEnter) {
+        return;
+      }
       if (this.highlightedIndex !== null) {
         event.preventDefault();
         this.selected.emit(this.predictions[this.highlightedIndex]);

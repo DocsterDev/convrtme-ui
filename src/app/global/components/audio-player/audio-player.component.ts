@@ -16,7 +16,7 @@ import {EventBusService} from '../../../service/event-bus.service';
   styleUrls: ['./audio-player.component.sass']
 })
 export class AudioPlayerComponent implements OnInit, OnDestroy {
-  public showNowPlayingBar: boolean;
+  public showNowPlayingBar: boolean = true;
   public video: any = {};
   public progress;
   public duration: string;
