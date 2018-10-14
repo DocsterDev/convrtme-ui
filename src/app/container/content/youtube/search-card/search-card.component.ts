@@ -50,7 +50,6 @@ export class SearchCardComponent implements OnInit, OnDestroy {
         this.nowLoading = e.toggle;
       }
     });
-
   }
 
   selectContent(video) {
@@ -67,7 +66,7 @@ export class SearchCardComponent implements OnInit, OnDestroy {
     $event.stopPropagation();
     this.notificationSubscription = this.notificationCenterService.addSubscription(channel, avatarUrl).subscribe((resp) => {
       const response: any = resp;
-      this.notificationService.showNotification({type: 'success', message: 'Successfully added ' + response.channel.name});
+      this.notificationService.showNotification({type: 'success', message: 'Successfully added ' + response.channel.name + ' to Subcriptions.'});
     }, (error) => {
       console.error(error);
     });

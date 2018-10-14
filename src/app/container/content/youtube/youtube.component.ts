@@ -1,4 +1,4 @@
-import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs/Subscription';
 import {VideoSearchService} from '../../../service/video-search.service';
 import {AudioPlayerService} from '../../../global/components/audio-player/audio-player.service';
@@ -6,8 +6,8 @@ import {VideoRecommendedService} from '../../../service/video-recommended.servic
 import {PlaylistService} from '../../../service/playlist.service';
 import {UserService} from '../../../service/user.service';
 import {NotificationService} from '../../../global/components/notification/notification.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {EventBusService} from "../../../service/event-bus.service";
+import {ActivatedRoute} from '@angular/router';
+import {EventBusService} from '../../../service/event-bus.service';
 
 @Component({
   selector: 'app-youtube',
@@ -60,10 +60,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       this.isMobile = this.eventBusService.isDeviceMobile();
       this.eventBusSubscription = this.eventBusService.deviceListenerEvent$.subscribe((isMobile) => this.isMobile = isMobile);
       this.eventBusSubscription = this.eventBusService.searchModeEvent$.subscribe((isSearchModeEnabled) => this.isSearchModeEnabled = isSearchModeEnabled);
-      this.eventBusSubscription = this.eventBusService.notificationCenterEvent$.subscribe((isNotificationCenterModeEnabled) => {
-        this.isNotificationCenterModeEnabled = isNotificationCenterModeEnabled;
-        console.log('Notificiaiton Center Open: ' + this.isNotificationCenterModeEnabled);
-      });
+      this.eventBusSubscription = this.eventBusService.notificationCenterEvent$.subscribe((isNotificationCenterModeEnabled) => this.isNotificationCenterModeEnabled = isNotificationCenterModeEnabled);
       this.searchResultsSubscription = this.videoSearchService.getResultList().subscribe((searchResults) => {
         if (searchResults != null) {
           this.videoRecommendedService.recommended(searchResults[0].id);
@@ -76,23 +73,23 @@ export class YoutubeComponent implements OnInit, OnDestroy {
         this.recommendedList = [];
         this.loadIncrementally(recommendedResults, this.recommendedList);
       });
-      this.signInEventSubscription = this.userService.userSignedInEmitter$.subscribe((response) => {
-        const user: any = response;
-        if (user.valid) {
-          this.playlistService.getPlaylists().subscribe((response) => {
-            this.playlists = response;
-          });
-        }
-      });
-      this.playlistActionSubscription = this.audioPlayerService.triggerPlaylistActionEventEmitter$.subscribe((resp) => {
-        const action: any = resp;
-        if (action.action === 'next') {
-          console.log('NEXT');
-        }
-        if (action.action === 'prev') {
-          console.log('PREVIOUS');
-        }
-      });
+      // this.signInEventSubscription = this.userService.userSignedInEmitter$.subscribe((response) => {
+      //   const user: any = response;
+      //   if (user.valid) {
+      //     this.playlistService.getPlaylists().subscribe((resp) => {
+      //       this.playlists = resp;
+      //     });
+      //   }
+      // });
+      // this.playlistActionSubscription = this.audioPlayerService.triggerPlaylistActionEventEmitter$.subscribe((resp) => {
+      //   const action: any = resp;
+      //   if (action.action === 'next') {
+      //     console.log('NEXT');
+      //   }
+      //   if (action.action === 'prev') {
+      //     console.log('PREVIOUS');
+      //   }
+      // });
       this.route.queryParams.subscribe(params => {
         this.query = params.q;
         this.videoSearchService.search(this.query ? this.query : 'cnn');
@@ -151,7 +148,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   }
 
   public handleRemoveFromPlaylist($event) {
-    const originalPlaylist = JSON.parse(JSON.stringify(this.currentPlaylist)); // TODO Dont not do this shit, use 'npm install lodash' instead - https://stackoverflow.com/questions/34688517/whats-alternative-to-angular-copy-in-angular
+    const originalPlaylist = JSON.parse(JSON.stringify(this.currentPlaylist));
     this.currentPlaylist.videos = this.currentPlaylist.videos.filter(video => video.id !== $event.video.id);
     this.audioPlayerService.triggerPlaylistUpdateEvent({playlist: this.currentPlaylist.videos});
     this.playlistUpdateSubscription = this.playlistService.updateVideos(this.currentPlaylist.uuid, this.currentPlaylist.videos).subscribe(() => {
@@ -215,7 +212,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     }
 
     return result;
-  };
+  }
 
   ngOnDestroy() {
     this.searchResultsSubscription.unsubscribe();

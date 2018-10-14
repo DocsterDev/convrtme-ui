@@ -2,7 +2,7 @@
   <div class="col-auto d-flex align-items-center justify-content-start Mstart(1)" *ngIf="!mobileSearchEnabled && !(isMobile && isNotificationCenterModeEnabled)">
     <img style="margin-bottom: -5px;" src="assets/img/svg/ic-logo.svg" width="65">
   </div>
-  <div class="col-auto d-flex align-items-center justify-content-start Mstart(1)" *ngIf="isMobile && (isNotificationCenterModeEnabled || mobileSearchEnabled)">
+  <div class="col-auto d-flex align-items-center justify-content-start Mstart(1)" (click)="closeMode()" *ngIf="isMobile && (isNotificationCenterModeEnabled || mobileSearchEnabled)">
     <svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="Core" transform="translate(-424.000000, -4.000000)" fill="#3890dc">
@@ -30,9 +30,10 @@
             placeholder="Search"
             tabindex="1"
             (focus)="handleSearchInputFocus(searchQuery)"
-            (blur)="handleSearchInputBlur()" #searchInputText/>
+            (blur)="handleSearchInputBlur(false)" #searchInputText/>
         <button type="submit" style="display:none">hidden submit</button>
         </form>
+        <app-search-auto-complete *ngIf="predictions && predictions.length > 0"  [open]="isSearchAutoCompleteOpen" [predictions]="this.predictions" (closed)="handleAutoCompleteClose()" (selected)="handleSubmitSearch($event)"></app-search-auto-complete>
       </div>
       <div class="col" style="max-width:50px;" *ngIf="!mobileSearchEnabled">
         <div class="search-icon d-flex align-items-center justify-content-center" (click)="handleSubmitSearch(searchQuery)">
@@ -51,7 +52,6 @@
       </div>
     </div>
   </div>
-  <app-search-auto-complete *ngIf="predictions && predictions.length > 0"  [open]="isSearchAutoCompleteOpen" [predictions]="this.predictions" class="search-auto-complete-container" (closed)="handleAutoCompleteClose()" (selected)="handleSubmitSearch($event)"></app-search-auto-complete>
 
   <!-- NOTIFICATION -->
   <app-notification-center (closed)="toggleNotificationCenter()" [open]="isNotificationCenterModeEnabled" *ngIf="isNotificationCenterModeEnabled"></app-notification-center>

@@ -13,8 +13,8 @@ export class EventBusService {
     this.searchModeEvent$ = new EventEmitter();
   }
 
-  public triggerNotificationCenterEvent(open: boolean): void {
-    this.notificationCenterEvent$.emit(open);
+  public triggerNotificationCenterEvent(isNotificationCenterModeEnabled: boolean): void {
+    this.notificationCenterEvent$.emit(isNotificationCenterModeEnabled);
   }
 
   public triggerDeviceListener(isMobile: boolean): void {

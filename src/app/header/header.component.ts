@@ -59,7 +59,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.eventBusSubscription = this.eventBusService.deviceListenerEvent$.subscribe((isMobile) => {
       this.isMobile = isMobile;
       if (!this.isMobile) {
-        this.handleSearchInputBlur();
+        this.handleSearchInputBlur(true);
       }
     });
     this.eventBusSubscription = this.eventBusService.searchModeEvent$.subscribe((isSearchModeEnabled) => this.isSearchModeEnabled = isSearchModeEnabled);
@@ -120,15 +120,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.handleAutoCompleteLookup(searchQuery);
   }
 
-  public handleSearchInputBlur() {
-    if (!this.searchQuery) {
+  public handleSearchInputBlur(allowNonNullSearchQuery: boolean) {
+    if (allowNonNullSearchQuery || !this.searchQuery) {
       this.clearAutoSuggestions();
       this.isSearchAutoCompleteOpen = false;
       this.isFocused = false;
       this.renderer.invokeElementMethod(this.searchInputText.nativeElement, 'blur', []);
       this.mobileSearchEnabled = false;
+      this.eventBusService.triggerSearchModeEvent(false);
     }
-    this.eventBusService.triggerSearchModeEvent(false);
   }
 
   public handleSubmitSearch(searchQuery) {
@@ -141,10 +141,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.isFocused = false;
     this.renderer.invokeElementMethod(this.searchInputText.nativeElement, 'blur', []);
     this.router.navigate(['.'], { relativeTo: this.route, queryParams: {q: searchQuery} });
+    this.eventBusService.triggerSearchModeEvent(false);
   }
 
   public clearAutoSuggestions() {
     this.predictions = [];
+  }
+
+  public closeMode() {
+    this.eventBusService.triggerSearchModeEvent(false);
+    this.eventBusService.triggerNotificationCenterEvent(false);
+    this.handleSearchInputBlur(true);
   }
 
   public focusSearchBar() {
