@@ -103,8 +103,9 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   public seekNext() {
-    this.audioPlayerService.triggerPlaylistActionEvent({action: 'next', isPlaylist: this.isPlaylist});
-    this.playNextVideo();
+    //this.audioPlayerService.triggerPlaylistActionEvent({action: 'next', isPlaylist: this.isPlaylist});
+    // this.playNextVideo();
+    this.activeSound.seek(120);
   }
 
   public seekPrev() {

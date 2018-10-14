@@ -33,7 +33,7 @@
             (blur)="handleSearchInputBlur(false)" #searchInputText/>
         <button type="submit" style="display:none">hidden submit</button>
         </form>
-        <app-search-auto-complete *ngIf="predictions && predictions.length > 0"  [open]="isSearchAutoCompleteOpen" [predictions]="this.predictions" (closed)="handleAutoCompleteClose()" (selected)="handleSubmitSearch($event)"></app-search-auto-complete>
+        <app-search-auto-complete *ngIf="predictions && predictions.length > 0" [open]="isSearchAutoCompleteOpen" [predictions]="this.predictions" (onHighlighted)="searchQuery = $event" (closed)="handleAutoCompleteClose()" (selected)="handleSubmitSearch($event)"></app-search-auto-complete>
       </div>
       <div class="col" style="max-width:50px;" *ngIf="!mobileSearchEnabled">
         <div class="search-icon d-flex align-items-center justify-content-center" (click)="handleSubmitSearch(searchQuery)">

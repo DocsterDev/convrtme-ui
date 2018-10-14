@@ -41,6 +41,8 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   public isSearchModeEnabled: boolean;
   public isNotificationCenterModeEnabled: boolean;
 
+  public loaded: boolean;
+
   static updateComponent(component, index, list) {
     component.index = index;
     list.push(component);
@@ -62,11 +64,16 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       this.eventBusSubscription = this.eventBusService.searchModeEvent$.subscribe((isSearchModeEnabled) => this.isSearchModeEnabled = isSearchModeEnabled);
       this.eventBusSubscription = this.eventBusService.notificationCenterEvent$.subscribe((isNotificationCenterModeEnabled) => this.isNotificationCenterModeEnabled = isNotificationCenterModeEnabled);
       this.searchResultsSubscription = this.videoSearchService.getResultList().subscribe((searchResults) => {
-        if (searchResults != null) {
+        setTimeout(()=>{
+          this.loaded = true;
+        }, 15);
+
+        if (searchResults.length > 0) {
           this.videoRecommendedService.recommended(searchResults[0].id);
         }
         this.previousQuery = this.query;
         this.videoList = [];
+        this.recommendedList = [];
         this.loadIncrementally(searchResults, this.videoList);
       });
       this.recommendedResultsSubscription = this.videoRecommendedService.getResultList().subscribe((recommendedResults) => {
@@ -188,9 +195,12 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   private loadIncrementally(data, list) {
     let totalTime = 0;
     data.forEach((e, index) => {
-      const maxMillis = 300;
-      const minMillis = 20;
-      const delay = Math.floor(Math.random() * (maxMillis - minMillis + 1)) + minMillis;
+      const maxMillis = 200;
+      const minMillis = 15;
+      let delay = Math.floor(Math.random() * (maxMillis - minMillis + 1)) + minMillis;
+      if (index === 0) {
+        delay = 0;
+      }
       totalTime = totalTime + delay;
       setTimeout(YoutubeComponent.updateComponent, totalTime, e, index, list);
     });

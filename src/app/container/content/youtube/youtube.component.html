@@ -1,54 +1,58 @@
 <div class="w-100 d-flex justify-content-center">
   <div class="container" style="padding:0!important;">
-  <div class="row d-flex justify-content-center no-gutters" *ngIf="!isMobile || (isMobile && !isSearchModeEnabled && !isNotificationCenterModeEnabled)">
-    <!-- SEARCH MODULE -->
-    <div class="col Mx(1) order-1 solidify">
-      <!--<div class="d-none d-md-flex text-md-left pb-3 c-smaller c-accent-color c-bold section-text" *ngIf="previousQuery">Search Results</div>-->
-      <div class="text-left c-bold c-smaller section-text pb-3" *ngIf="previousQuery">Showing results for: <span class="c-bold c-smaller c-accent-color">{{previousQuery}}</span></div>
+    <div *ngIf="loaded && videoList.length === 0" class="row mt-5 d-flex align-items-center justify-content-center no-gutters">
+      <div class="col">
+        <span class="c-font-circular c-light text-center c-smaller">You don&rsquo;t have any search results.<br/>Try searching for something normal.</span>
+      </div>
+    </div>
+    <div *ngIf="loaded && videoList.length > 0 && !isMobile || (isMobile && !isSearchModeEnabled && !isNotificationCenterModeEnabled)" class="row d-flex justify-content-center no-gutters" >
+      <!-- SEARCH MODULE -->
+      <div class="col Mx(1) order-1 solidify">
+        <div class="text-left c-bold c-smaller section-text pb-3 truncate-single-line" *ngIf="previousQuery">Showing results for: <span class="c-bold c-smaller c-accent-color">{{previousQuery}}</span></div>
         <div *ngFor="let video of videoList" class="mb-2">
           <app-search-card (added)="handleAddToCurrentPlaylist($event)" (selected)="handleVideoSelect($event)" [video]="video"></app-search-card>
         </div>
-    </div>
-    <!-- RECOMMENDED MODULE -->
-    <div class="col-md Mx(1) order-2 solidify">
-      <div class="text-center text-md-left pb-3 pt-2 pt-md-0 c-smaller c-bold c-accent-color section-text" *ngIf="previousQuery">Recommended For You</div>
-      <div *ngFor="let video of recommendedList" class="mb-2">
-        <app-search-card (added)="handleAddToCurrentPlaylist($event)" (selected)="handleRecommendedVideoSelect($event)" [video]="video"></app-search-card>
       </div>
-    </div>
-    <!-- PLAYLIST MODULE -->
-    <div class="col-md Mx(1) order-3" *ngIf="false">
-      <div class="d-block d-md-none My(1)"></div>
-      <div class="text-center text-md-left c-smaller c-bold c-accent-color section-text">Playlists</div>
-      <div class="row no-gutters Mt(0.25) d-flex flex-nowrap justify-content-center" (click)="currentPlayingPlaylist = 'PLAYLIST'">
-        <div *ngFor="let playlist of playlists" class="col d-flex align-items-center justify-content-center playlist-icon-col" (click)="setPlaylistActive(playlist)">
-          <div class="playlist-icon" [ngClass]="{'playlist-active': currentPlaylist.uuid === playlist.uuid}" [style.background]="'#' + playlist.iconColor"></div>
+      <!-- RECOMMENDED MODULE -->
+      <div class="col-md Mx(1) order-2 solidify">
+        <div class="text-center text-md-left pb-3 pt-2 pt-md-0 c-smaller c-bold section-text" *ngIf="previousQuery">Recommended For You</div>
+        <div *ngFor="let video of recommendedList" class="mb-2">
+          <app-search-card (added)="handleAddToCurrentPlaylist($event)" (selected)="handleRecommendedVideoSelect($event)" [video]="video"></app-search-card>
         </div>
       </div>
-      <div *ngIf="playlistLoading" class="help-text">
-        <div class="c-font-circular c-smaller c-light Py(2)">Loading...</div>
+      <!-- PLAYLIST MODULE -->
+      <div class="col-md Mx(1) order-3" *ngIf="false">
+        <div class="d-block d-md-none My(1)"></div>
+        <div class="text-center text-md-left c-smaller c-bold c-accent-color section-text">Playlists</div>
+        <div class="row no-gutters Mt(0.25) d-flex flex-nowrap justify-content-center" (click)="currentPlayingPlaylist = 'PLAYLIST'">
+          <div *ngFor="let playlist of playlists" class="col d-flex align-items-center justify-content-center playlist-icon-col" (click)="setPlaylistActive(playlist)">
+            <div class="playlist-icon" [ngClass]="{'playlist-active': currentPlaylist.uuid === playlist.uuid}" [style.background]="'#' + playlist.iconColor"></div>
+          </div>
+        </div>
+        <div *ngIf="playlistLoading" class="help-text">
+          <div class="c-font-circular c-smaller c-light Py(2)">Loading...</div>
+        </div>
+        <div *ngIf="!currentPlaylist.videos && !playlistLoading" class="help-text">
+          <div class="c-font-circular c-smaller c-light Py(2)">Select a playlist above.</div>
+        </div>
+        <div *ngIf="currentPlaylist.videos && !playlistLoading">
+          <smooth-dnd-container [lockAxis]="'y'" (drop)="handlePlaylistVideoSort($event)">
+            <smooth-dnd-draggable *ngFor="let video of currentPlaylist.videos">
+              <app-playlist-card (removed)="handleRemoveFromPlaylist($event)" (selected)="handleVideoSelect($event)" [color]="currentPlaylist.iconColor" [video]="video"></app-playlist-card>
+            </smooth-dnd-draggable>
+          </smooth-dnd-container>
+        </div>
+        <div *ngIf="currentPlaylist.videos && currentPlaylist.videos.length === 0 && !playlistLoading" class="help-text">
+          <div class="c-font-circular c-smaller c-light Py(2)">No videos in this playlist. Try adding some.</div>
+        </div>
+        <div class="d-block d-md-none My(1.5)"></div>
       </div>
-      <div *ngIf="!currentPlaylist.videos && !playlistLoading" class="help-text">
-        <div class="c-font-circular c-smaller c-light Py(2)">Select a playlist above.</div>
-      </div>
-      <div *ngIf="currentPlaylist.videos && !playlistLoading">
-        <smooth-dnd-container [lockAxis]="'y'" (drop)="handlePlaylistVideoSort($event)">
-          <smooth-dnd-draggable *ngFor="let video of currentPlaylist.videos">
-            <app-playlist-card (removed)="handleRemoveFromPlaylist($event)" (selected)="handleVideoSelect($event)" [color]="currentPlaylist.iconColor" [video]="video"></app-playlist-card>
-          </smooth-dnd-draggable>
-        </smooth-dnd-container>
-      </div>
-      <div *ngIf="currentPlaylist.videos && currentPlaylist.videos.length === 0 && !playlistLoading" class="help-text">
-        <div class="c-font-circular c-smaller c-light Py(2)">No videos in this playlist. Try adding some.</div>
-      </div>
-      <div class="d-block d-md-none My(1.5)"></div>
     </div>
-  </div>
-  <div class="row no-gutters h-100" [ngStyle]="{'max-height': isPlaying ? '200px' : '60px'}">
-    <div class="col">
-      &nbsp;
+    <div class="row no-gutters h-100" [ngStyle]="{'max-height': isPlaying ? '200px' : '60px'}">
+      <div class="col">
+        &nbsp;
+      </div>
+      </div>
     </div>
-    </div>
-  </div>
 </div>
 
