@@ -34,12 +34,24 @@
 
 .playback-seek-bar
   width: 100%
-  height: 7px
+  height: 15px
+  max-height: 8px
+  transition: max-height 50ms ease-in
+  will-change: max-height
   background-color: $playbackSeekBackground
+  &:hover
+    max-height: 15px
+  &:hover .playback-seek-bar-progress
+    max-height: 15px
   .playback-seek-bar-progress
-    height: 7px
-    width: 12%
+    height: 15px
+    max-height: 8px
+    max-width: 0%
     background-color: #6EB9F2
+    transition: max-width, max-height 50ms ease-in
+    will-change: max-width, max-height
+    &:hover
+      max-height: 15px
   .playback-seek-bar-handle
     background-color: $playbackSeekHandle
     height: 10px

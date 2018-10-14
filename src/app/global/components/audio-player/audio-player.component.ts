@@ -16,12 +16,12 @@ import {EventBusService} from '../../../service/event-bus.service';
   styleUrls: ['./audio-player.component.sass']
 })
 export class AudioPlayerComponent implements OnInit, OnDestroy {
-  public showNowPlayingBar: boolean = true;
+  public showNowPlayingBar: boolean;
   public video: any = {};
   public progress;
-  public seekPositionX: number;
   public duration: string;
   public timer: string;
+  public seekTimer: string;
 
   private activeSound: Howl;
 
@@ -41,6 +41,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private savedShowNowPlayingBar: any;
 
   public seekBarHandlePosX: number;
+  public seekBarHandleEnabled: boolean;
 
   private videoEventSubscription: Subscription;
   private videoPlayingEventSubscription: Subscription;
@@ -87,13 +88,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     });
   }
 
-  public bindMouseMoveSeekBar ($event, elementWidth) {
-    this.seekBarHandlePosX = ($event.offsetX/elementWidth)*100;
-    this.seekPositionX = this.seekBarHandlePosX;
-    console.log($event.offsetX);
-    $event.stopPropagation();
-  }
-
   private checkCurrentPlaylist() {
     for (let i = 0; i < this.currentPlaylist.length; i++) {
       const video = this.currentPlaylist[i];
@@ -115,16 +109,34 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   public seekNext() {
     //this.audioPlayerService.triggerPlaylistActionEvent({action: 'next', isPlaylist: this.isPlaylist});
     // this.playNextVideo();
-    this.activeSound.seek(120);
   }
 
   public seekPrev() {
-    this.audioPlayerService.triggerPlaylistActionEvent({action: 'prev', isPlaylist: this.isPlaylist});
-    if (this.playlistIndex === 0) {
-      console.log('Cant go to previous');
-    } else {
-      this.playlistIndex = this.playlistIndex - 1;
-      this.audioPlayerService.triggerVideoEvent(this.currentPlaylist[this.playlistIndex]);
+    // this.audioPlayerService.triggerPlaylistActionEvent({action: 'prev', isPlaylist: this.isPlaylist});
+    // if (this.playlistIndex === 0) {
+    //   console.log('Cant go to previous');
+    // } else {
+    //   this.playlistIndex = this.playlistIndex - 1;
+    //   this.audioPlayerService.triggerVideoEvent(this.currentPlaylist[this.playlistIndex]);
+    // }
+  }
+
+  public bindMouseMoveSeekBar($event, elementWidth, duration) {
+    if (this.activeSound && this.activeSound.playing()) {
+      this.seekBarHandlePosX = ($event.offsetX / elementWidth) * 100;
+      const seconds = UtilsService.formatDuration(duration);
+      const seekPosition = seconds * (this.seekBarHandlePosX / 100);
+      this.seekTimer = UtilsService.formatTime(seekPosition);
+      $event.stopPropagation();
+    }
+  }
+
+  public seekToPosition($event, position, duration) {
+    if (this.activeSound && this.activeSound.playing()) {
+      const seconds = UtilsService.formatDuration(duration);
+      const seekPosition = Math.round(seconds * (position/100));
+      this.activeSound.seek(seekPosition);
+      $event.stopPropagation();
     }
   }
 
