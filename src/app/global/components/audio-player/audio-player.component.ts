@@ -155,7 +155,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     const streamUrl = environment.streamUrl + '/stream?v=' + this.video.id + (this.headerService.getToken() ? '&token=' + this.headerService.getToken() : '');
     this.activeSound = new Howl({
       src: [streamUrl],
-      format: ['webm'],
+      // format: ['webm'],
       html5: true,
       buffer: true,
       preload: false,
