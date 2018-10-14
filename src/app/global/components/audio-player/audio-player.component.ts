@@ -39,6 +39,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private isMobile: boolean;
   private isSearchModeEnabled: boolean;
   private savedShowNowPlayingBar: any;
+  private prevIsScrolling: boolean;
 
   public seekBarHandlePosX: number;
   public seekBarHandleEnabled: boolean;
@@ -89,9 +90,10 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       }
     });
     this.eventBusSubscription = this.eventBusService.scrollEvent$.subscribe((isScrolling) => {
-      if (this.video && this.activeSound) {
-        this.showNowPlayingBar = !isScrolling;
+      if (isScrolling) {
+        this.prevIsScrolling = this.showNowPlayingBar;
       }
+      this.showNowPlayingBar = isScrolling ? false : this.prevIsScrolling;
     });
   }
 
@@ -220,7 +222,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       },
       onend: () => {
         this.audioPlayerService.triggerTogglePlaying({id: this.video.id, toggle: false});
-          this.playNextVideo();
+        this.playNextVideo();
       },
       onload: () => {
         if (this.video.isRecommended === false && this.video.isPlaylist === false) {
@@ -241,7 +243,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       this.videoServiceLock = false;
       return;
     }
-    console.log('Received error in fetching video stream. Retry attempt ' + this.retryCount);
+    console.error('Received error in fetching video stream. Retry attempt ' + this.retryCount);
     this.buildAudioObject();
   }
 
