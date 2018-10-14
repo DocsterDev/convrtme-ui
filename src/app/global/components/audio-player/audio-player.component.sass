@@ -6,8 +6,9 @@
   height: 100%
   max-height: 0
   overflow: hidden
-  -webkit-transition: max-height 0.09s ease
-  transition: max-height 0.09s ease
+  -webkit-transition: max-height 50ms ease-in
+  transition: max-height 50ms ease-in
+  will-change: max-height
 
 .open-now-playing-bar
   //max-height: 145px
@@ -37,6 +38,7 @@
   height: 15px
   max-height: 8px
   transition: max-height 50ms ease-in
+  -webkit-transition: max-height 50ms ease-in
   will-change: max-height
   background-color: $playbackSeekBackground
   &:hover
@@ -49,6 +51,7 @@
     max-width: 0%
     background-color: #6EB9F2
     transition: max-width, max-height 50ms ease-in
+    -webkit-transition: max-width, max-height 50ms ease-in
     will-change: max-width, max-height
     &:hover
       max-height: 15px

@@ -1,9 +1,13 @@
 @import variables
 
-.search-card
-  opacity: 1
-  transition: opacity, transform $animationTimer ease
+%fade-animation
+  transition: opacity 50ms ease
+  -webkit-transition: opacity 50ms ease
   will-change: opacity
+
+.search-card
+  @extend %fade-animation
+  opacity: 1
   min-width: 100px
   //width: 100%
   @media screen and (min-width: 448px)
@@ -44,9 +48,9 @@
     color: #3890dc !important
 
 .title-text
-  transition: opacity $animationTimer ease
+  @extend %fade-animation
 .subtitle
-  transition: opacity $animationTimer ease
+  @extend %fade-animation
 
 .now-playing .play-icon
   opacity: 1 !important
@@ -74,7 +78,7 @@
   opacity: 0.6 !important
 
 .loading-icon
-  transition: opacity $animationTimer ease
+  @extend %fade-animation
   opacity: 0
   color: white
   position: absolute
@@ -83,7 +87,7 @@
   transform: translate(-50%, -50%)
 
 .play-icon
-  transition: opacity $animationTimer ease
+  @extend %fade-animation
   opacity: 0
   color: white
   position: absolute
@@ -134,7 +138,7 @@
     font-size: 13px
 
 .playlist-icon-add
-  transition: opacity $animationTimer ease
+  @extend %fade-animation
   opacity: 0
   &:hover
     opacity: 1
@@ -145,7 +149,7 @@
   border-radius: 50%
 
 .play-icon-active
-  transition: opacity $animationTimer ease
+  @extend %fade-animation
   opacity: 0
 
 .truncate-double-line

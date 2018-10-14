@@ -1,5 +1,10 @@
 @import variables
 
+%fade-animation-background
+  transition: background 50ms ease
+  -webkit-transition: background 50ms ease
+  will-change: background
+
 .tab-text
   color: $textColorLight
   &:hover
@@ -54,8 +59,10 @@
 .search-bar
   background: #FFFFFF
   @media screen and (min-width: 768px)
+    transition: background 50ms ease
+    -webkit-transition: background 50ms ease
+    will-change: background
     background: #F0F1F5
-    transition: background 100ms ease
     border: solid 2px #F0F1F5
   height: 45px
   width: 500px
@@ -74,9 +81,10 @@
     color: #7584A1
 
 .action-header-tab
-  transition: background 100ms ease
-  background: transparent
+  transition: background 50ms ease
+  -webkit-transition: background 50ms ease
   will-change: background
+  background: transparent
   &:active .active-icon-svg
     fill: #FFFFFF
   &:active
@@ -92,7 +100,8 @@
       cursor: pointer
 
 .active-icon-svg
-  transition: fill 100ms ease
+  transition: fill 50ms ease
+  -webkit-transition: fill 50ms ease
   will-change: fill
 
 .action-enabled-icon

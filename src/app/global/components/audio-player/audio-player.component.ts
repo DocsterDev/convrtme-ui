@@ -79,11 +79,18 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.eventBusSubscription = this.eventBusService.deviceListenerEvent$.subscribe((isMobile) => this.isMobile = isMobile);
     this.eventBusSubscription = this.eventBusService.searchModeEvent$.subscribe((isSearchModeEnabled) => {
       this.isSearchModeEnabled = isSearchModeEnabled;
-      if (this.isSearchModeEnabled && this.isMobile) {
-        this.savedShowNowPlayingBar = this.showNowPlayingBar;
-        this.showNowPlayingBar = false;
-      } else {
-        this.showNowPlayingBar = this.savedShowNowPlayingBar;
+      if (this.isMobile) {
+        if (this.isSearchModeEnabled) {
+          this.savedShowNowPlayingBar = this.showNowPlayingBar;
+          this.showNowPlayingBar = false;
+        } else {
+          this.showNowPlayingBar = this.savedShowNowPlayingBar;
+        }
+      }
+    });
+    this.eventBusSubscription = this.eventBusService.scrollEvent$.subscribe((isScrolling) => {
+      if (this.video && this.activeSound) {
+        this.showNowPlayingBar = !isScrolling;
       }
     });
   }
@@ -122,7 +129,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   public bindMouseMoveSeekBar($event, elementWidth, duration) {
-    if (this.activeSound && this.activeSound.playing()) {
+    if (this.activeSound) {
       this.seekBarHandlePosX = ($event.offsetX / elementWidth) * 100;
       const seconds = UtilsService.formatDuration(duration);
       const seekPosition = seconds * (this.seekBarHandlePosX / 100);
@@ -132,9 +139,12 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   public seekToPosition($event, position, duration) {
-    if (this.activeSound && this.activeSound.playing()) {
+    if (this.activeSound) {
       const seconds = UtilsService.formatDuration(duration);
       const seekPosition = Math.round(seconds * (position/100));
+      if (this.activeSound && !this.activeSound.playing()) {
+        this.activeSound.play();
+      }
       this.activeSound.seek(seekPosition);
       $event.stopPropagation();
     }
