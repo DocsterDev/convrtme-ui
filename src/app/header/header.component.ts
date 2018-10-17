@@ -6,6 +6,7 @@ import {VideoAutoCompleteService} from '../service/video-autocomplete.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NotificationCenterService} from '../service/notification-center.service';
 import {EventBusService} from '../service/event-bus.service';
+import {AudioPlayerService} from '../global/components/audio-player/audio-player.service';
 
 @Component({
   selector: 'app-header',
@@ -26,6 +27,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private autoCompleteSubscription: Subscription;
   private searchResultsSubscription: Subscription;
   private eventBusSubscription: Subscription;
+  private videoPlayingSubscription: Subscription;
+  private pollNotificationsSubscription: Subscription;
 
   public isFocused: boolean;
   public mobileSearchEnabled: boolean;
@@ -34,6 +37,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   public isMobile: boolean;
   public isSearchModeEnabled: boolean;
+  public isPlaying: boolean;
 
   public notificationDirty: boolean;
 
@@ -50,7 +54,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private notificationCenterService: NotificationCenterService,
-    private eventBusService: EventBusService) {
+    private eventBusService: EventBusService,
+    private audioPlayerService: AudioPlayerService) {
   }
 
   ngOnInit() {
@@ -71,11 +76,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.user = user;
       this.loading = false;
     });
+    this.videoPlayingSubscription = this.audioPlayerService.triggerTogglePlayingEmitter$.subscribe((e) => {
+      this.isPlaying = e.toggle;
+      if (this.isPlaying === true && this.isNotificationCenterModeEnabled === true) {
+        this.eventBusService.triggerNotificationCenterEvent(false);
+      }
+    });
     this.pollNotificiations();
   }
 
   private pollNotificiations() {
-    this.notificationCenterService.pollNotifications().subscribe((response) => {
+    this.pollNotificationsSubscription = this.notificationCenterService.pollNotifications().subscribe((response) => {
       const resp: any = response;
       this.numAlertNotifications = resp.count;
       this.notificationDirty = false;
@@ -169,5 +180,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.autoCompleteSubscription.unsubscribe();
     this.searchResultsSubscription.unsubscribe();
     this.eventBusSubscription.unsubscribe();
+    this.pollNotificationsSubscription.unsubscribe();
+    this.videoPlayingSubscription.unsubscribe();
   }
 }

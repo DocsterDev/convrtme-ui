@@ -9,7 +9,7 @@
   @media screen and (min-width: 448px)
     max-width: 448px
   max-width: 348px
-  overflow: hidden
+  // overflow: hidden
   max-height: $thumbnailHeightMobile
   @media screen and (min-width: 768px) /* Turn off hover on mobile */
     &:hover .thumbnail-container
@@ -22,6 +22,8 @@
       opacity: 0.7
     &:hover .playlist-icon-add
       opacity: 0.7
+    &:hover .notification-new-content-badge
+      opacity: 0.6
     //&:hover .play-icon
     //  opacity: 1
     &:hover
@@ -158,3 +160,10 @@
   color: $primaryBtnColor
   font-size: 11px
   padding: 0 2px
+
+.notification-new-content-badge
+  position: absolute
+  right: 0
+  top: 50%
+  transform: translateY(-50%)
+  margin-right: -17px

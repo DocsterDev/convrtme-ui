@@ -58,6 +58,18 @@ export class NotificationVideoComponent implements OnInit, OnDestroy {
     this.added.emit(video);
   }
 
+  public formatDate(date) {
+    if (date) {
+      //return moment.utc(date).local().format('LLLL');
+      return moment.utc(date).local().fromNow();
+    }
+    return '';
+  }
+
+  public isSameDay(date) {
+    return moment.utc(date).local().isSame(moment().local(), 'day');
+  }
+
   ngOnDestroy() {
     this.videoPlayingSubscription.unsubscribe();
     this.videoLoadingSubscription.unsubscribe();

@@ -1,7 +1,7 @@
 <!-- NOTIFICATION -->
 <div class="notification-body header-shadow-mobile" [ngClass]="{'open-notification-body': open}">
-  <div class="container" style="padding:0;">
-    <div class="row no-gutters header-shadow-desktop py-4 px-4">
+  <div class="container p-0">
+    <div class="row no-gutters header-shadow-desktop py-4 px-4 mb-4">
       <div class="col d-flex align-items-center justify-content-start">
         &nbsp;<div *ngIf="showManageSubs" class="d-flex align-items-center c-font-circular c-accent-color c-smaller link-test" (click)="showSubscriptions()">
           <svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -22,15 +22,15 @@
         &nbsp;<div *ngIf="!showManageSubs" class="c-font-circular c-accent-color c-smaller link-test" (click)="showSubscriptionManager()">Manage</div>
       </div>
     </div>
-    <div *ngIf="loaded && !showManageSubs && notificationKeys(notificationGroups).length > 0" class="row loading-container" [ngClass]="{'fade-in-load': fadeIn}">
+    <div *ngIf="loaded && !showManageSubs && notificationKeys(notificationGroups).length > 0" class="row no-gutters px-3 px-sm-4 loading-container" [ngClass]="{'fade-in-load': fadeIn}">
       <div class="col">
         <div *ngFor="let key of notificationKeys(notificationGroups)">
-          <app-notification-group (selected)="selected()" [groupTitle]="key" [groupVideos]="notificationGroups[key]"></app-notification-group>
+          <app-notification-group (selected)="selected($event)" [groupTitle]="key" [groupVideos]="notificationGroups[key]"></app-notification-group>
         </div>
       </div>
     </div>
     <div *ngIf="loaded && !showManageSubs && notificationKeys(notificationGroups).length > 0"
-         class="row loading-container my-4" [ngClass]="{'fade-in-load': fadeIn}">
+         class="row no-gutters loading-container my-4" [ngClass]="{'fade-in-load': fadeIn}">
       <div class="col d-flex align-items-center justify-content-center">
         <span class="c-font-circular c-accent-color c-smaller">View All</span>
       </div>
@@ -38,7 +38,7 @@
 
     <div *ngIf="loaded && !showManageSubs && notificationKeys(notificationGroups).length === 0"
          class="container loading-container" [ngClass]="{'fade-in-load': fadeIn}">
-      <div class="row h-100 mt-5">
+      <div class="row no-gutters h-100 mt-5">
         <div class="col d-flex align-items-center justify-content-center">
           <span class="c-font-circular c-light text-center c-smaller">Nice.<br/>You&rsquo;re all caught up.</span>
         </div>
@@ -47,7 +47,7 @@
 
     <div *ngIf="loaded && showManageSubs && subscriptions.length > 0" class="container loading-container"
          [ngClass]="{'fade-in-load': fadeIn}">
-      <div class="row flex-nowrap w-100 py-3 hover-state no-gutters" *ngFor="let subscription of subscriptions">
+      <div class="row px-1 px-sm-4 mb-4 flex-nowrap w-100 hover-state no-gutters" *ngFor="let subscription of subscriptions">
         <div class="col-auto d-flex align-items-center justify-content-center">
           <img width="55" height="55" [src]="subscription.channel.avatarUrl" style="border-radius: 50%;"/>
         </div>
@@ -95,21 +95,19 @@
     </div>
 
 
-    <div *ngIf="!loaded">
-      <div class="row h-100 mt-5">
-        <div class="col d-flex align-items-center justify-content-center">
-          <svg width="38" height="38" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg" stroke="#39a0ed">
-            <g fill="none" fill-rule="evenodd">
-              <g transform="translate(1 1)" stroke-width="2">
-                <circle stroke-opacity=".5" cx="18" cy="18" r="18"/>
-                <path d="M36 18c0-9.94-8.06-18-18-18">
-                  <animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="1s"
-                                    repeatCount="indefinite"/>
-                </path>
-              </g>
+    <!-- LOADING SPINNER -->
+    <div *ngIf="!loaded" class="row no-gutters height-adjusted">
+      <div class="col d-flex align-items-center justify-content-center">
+        <svg width="38" height="38" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg" stroke="#39a0ed">
+          <g fill="none" fill-rule="evenodd">
+            <g transform="translate(1 1)" stroke-width="2">
+              <circle stroke-opacity=".5" cx="18" cy="18" r="18"/>
+              <path d="M36 18c0-9.94-8.06-18-18-18">
+                <animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="1s" repeatCount="indefinite"/>
+              </path>
             </g>
-          </svg>
-        </div>
+          </g>
+        </svg>
       </div>
     </div>
 

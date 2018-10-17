@@ -18,11 +18,18 @@
   display: none
   transition: opacity 100ms ease
   will-change: opacity
+  //overflow-x: hidden
+  overflow-y: scroll
+  height: -webkit-calc(100% - 65px)
+  height:    -moz-calc(100% - 65px)
+  height:         calc(100% - 65px)
   @media screen and (max-width: 768px)
     width: 100% !important
-    height: -webkit-calc(100% - 65px)
-    height:    -moz-calc(100% - 65px)
-    height:         calc(100% - 65px)
+
+.height-adjusted
+  height: -webkit-calc(100% - 160px)
+  height:    -moz-calc(100% - 160px)
+  height:         calc(100% - 160px)
 
 .open-notification-body
   display: flex

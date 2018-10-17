@@ -17,14 +17,13 @@ export class NotificationGroupComponent implements OnInit {
   @Output()
   public selected = new EventEmitter<any>();
 
-  constructor(private audioPlayerService: AudioPlayerService) { }
+  constructor() { }
 
   ngOnInit() {
   }
 
   public selectVideo(video) {
-    this.selected.emit();
-    this.audioPlayerService.triggerVideoEvent(video);
+    this.selected.emit(video);
   }
 
 }

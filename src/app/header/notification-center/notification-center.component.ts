@@ -2,6 +2,7 @@ import {Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnI
 import {NotificationCenterService} from '../../service/notification-center.service';
 import {Subscription} from 'rxjs/Subscription';
 import * as moment from 'moment';
+import {AudioPlayerService} from '../../global/components/audio-player/audio-player.service';
 
 @Component({
   selector: 'app-notification-center',
@@ -37,7 +38,7 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
       this.internalOpen = this.open;
   }
 
-  constructor(private elementRef: ElementRef, private notificationCenterService: NotificationCenterService) {
+  constructor(private elementRef: ElementRef, private notificationCenterService: NotificationCenterService, private audioPlayerService: AudioPlayerService) {
   }
 
   ngOnInit() {
@@ -65,9 +66,10 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
     this.fadeIn = false;
   }
 
-  public selected() {
-    this.open = false;
-    this.closed.emit(false);
+  public selected(video) {
+    // this.open = false;
+    // this.closed.emit(false);
+    this.audioPlayerService.triggerVideoEvent(video);
   }
 
   public showSubscriptionManager() {
@@ -92,7 +94,7 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
   }
 
   public removeSubscription(subscription) {
-    const originalSubscriptions = JSON.parse(JSON.stringify(this.subscriptions)); // TODO Dont not do this shit, use 'npm install lodash' instead - https://stackoverflow.com/questions/34688517/whats-alternative-to-angular-copy-in-angular
+    const originalSubscriptions = JSON.parse(JSON.stringify(this.subscriptions));
     this.subscriptions.filter(sub => sub.uuid !== subscription.uuid);
     this.notificationCenterSubscription = this.notificationCenterService.removeSubscription(subscription.uuid).subscribe((resp) => {
       this.showSubscriptionManager();
@@ -102,12 +104,12 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
     });
   }
 
-  public formatDate(date) {
-    if (date) {
-      return moment(date).local().format('MM/DD/YYYY');
-    }
-    return '';
-  }
+  // public formatDate(date) {
+  //   if (date) {
+  //     return moment(date).local().format('MM/DD/YYYY');
+  //   }
+  //   return '';
+  // }
 
   ngOnDestroy() {
     this.notificationCenterSubscription.unsubscribe();

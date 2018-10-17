@@ -90,10 +90,10 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       }
     });
     this.eventBusSubscription = this.eventBusService.scrollEvent$.subscribe((isScrolling) => {
-      if (isScrolling) {
-        this.prevIsScrolling = this.showNowPlayingBar;
-      }
-      this.showNowPlayingBar = isScrolling ? false : this.prevIsScrolling;
+      // if (isScrolling) {
+      //   this.prevIsScrolling = this.showNowPlayingBar;
+      // }
+      // this.showNowPlayingBar = isScrolling ? false : this.prevIsScrolling;
     });
   }
 
