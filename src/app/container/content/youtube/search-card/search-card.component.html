@@ -1,4 +1,4 @@
-<div class="search-card" [ngClass]="{'now-playing': nowPlaying, 'now-loading': nowLoading}" (click)="selectContent(video)">
+<div class="search-card" [ngClass]="{'now-playing': nowPlaying, 'now-loading': nowLoading}" (click)="selectContent()">
   <div class="row flex-nowrap no-gutters align-items-start">
     <div class="col thumbnail-container">
         <img class="thumbnail" src="{{video.thumbnailUrl}}"/>

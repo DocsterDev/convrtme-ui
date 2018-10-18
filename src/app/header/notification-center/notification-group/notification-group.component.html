@@ -6,8 +6,8 @@
   </div>
   <div class="row">
     <div class="col">
-      <div class="mb-4" *ngFor="let video of groupVideos">
-        <app-notification-video (selected)="selectVideo(video)" [video]="video"></app-notification-video>
+      <div class="mb-4" *ngFor="let video of groupVideos; let i = index">
+        <app-notification-video (selected)="selectVideo(i, groupVideos)" [video]="video"></app-notification-video>
       </div>
     </div>
   </div>

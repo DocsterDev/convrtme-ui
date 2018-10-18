@@ -43,7 +43,7 @@
       </div>
     </div>
     <div class="row align-items-center no-gutters mt-2 Px(0.5)">
-      <div class="col-auto text-right Mstart(1)"><div class="c-font-circular timer" style="min-width:35px;">{{seekBarHandleEnabled ? seekTimer : timer}}</div></div>
+      <div class="col-auto text-right Mstart(1)"><div class="c-font-circular timer" style="min-width:35px;">{{seekBarHandleEnabled ? seekTimer : elapsed}}</div></div>
       <div class="col mx-2">
         <div class="playback-seek-bar" (click)="seekToPosition($event, seekBarHandlePosX, video.duration)" (mousemove)="bindMouseMoveSeekBar($event, seekbar.offsetWidth, video.duration);" (mouseenter)="seekBarHandleEnabled = true;" (mouseleave)="seekBarHandleEnabled = false;" #seekbar>
           <div [ngStyle]="{'max-width': (seekBarHandleEnabled ? seekBarHandlePosX : progress) + '%'}" class="playback-seek-bar-progress"></div>

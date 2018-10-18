@@ -22,8 +22,8 @@ export class NotificationGroupComponent implements OnInit {
   ngOnInit() {
   }
 
-  public selectVideo(video) {
-    this.selected.emit(video);
+  public selectVideo(index, playlist) {
+    this.selected.emit({index:index, playlist:playlist});
   }
 
 }

@@ -41,6 +41,7 @@ import {NotificationVideoComponent} from './header/notification-center/notificat
 import {NotificationCenterService} from './service/notification-center.service';
 import {FadeAnimationDirective} from './directives/fade-animation.directive';
 import {EventBusService} from "./service/event-bus.service";
+import {StreamPrefetchService} from './service/stream-prefetch.service';
 
 @NgModule({
   declarations: [
@@ -87,6 +88,7 @@ import {EventBusService} from "./service/event-bus.service";
     HeaderService,
     NotificationCenterService,
     EventBusService,
+    StreamPrefetchService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: GlobalInterceptor,

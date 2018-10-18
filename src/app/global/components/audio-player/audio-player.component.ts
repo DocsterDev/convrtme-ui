@@ -9,6 +9,7 @@ import {Title} from '@angular/platform-browser';
 import {environment} from '../../../../environments/environment';
 import {HeaderService} from '../../../service/header.service';
 import {EventBusService} from '../../../service/event-bus.service';
+import {StreamPrefetchService} from '../../../service/stream-prefetch.service';
 
 @Component({
   selector: 'app-audio-player',
@@ -20,8 +21,9 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   public video: any = {};
   public progress;
   public duration: string;
-  public timer: string;
+  public elapsed: string;
   public seekTimer: string;
+  private seek: number;
 
   private activeSound: Howl;
 
@@ -29,7 +31,10 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   public isPlaying = false;
   private videoServiceLock = false;
 
+  private hasPrefetched: boolean;
+
   private currentPlaylist: any = [];
+  private currentPlaylistIndex: number;
   private playlistIndex: number;
 
   private isPlaylist = false;
@@ -50,21 +55,35 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private playlistUpdateEventSubscription: Subscription;
   private streamValidatorSubscription: Subscription;
   private eventBusSubscription: Subscription;
+  private playlistActionSubscription: Subscription;
+  private streamPrefetchSubscription: Subscription;
 
   constructor(private audioPlayerService: AudioPlayerService,
               private notificationService: NotificationService,
               private videoRecommendedService: VideoRecommendedService,
               private titleService: Title,
               private headerService: HeaderService,
-              private eventBusService: EventBusService) {
+              private eventBusService: EventBusService,
+              private streamPrefetchService: StreamPrefetchService) {
   }
 
   ngOnInit() {
     Howl.autoSuspend = false;
     this.progress = '0';
     this.videoEventSubscription = this.audioPlayerService.triggerVideoEventEmitter$.subscribe((e) => {
-      this.isPlaylist = e.isPlaylist;
-      this.playMedia(e);
+      this.currentPlaylist = e.playlist;
+      this.currentPlaylistIndex = e.index;
+      this.playMedia(this.currentPlaylist[this.currentPlaylistIndex]);
+    });
+    this.playlistActionSubscription = this.audioPlayerService.triggerPlaylistActionEventEmitter$.subscribe((e) => {
+      switch(e.action) {
+        case 'prev':
+          this.goToPrevious();
+          break;
+        case 'next':
+          this.goToNext();
+          break;
+      }
     });
     this.videoPlayingEventSubscription = this.audioPlayerService.triggerTogglePlayingEmitter$.subscribe((e) => {
       this.isPlaying = e.toggle;
@@ -97,6 +116,24 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     });
   }
 
+  private goToNext() {
+    if (this.currentPlaylist.length === (this.currentPlaylistIndex + 1)) {
+      console.log('Last video in the playlist cannot continue');
+      return;
+    }
+    this.currentPlaylistIndex++;
+    this.audioPlayerService.triggerVideoEvent({index: this.currentPlaylistIndex, playlist: this.currentPlaylist});
+  }
+
+  private goToPrevious() {
+    if (this.currentPlaylistIndex === 0) {
+      console.log('Cant go to previous');
+      return;
+    }
+    this.currentPlaylistIndex--;
+    this.audioPlayerService.triggerVideoEvent({index: this.currentPlaylistIndex, playlist: this.currentPlaylist});
+  }
+
   private checkCurrentPlaylist() {
     for (let i = 0; i < this.currentPlaylist.length; i++) {
       const video = this.currentPlaylist[i];
@@ -116,18 +153,11 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   public seekNext() {
-    //this.audioPlayerService.triggerPlaylistActionEvent({action: 'next', isPlaylist: this.isPlaylist});
-    // this.playNextVideo();
+    this.audioPlayerService.triggerPlaylistActionEvent({action: 'next'});
   }
 
   public seekPrev() {
-    // this.audioPlayerService.triggerPlaylistActionEvent({action: 'prev', isPlaylist: this.isPlaylist});
-    // if (this.playlistIndex === 0) {
-    //   console.log('Cant go to previous');
-    // } else {
-    //   this.playlistIndex = this.playlistIndex - 1;
-    //   this.audioPlayerService.triggerVideoEvent(this.currentPlaylist[this.playlistIndex]);
-    // }
+    this.audioPlayerService.triggerPlaylistActionEvent({action: 'prev'});
   }
 
   public bindMouseMoveSeekBar($event, elementWidth, duration) {
@@ -152,24 +182,10 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     }
   }
 
-  private playNextVideo() {
-    if (this.isPlaylist === true) {
-      if ((this.currentPlaylist.length - 1) === this.playlistIndex) {
-        console.log('Playlist has reached the end');
-      } else {
-        this.playlistIndex = this.playlistIndex + 1;
-        this.audioPlayerService.triggerVideoEvent(this.currentPlaylist[this.playlistIndex]);
-      }
-    }
-  }
-
   public playMedia(video) {
     if (this.videoServiceLock) {
       console.log('Cant select another video right now');
       return;
-    }
-    if (video.isPlaylist === true) {
-      this.isPlaylist = true;
     }
     this.videoServiceLock = true;
     this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: true});
@@ -198,9 +214,9 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.duration = this.video.duration;
         this.showNowPlayingBar = true;
         this.audioPlayerService.triggerTogglePlaying({id: this.video.id, toggle: true});
-        // this.video = video;
         this.audioPlayerService.setPlaylingVideo(this.video);
         this.titleService.setTitle(this.video.title + ' - ' + this.video.owner);
+        this.hasPrefetched = false;
         this.checkCurrentPlaylist();
         requestAnimationFrame(this.step.bind(this));
       },
@@ -221,8 +237,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         }, 1000);
       },
       onend: () => {
-        this.audioPlayerService.triggerTogglePlaying({id: this.video.id, toggle: false});
-        this.playNextVideo();
+        this.audioPlayerService.triggerPlaylistActionEvent({action: 'next'});
       },
       onload: () => {
         if (this.video.isRecommended === false && this.video.isPlaylist === false) {
@@ -233,6 +248,19 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       }
     });
     this.activeSound.play();
+  }
+
+  private prefetchAudioStream() {
+    if (this.currentPlaylist.length === (this.currentPlaylistIndex + 1)) {
+      console.log('Last video in the playlist. Not pre-fetching media stream.');
+      return;
+    }
+    const prefetchVideoId: string = this.currentPlaylist[this.currentPlaylistIndex + 1].id;
+    this.streamPrefetchSubscription = this.streamPrefetchService.prefetchStreamUrl(prefetchVideoId).subscribe((resp) => {
+      console.log('Successfully pre-fetched media url for video id ' + this.video.id);
+    }, (error) => {
+      console.error('Error prefetching stream url for video id ' + this.video.id);
+    });
   }
 
   private handleError() {
@@ -248,10 +276,15 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   private step() {
-    const seek = this.activeSound.seek() || 0;
-    this.timer = UtilsService.formatTime(Math.round(seek));
-    this.progress = (((seek / UtilsService.formatDuration(this.audioPlayerService.getPlayingVideo().duration)) * 100) || 0);
-
+    const seek: number = this.activeSound.seek() || 0;
+    const duration: number = UtilsService.formatDuration(this.audioPlayerService.getPlayingVideo().duration);
+    this.progress = (((seek / duration) * 100) || 0);
+    this.elapsed = UtilsService.formatTime(Math.round(seek));
+    if ((duration - Math.floor(seek)) === 15 && !this.hasPrefetched) {
+      console.log('Prefetching next media stream');
+      this.hasPrefetched = true;
+      this.prefetchAudioStream();
+    }
     if (this.activeSound.playing()) {
       requestAnimationFrame(this.step.bind(this));
     }
@@ -264,6 +297,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.playlistUpdateEventSubscription.unsubscribe();
     this.streamValidatorSubscription.unsubscribe();
     this.eventBusSubscription.unsubscribe();
+    this.playlistActionSubscription.unsubscribe();
+    this.streamPrefetchSubscription.unsubscribe();
   }
 
 }

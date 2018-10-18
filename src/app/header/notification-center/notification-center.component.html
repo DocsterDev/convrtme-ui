@@ -45,9 +45,8 @@
       </div>
     </div>
 
-    <div *ngIf="loaded && showManageSubs && subscriptions.length > 0" class="container loading-container"
-         [ngClass]="{'fade-in-load': fadeIn}">
-      <div class="row px-1 px-sm-4 mb-4 flex-nowrap w-100 hover-state no-gutters" *ngFor="let subscription of subscriptions">
+    <div *ngIf="loaded && showManageSubs && subscriptions.length > 0" class="container pt-3 loading-container" [ngClass]="{'fade-in-load': fadeIn}">
+      <div class="row px-1 px-sm-4 mb-4 py-1 flex-nowrap w-100 hover-state no-gutters" *ngFor="let subscription of subscriptions">
         <div class="col-auto d-flex align-items-center justify-content-center">
           <img width="55" height="55" [src]="subscription.channel.avatarUrl" style="border-radius: 50%;"/>
         </div>

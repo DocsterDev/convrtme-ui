@@ -106,16 +106,9 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       });
   }
 
-  public handleVideoSelect($video) {
-    $video.isRecommended = false;
-    this.audioPlayerService.triggerVideoEvent($video);
-    this.audioPlayerService.triggerToggleLoading({video: $video.id, toggle: true});
-  }
-
-  public handleRecommendedVideoSelect($video) {
-    $video.isRecommended = true;
-    this.audioPlayerService.triggerVideoEvent($video);
-    this.audioPlayerService.triggerToggleLoading({video: $video.id, toggle: true});
+  public handleVideoSelect(index, playlist) {
+    console.log(index + '   ' + playlist.length);
+    this.audioPlayerService.triggerVideoEvent({index:index, playlist:playlist});
   }
 
   public handlePlaylistVideoSort(dropResult) {

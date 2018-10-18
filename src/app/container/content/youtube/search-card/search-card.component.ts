@@ -52,9 +52,8 @@ export class SearchCardComponent implements OnInit, OnDestroy {
     });
   }
 
-  selectContent(video) {
-    video.isPlaylist = false;
-    this.selected.emit(video);
+  selectContent() {
+    this.selected.emit();
   }
 
   addedContent(event, video) {
