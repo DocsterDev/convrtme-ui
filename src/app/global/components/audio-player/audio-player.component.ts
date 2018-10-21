@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {AudioPlayerService} from './audio-player.service';
 import {Howl} from 'howler';
 import {NotificationService} from '../notification/notification.service';
@@ -45,6 +45,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private isSearchModeEnabled: boolean;
   private savedShowNowPlayingBar: any;
   private prevIsScrolling: boolean;
+  public minimizePlayer: boolean;
 
   public seekBarHandlePosX: number;
   public seekBarHandleEnabled: boolean;
@@ -57,6 +58,16 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private eventBusSubscription: Subscription;
   private playlistActionSubscription: Subscription;
   private streamPrefetchSubscription: Subscription;
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.key == ' ') {
+      if (!this.isSearchModeEnabled) {
+        this.toggle();
+        event.preventDefault();
+      }
+    }
+  }
 
   constructor(private audioPlayerService: AudioPlayerService,
               private notificationService: NotificationService,
@@ -109,16 +120,18 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       }
     });
     this.eventBusSubscription = this.eventBusService.scrollEvent$.subscribe((isScrolling) => {
-      // if (isScrolling) {
-      //   this.prevIsScrolling = this.showNowPlayingBar;
-      // }
-      // this.showNowPlayingBar = isScrolling ? false : this.prevIsScrolling;
+      if (isScrolling) {
+        //this.prevIsScrolling = this.showNowPlayingBar;
+        this.minimizePlayer = true;
+      }
+      //this.minimizePlayer = isScrolling ? false : this.prevIsScrolling;
     });
   }
 
   private goToNext() {
     if (this.currentPlaylist.length === (this.currentPlaylistIndex + 1)) {
       console.log('Last video in the playlist cannot continue');
+      this.audioPlayerService.triggerTogglePlaying({toggle: false});
       return;
     }
     this.currentPlaylistIndex++;
@@ -145,10 +158,16 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   public toggle() {
-    if (!this.isPlaying) {
-      this.activeSound.play();
-    } else {
-      this.activeSound.pause();
+    if (this.activeSound) {
+      if (this.activeSound.playing()) {
+        // this.activeSound.onfade = () => { console.log('This should show in the console after fading, right?'); this.activeSound.pause(); }
+        // this.activeSound.fade(1, 0, 500);
+        this.activeSound.pause();
+      } else {
+        // this.activeSound.onfade = () => { console.log('This should show in the console after fading, right?'); this.activeSound.play(); }
+        // this.activeSound.fade(0, 1, 500);
+        this.activeSound.play();
+      }
     }
   }
 
@@ -193,18 +212,20 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.retryCount = 0;
     this.progress = '0';
     this.video = video; // THIS IS NEW - KEEP AN EYE ON THIS
-    this.buildAudioObject();
+
+    this.fetchAudioStream(video.id); // TODO TEMP
+
+   // this.buildAudioObject();
+
+
+
+
   }
 
-  private buildAudioObject() {
-    this.showNowPlayingBar = false;
-    if (this.activeSound) {
-      this.activeSound.unload();
-      this.titleService.setTitle('moup.io');
-    }
+  private buildAudioObject(fetchedStreamUrl:string) {
     const streamUrl = environment.streamUrl + '/stream?v=' + this.video.id + (this.headerService.getToken() ? '&token=' + this.headerService.getToken() : '');
     this.activeSound = new Howl({
-      src: [streamUrl],
+      src: [fetchedStreamUrl !=null ? fetchedStreamUrl : streamUrl],
       // format: ['webm'],
       html5: true,
       buffer: true,
@@ -250,6 +271,23 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.activeSound.play();
   }
 
+  private fetchAudioStream(videoId:string) {
+    this.showNowPlayingBar = false;
+    if (this.activeSound) {
+      this.activeSound.unload();
+      this.titleService.setTitle('moup.io');
+    }
+    this.streamPrefetchSubscription = this.streamPrefetchService.prefetchStreamUrl(videoId).subscribe((resp) => {
+      console.log('Successfully fetched media url for video id ' + this.video.id);
+      const response:any = resp;
+      console.log('Stream URL: ' + response.streamUrl);
+      const streamUrl = response.streamUrl;
+      this.buildAudioObject(streamUrl);
+    }, (error) => {
+      console.error('Error fetching stream url for video id ' + this.video.id);
+    });
+  }
+
   private prefetchAudioStream() {
     if (this.currentPlaylist.length === (this.currentPlaylistIndex + 1)) {
       console.log('Last video in the playlist. Not pre-fetching media stream.');
@@ -272,7 +310,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       return;
     }
     console.error('Received error in fetching video stream. Retry attempt ' + this.retryCount);
-    this.buildAudioObject();
+    this.buildAudioObject(null);
   }
 
   private step() {
