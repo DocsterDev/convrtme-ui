@@ -59,6 +59,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private playlistActionSubscription: Subscription;
   private streamPrefetchSubscription: Subscription;
 
+  private fetchedStreamUrl: string;
+
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     if (event.key == ' ') {
@@ -214,18 +216,38 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.video = video; // THIS IS NEW - KEEP AN EYE ON THIS
 
     this.fetchAudioStream(video.id); // TODO TEMP
-
-   // this.buildAudioObject();
+    this.buildAudioObject();
 
 
 
 
   }
 
-  private buildAudioObject(fetchedStreamUrl:string) {
-    const streamUrl = environment.streamUrl + '/stream?v=' + this.video.id + (this.headerService.getToken() ? '&token=' + this.headerService.getToken() : '');
+  // private getStreamUrl() {
+  //   setTimeout(() => {
+  //     return this.fetchedStreamUrl;
+  //   }, 10000);
+  // }
+
+  private result: any;
+  
+  async getStreamUrl(): string {
+    if (typeof this.result === 'undefined')
+    {
+      // save result
+      this.result = await this.service.call()
+        .toPromise()
+        .then(resp =>resp as MyCustomObject);//Do you own cast here
+
+    }
+    return this.result;
+  }
+
+  private buildAudioObject() {
+    //const streamUrl = environment.streamUrl + '/stream?v=' + this.video.id + (this.headerService.getToken() ? '&token=' + this.headerService.getToken() : '');
+
     this.activeSound = new Howl({
-      src: [fetchedStreamUrl !=null ? fetchedStreamUrl : streamUrl],
+      src: [this.getStreamUrl()],
       // format: ['webm'],
       html5: true,
       buffer: true,
@@ -246,13 +268,14 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.isPlaying = false;
       },
       onplayerror: (e) => {
-        console.error(JSON.stringify(e));
+        console.log('PLAY ERROR');
+        console.error(e);
         this.audioPlayerService.triggerToggleLoading({id: this.video.id, toggle: false});
         this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error playing this video.'});
         this.videoServiceLock = false;
       },
       onloaderror: (e) => {
-        console.log('Error Code: ' + e);
+        console.log('LOAD ERROR - STREAM URL: ' + this.fetchedStreamUrl);
         setTimeout(() => {
           this.handleError();
         }, 1000);
@@ -268,10 +291,10 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.videoServiceLock = false;
       }
     });
-    this.activeSound.play();
   }
 
-  private fetchAudioStream(videoId:string) {
+  private fetchAudioStream(videoId: string) {
+    this.fetchedStreamUrl = null;
     this.showNowPlayingBar = false;
     if (this.activeSound) {
       this.activeSound.unload();
@@ -279,10 +302,9 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     }
     this.streamPrefetchSubscription = this.streamPrefetchService.prefetchStreamUrl(videoId).subscribe((resp) => {
       console.log('Successfully fetched media url for video id ' + this.video.id);
-      const response:any = resp;
-      console.log('Stream URL: ' + response.streamUrl);
-      const streamUrl = response.streamUrl;
-      this.buildAudioObject(streamUrl);
+      const response: any = resp;
+      this.fetchedStreamUrl = response.streamUrl;
+      // this.buildAudioObject(streamUrl);
     }, (error) => {
       console.error('Error fetching stream url for video id ' + this.video.id);
     });
@@ -303,14 +325,15 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   private handleError() {
     this.retryCount = this.retryCount + 1;
-    if (this.retryCount > 1) {
+    if (this.retryCount > 5) {
       this.audioPlayerService.triggerToggleLoading({id: this.video.id, toggle: false});
       this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error loading this video.'});
       this.videoServiceLock = false;
       return;
     }
     console.error('Received error in fetching video stream. Retry attempt ' + this.retryCount);
-    this.buildAudioObject(null);
+    //this.buildAudioObject();
+    this.activeSound.play();
   }
 
   private step() {
