@@ -214,18 +214,53 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.video = video; // THIS IS NEW - KEEP AN EYE ON THIS
 
     this.fetchAudioStream(video.id); // TODO TEMP
-
-   // this.buildAudioObject();
-
-
-
+    this.buildAudioObject();
 
   }
 
-  private buildAudioObject(fetchedStreamUrl:string) {
+  public fetchedStreamUrl: string;
+
+  sleep(timeout, videoId) {
+    return new Promise(resolve => {
+      console.log('Start of inside');
+      setTimeout(resolve, timeout);
+    // return new Promise(resolve => {
+      console.log('End of inside');
+      this.streamPrefetchSubscription = this.streamPrefetchService.prefetchStreamUrl(videoId).subscribe((resp) => {
+        console.log('Successfully fetched media url for video id ' + this.video.id);
+        const response:any = resp;
+        this.fetchedStreamUrl = response.streamUrl;
+
+        resolve;
+      }, (error) => {
+        console.error('Error fetching stream url for video id ' + this.video.id);
+      });
+
+    });
+      //setTimeout(resolve, ms);
+
+    // });
+  }
+
+  async demo(videoId) {
+    console.log('Taking a break...');
+    //await this.sleep(videoId);
+    console.log('Two seconds later');
+    return;
+  }
+
+
+  private buildAudioObject() {
+    // this.fetchedStreamUrl = null;
     const streamUrl = environment.streamUrl + '/stream?v=' + this.video.id + (this.headerService.getToken() ? '&token=' + this.headerService.getToken() : '');
+    //this.demo(this.video.id);
+    // console.log('Start');
+    // await this.sleep(0, this.video.id);
+    // console.log('End');
+    // console.log(this.fetchedStreamUrl);
     this.activeSound = new Howl({
-      src: [fetchedStreamUrl !=null ? fetchedStreamUrl : streamUrl],
+      // src: [this.demo(fetchedStreamUrl !=null ? fetchedStreamUrl : streamUrl)],
+      src: [this.fetchedStreamUrl],
       // format: ['webm'],
       html5: true,
       buffer: true,
@@ -280,9 +315,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.streamPrefetchSubscription = this.streamPrefetchService.prefetchStreamUrl(videoId).subscribe((resp) => {
       console.log('Successfully fetched media url for video id ' + this.video.id);
       const response:any = resp;
-      console.log('Stream URL: ' + response.streamUrl);
-      const streamUrl = response.streamUrl;
-      this.buildAudioObject(streamUrl);
+      this.fetchedStreamUrl = response.streamUrl;
+      //this.buildAudioObject();
     }, (error) => {
       console.error('Error fetching stream url for video id ' + this.video.id);
     });
@@ -303,14 +337,14 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   private handleError() {
     this.retryCount = this.retryCount + 1;
-    if (this.retryCount > 1) {
+    if (this.retryCount > 10) {
       this.audioPlayerService.triggerToggleLoading({id: this.video.id, toggle: false});
       this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error loading this video.'});
       this.videoServiceLock = false;
       return;
     }
     console.error('Received error in fetching video stream. Retry attempt ' + this.retryCount);
-    this.buildAudioObject(null);
+    this.buildAudioObject();
   }
 
   private step() {
