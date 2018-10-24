@@ -321,7 +321,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.videoServiceLock = false;
       }
     });
-    this.activeSound.play();
   }
 
   private fetchAudioStream(videoId: string) {
