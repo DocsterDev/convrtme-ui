@@ -231,7 +231,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.progress = '0';
     this.video = video;
     if (this.videoCount === 0 && !this.isChrome) {
-      console.log('NOT CHROME');
       this.fetchedStreamUrl = {};
       this.fetchedStreamUrl.streamUrl = environment.streamUrl + '/stream?v=' + this.video.id + (this.headerService.getToken() ? '&token=' + this.headerService.getToken() : '');
       this.buildAudioObject();
@@ -241,7 +240,15 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.fetchAudioStream(this.video.id);
     let count = 0;
     do {
-      await this.sleep(1000);
+      await this.sleep(250);
+      if (count > 60){
+        // this.audioPlayerService.triggerToggleLoading({id: this.video.id, toggle: false});
+        // this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error loading this video.'});
+        // this.videoServiceLock = false;
+        // this.showNowPlayingBar = false;
+
+        this.fetchedStreamUrl = {success:false};
+      }
       count++;
     }
     while (this.fetchedStreamUrl === null);
@@ -249,9 +256,26 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   async buildAudioObject() {
-    // const streamUrl = environment.streamUrl + '/stream?v=' + this.video.id + (this.headerService.getToken() ? '&token=' + this.headerService.getToken() : '');
+    const streamUrl = environment.streamUrl + '/stream?v=' + this.video.id + (this.headerService.getToken() ? '&token=' + this.headerService.getToken() : '');
+
+    let outputStreamUrl: string;
+    outputStreamUrl = streamUrl;
+    if (this.fetchedStreamUrl.success) {
+      if (this.fetchedStreamUrl.audioOnly) {
+        outputStreamUrl = this.fetchedStreamUrl.streamUrl;
+        // TODO ----- This may cause Safari to fail
+        this.streamPrefetchService.updateVideoWatched(this.video.id).subscribe(() => {
+          console.log('Successfully updated video as watched');
+        }, (error) => {
+          console.error('Error updating video as watched');
+          console.error(error);
+        });
+        // TODO -----------------------------------
+      }
+    }
+
     this.activeSound = new Howl({
-      src: [this.fetchedStreamUrl.streamUrl],
+      src: [outputStreamUrl],
       html5: true,
       buffer: true,
       preload: false,
@@ -265,12 +289,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.hasPrefetched = false;
         this.checkCurrentPlaylist();
         requestAnimationFrame(this.step.bind(this));
-        this.streamPrefetchService.updateVideoWatched(this.video.id).subscribe(() => {
-          console.log('Successfully updated video as watched');
-        }, (error) => {
-          console.error('Error updating video as watched');
-          console.error(error);
-        });
       },
       onpause: () => {
         // Leave this as an exception
