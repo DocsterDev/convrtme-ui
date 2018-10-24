@@ -263,7 +263,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     console.log('FOUND: ' + JSON.stringify(this.fetchedStreamUrl));
     // Determine if chrom or not and fetch url depending
     this.buildAudioObject();
-
+    this.activeSound.play();
   }
 
   async buildAudioObject() {
@@ -274,7 +274,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       html5: true,
       buffer: true,
       preload: false,
-      autoplay: false,
+      autoplay: true,
       onplay: () => {
         this.duration = this.video.duration;
         this.showNowPlayingBar = true;
