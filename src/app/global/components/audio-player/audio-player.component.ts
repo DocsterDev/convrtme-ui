@@ -10,7 +10,7 @@ import {environment} from '../../../../environments/environment';
 import {HeaderService} from '../../../service/header.service';
 import {EventBusService} from '../../../service/event-bus.service';
 import {StreamPrefetchService} from '../../../service/stream-prefetch.service';
-import {VideoSearchService} from "../../../service/video-search.service";
+import {VideoSearchService} from '../../../service/video-search.service';
 
 
 
@@ -62,12 +62,11 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private playlistActionSubscription: Subscription;
   private streamPrefetchSubscription: Subscription;
   private streamRecPrefetchSubscription: Subscription;
-  private searchResultsSubscription: Subscription;
-  private recommendedResultsSubscription: Subscription;
+
 
   private fetchedStreamUrl: any;
-
-  private videoStreamUrlMap = new Map<string, string>();
+  private isChrome: boolean;
+  private videoCount = 0;
 
 
   @HostListener('document:keydown', ['$event'])
@@ -91,6 +90,11 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    const userAgent = navigator.userAgent;
+    console.log(userAgent);
+    if (userAgent.indexOf('Chrome') !== -1) {
+      this.isChrome = true;
+    }
     Howl.autoSuspend = false;
     this.progress = '0';
     this.videoEventSubscription = this.audioPlayerService.triggerVideoEventEmitter$.subscribe((e) => {
@@ -99,7 +103,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       this.playMedia(this.currentPlaylist[this.currentPlaylistIndex]);
     });
     this.playlistActionSubscription = this.audioPlayerService.triggerPlaylistActionEventEmitter$.subscribe((e) => {
-      switch(e.action) {
+      switch (e.action) {
         case 'prev':
           this.goToPrevious();
           break;
@@ -133,10 +137,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     });
     this.eventBusSubscription = this.eventBusService.scrollEvent$.subscribe((isScrolling) => {
       if (isScrolling) {
-        //this.prevIsScrolling = this.showNowPlayingBar;
-        //this.minimizePlayer = true;
       }
-      //this.minimizePlayer = isScrolling ? false : this.prevIsScrolling;
     });
 
   }
@@ -177,12 +178,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   public toggle() {
     if (this.activeSound) {
       if (this.activeSound.playing()) {
-        // this.activeSound.onfade = () => { console.log('This should show in the console after fading, right?'); this.activeSound.pause(); }
-        // this.activeSound.fade(1, 0, 500);
         this.activeSound.pause();
       } else {
-        // this.activeSound.onfade = () => { console.log('This should show in the console after fading, right?'); this.activeSound.play(); }
-        // this.activeSound.fade(0, 1, 500);
         this.activeSound.play();
       }
     }
@@ -222,13 +219,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  async demo() {
-    console.log('Taking a break...');
-    await this.sleep(2000);
-    console.log('Two seconds later');
-  }
-
-
   async playMedia(video) {
     if (this.videoServiceLock) {
       console.log('Cant select a video right now');
@@ -239,42 +229,33 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.audioPlayerService.triggerTogglePlaying({id: video.id, toggle: false});
     this.retryCount = 0;
     this.progress = '0';
-    this.video = video; // THIS IS NEW - KEEP AN EYE ON THIS
-
-   // this.fetchAudioStream(video.id); // TODO TEMP
-    this.showNowPlayingBar = false;
-    if (this.activeSound) {
-      this.activeSound.unload();
-      this.titleService.setTitle('moup.io');
+    this.video = video;
+    if (this.videoCount === 0 && !this.isChrome) {
+      console.log('NOT CHROME');
+      this.fetchedStreamUrl = {};
+      this.fetchedStreamUrl.streamUrl = environment.streamUrl + '/stream?v=' + this.video.id + (this.headerService.getToken() ? '&token=' + this.headerService.getToken() : '');
+      this.buildAudioObject();
+      this.videoCount++;
+      return;
     }
-
-    this.fetchedStreamUrl = null;
     this.fetchAudioStream(this.video.id);
-
-    let count: number = 0;
-
+    let count = 0;
     do {
       await this.sleep(1000);
-      console.log(count++);
-      console.log(this.fetchedStreamUrl);
+      count++;
     }
     while (this.fetchedStreamUrl === null);
-
-    console.log('FOUND: ' + JSON.stringify(this.fetchedStreamUrl));
-    // Determine if chrom or not and fetch url depending
     this.buildAudioObject();
-    this.activeSound.play();
   }
 
   async buildAudioObject() {
-    //const streamUrl = environment.streamUrl + '/stream?v=' + this.video.id + (this.headerService.getToken() ? '&token=' + this.headerService.getToken() : '');
+    // const streamUrl = environment.streamUrl + '/stream?v=' + this.video.id + (this.headerService.getToken() ? '&token=' + this.headerService.getToken() : '');
     this.activeSound = new Howl({
       src: [this.fetchedStreamUrl.streamUrl],
-      // format: ['webm'],
       html5: true,
       buffer: true,
       preload: false,
-      autoplay: true,
+      autoplay: false,
       onplay: () => {
         this.duration = this.video.duration;
         this.showNowPlayingBar = true;
@@ -321,6 +302,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.videoServiceLock = false;
       }
     });
+    this.activeSound.play();
   }
 
   private fetchAudioStream(videoId: string) {
@@ -331,11 +313,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       this.titleService.setTitle('moup.io');
     }
     this.streamPrefetchSubscription = this.streamPrefetchService.prefetchStreamUrl(videoId).subscribe((resp) => {
-
-      const response:any = resp;
-      this.fetchedStreamUrl = response;
+      this.fetchedStreamUrl = resp;
       console.log('Successfully fetched media url for video id ' + this.video.id + ': ' + JSON.stringify(this.fetchedStreamUrl));
-      //this.buildAudioObject();
     }, (error) => {
       console.error('Error fetching stream url for video id ' + this.video.id);
     });
@@ -372,11 +351,11 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       this.progress = (((this.seek / duration) * 100) || 0);
       this.elapsed = UtilsService.formatTime(Math.round(this.seek));
       // PREFETCH VIDEO URL -- 10/21 - No longer necessary
-      // if ((duration - Math.floor(this.seek)) === 15 && !this.hasPrefetched) {
-      //   console.log('Prefetching next media stream');
-      //   this.hasPrefetched = true;
-      //   this.prefetchAudioStream();
-      // }
+      if ((duration - Math.floor(this.seek)) === 15 && !this.hasPrefetched) {
+        console.log('Prefetching next media stream');
+        this.hasPrefetched = true;
+        this.prefetchAudioStream();
+      }
       if (this.activeSound.playing()) {
         requestAnimationFrame(this.step.bind(this));
       }
