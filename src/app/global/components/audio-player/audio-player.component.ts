@@ -230,13 +230,14 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.retryCount = 0;
     this.progress = '0';
     this.video = video;
-    if (this.videoCount === 0 && !this.isChrome) {
-      this.fetchedStreamUrl = {};
-      this.fetchedStreamUrl.streamUrl = environment.streamUrl + '/stream?v=' + this.video.id + (this.headerService.getToken() ? '&token=' + this.headerService.getToken() : '');
-      this.buildAudioObject();
-      this.videoCount++;
-      return;
-    }
+    // TODO -  May need to turn this back on for Safari -- not sure
+    // if (this.videoCount === 0 && !this.isChrome) {
+    //   this.fetchedStreamUrl = {};
+    //   this.fetchedStreamUrl.streamUrl = environment.streamUrl + '/stream?v=' + this.video.id + (this.headerService.getToken() ? '&token=' + this.headerService.getToken() : '');
+    //   this.buildAudioObject();
+    //   this.videoCount++;
+    //   return;
+    // }
     this.fetchAudioStream(this.video.id);
     let count = 0;
     do {
@@ -253,9 +254,11 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   async buildAudioObject() {
-    const streamConversionUrl = environment.streamUrl + '/stream?v=' + this.video.id + (this.headerService.getToken() ? '&token=' + this.headerService.getToken() : '');
+    //const streamConversionUrl = environment.streamUrl + '/stream?v=' + this.video.id + (this.headerService.getToken() ? '&token=' + this.headerService.getToken() : '');
+    const streamConversionUrl = environment.streamUrl + '/stream/compress?&url=' + btoa(this.fetchedStreamUrl.streamUrl);
 
     let streamUrl: string;
+    console.log(JSON.stringify(this.fetchedStreamUrl));
     if (this.fetchedStreamUrl.success === true) {
         streamUrl = this.fetchedStreamUrl.audioOnly ? this.fetchedStreamUrl.streamUrl : streamConversionUrl;
     } else {
@@ -264,6 +267,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       this.videoServiceLock = false;
       return;
     }
+    console.log('CHOSEN STREAM: ' + streamUrl);
 
     this.activeSound = new Howl({
       src: [streamUrl],
@@ -325,7 +329,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     }
     this.streamPrefetchSubscription = this.streamPrefetchService.prefetchStreamUrl(videoId).subscribe((resp) => {
       this.fetchedStreamUrl = resp;
-      console.log('Successfully fetched media url for video id ' + this.video.id + ': ' + JSON.stringify(this.fetchedStreamUrl));
+
     }, (error) => {
       console.error('Error fetching stream url for video id ' + this.video.id);
     });

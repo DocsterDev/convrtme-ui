@@ -10,7 +10,7 @@ export class StreamPrefetchService {
   }
 
   prefetchStreamUrl(videoId: string) {
-    return this.http.get(environment.apiUrl + '/api/videos/' + videoId + '/metadata/prefetch');
+    return this.http.get(environment.apiUrl + '/api/videos/' + videoId + '/metadata');
   }
 
   updateVideoWatched(videoId: string) {
