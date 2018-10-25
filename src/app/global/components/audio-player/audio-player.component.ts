@@ -241,13 +241,10 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     let count = 0;
     do {
       await this.sleep(250);
-      if (count > 60){
-        // this.audioPlayerService.triggerToggleLoading({id: this.video.id, toggle: false});
-        // this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error loading this video.'});
-        // this.videoServiceLock = false;
-        // this.showNowPlayingBar = false;
-
-        this.fetchedStreamUrl = {success:false};
+      if (count > 60) {
+        console.error('Unable to retrieve stream URL');
+        this.streamPrefetchSubscription.unsubscribe();
+        this.fetchedStreamUrl = {success: false};
       }
       count++;
     }
@@ -256,26 +253,20 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   async buildAudioObject() {
-    const streamUrl = environment.streamUrl + '/stream?v=' + this.video.id + (this.headerService.getToken() ? '&token=' + this.headerService.getToken() : '');
+    const streamConversionUrl = environment.streamUrl + '/stream?v=' + this.video.id + (this.headerService.getToken() ? '&token=' + this.headerService.getToken() : '');
 
-    let outputStreamUrl: string;
-    outputStreamUrl = streamUrl;
-    if (this.fetchedStreamUrl.success) {
-      if (this.fetchedStreamUrl.audioOnly) {
-        outputStreamUrl = this.fetchedStreamUrl.streamUrl;
-        // TODO ----- This may cause Safari to fail
-        this.streamPrefetchService.updateVideoWatched(this.video.id).subscribe(() => {
-          console.log('Successfully updated video as watched');
-        }, (error) => {
-          console.error('Error updating video as watched');
-          console.error(error);
-        });
-        // TODO -----------------------------------
-      }
+    let streamUrl: string;
+    if (this.fetchedStreamUrl.success === true) {
+        streamUrl = this.fetchedStreamUrl.audioOnly ? this.fetchedStreamUrl.streamUrl : streamConversionUrl;
+    } else {
+      this.audioPlayerService.triggerToggleLoading({id: this.video.id, toggle: false});
+      this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error playing this video.'});
+      this.videoServiceLock = false;
+      return;
     }
 
     this.activeSound = new Howl({
-      src: [outputStreamUrl],
+      src: [streamUrl],
       html5: true,
       buffer: true,
       preload: false,
@@ -302,9 +293,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       },
       onloaderror: (e) => {
         console.error(e);
-        // this.audioPlayerService.triggerToggleLoading({id: this.video.id, toggle: false});
-        // this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error loading this video.'});
-        // this.videoServiceLock = false;
         setTimeout(() => {
           this.handleError();
         }, 1000);
@@ -313,9 +301,14 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.audioPlayerService.triggerPlaylistActionEvent({action: 'next'});
       },
       onload: () => {
-        if (this.video.isRecommended === false && this.video.isPlaylist === false) {
-          this.videoRecommendedService.recommended(this.video.id);
-        }
+        // if (this.video.isRecommended === false && this.video.isPlaylist === false) {
+        //   this.videoRecommendedService.recommended(this.video.id);
+        // }
+        this.streamPrefetchService.updateVideoWatched(this.video.id).subscribe(() => {
+          console.log('Successfully updated video as watched on load of video');
+        }, (error) => {
+          console.error('Error updating video as watched: ' + error);
+        });
         this.audioPlayerService.triggerToggleLoading({id: this.video.id, toggle: false});
         this.videoServiceLock = false;
       }
