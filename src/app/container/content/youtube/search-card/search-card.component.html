@@ -13,7 +13,8 @@
           <!--<span (click)="subscribe($event, video.owner)" class="text-owner">{{video.owner}}</span>-->
           <div class="subtitle-owner c-smallest truncate-single-line" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}"><span (click)="subscribe($event, video.owner, video.channelThumbnailUrl)" class="text-owner">{{video.owner}}</span></div>
           <div class="subtitle c-smallest truncate-single-line" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{video.publishedTimeAgo}}</div>
-          <div class="subtitle c-smallest truncate-single-line" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{video.viewCount}} <span class="label c-bold" *ngIf="video.new">New</span></div>
+          <!--<span class="label c-bold" *ngIf="video.new">New</span>-->
+          <div class="subtitle c-smallest truncate-single-line" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{video.viewCount}} </div>
         </div>
     </div>
     <!--<div class="col align-self-start play-icon-active d-none d-md-block Mt(0.25)" style="max-width:35px;">-->

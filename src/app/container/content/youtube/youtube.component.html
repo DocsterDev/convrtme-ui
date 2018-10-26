@@ -8,25 +8,42 @@
     <div *ngIf="loaded && videoList.length > 0 && !isMobile || (isMobile && !isSearchModeEnabled && !isNotificationCenterModeEnabled)" class="row d-flex justify-content-center no-gutters" >
       <!-- SEARCH MODULE -->
       <div class="col Mx(1) order-1 solidify">
+        <div class="text-left pb-3 pt-2 pt-md-0 c-smaller c-bold section-text" *ngIf="!previousQuery || nowPlayingList.length > 0">{{(nowPlayingList.length > 0 || !loaded) ? 'Now playing' : 'Today&rsquo;s headlines'}}</div>
+        <div class="mb-2 mb-md-5" *ngIf="nowPlayingList.length > 0">
+          <app-search-card (selected)="handleVideoSelect(0, nowPlayingList)" [video]="nowPlayingList[0]"></app-search-card>
+        </div>
+        <div *ngIf="isMobile && upNextList.length > 0 && nowPlayingList.length > 0" class="text-left pb-3 pt-2 pt-md-0 c-smaller c-bold section-text">Up next:</div>
+        <div *ngIf="isMobile && upNextList.length > 0 && nowPlayingList.length > 0" class="mb-5">
+          <div *ngFor="let video of upNextList; let i = index;">
+            <app-search-card (selected)="handleVideoSelect(0, upNextList)" [video]="video"></app-search-card>
+          </div>
+        </div>
         <div class="text-left c-bold c-smaller section-text pb-3 truncate-single-line" *ngIf="previousQuery">Showing results for: <span class="c-bold c-smaller c-accent-color">{{previousQuery}}</span></div>
+        <div class="text-left pb-3 pt-2 pt-md-0 c-smaller c-bold section-text" *ngIf="!previousQuery && upNextList.length > 0 && nowPlayingList.length > 0">Today&rsquo;s headlines</div>
         <div *ngFor="let video of videoList; let i = index;" class="mb-2">
           <app-search-card (selected)="handleVideoSelect(i, videoList)" [video]="video"></app-search-card>
         </div>
       </div>
       <!-- RECOMMENDED MODULE -->
       <div class="col-md Mx(1) order-2 solidify">
-        <div class="text-center text-md-left pb-3 pt-2 pt-md-0 c-smaller c-bold section-text" *ngIf="previousQuery">Recommended For You</div>
+        <div *ngIf="!isMobile && upNextList.length > 0" class="text-center text-md-left pb-3 pt-2 pt-md-0 c-smaller c-bold section-text">Up next:</div>
+        <div *ngIf="!isMobile && upNextList.length > 0" class="mb-5">
+          <div *ngFor="let video of upNextList; let i = index;">
+            <app-search-card (selected)="handleVideoSelect(0, upNextList)" [video]="video"></app-search-card>
+          </div>
+        </div>
+        <div class="text-center text-md-left pb-3 pt-2 pt-md-0 c-smaller c-bold section-text">Recommended for you</div>
         <div *ngFor="let video of recommendedList; let i = index;" class="mb-2">
           <app-search-card (selected)="handleVideoSelect(i, recommendedList)" [video]="video"></app-search-card>
         </div>
       </div>
       <!-- PLAYLIST MODULE -->
-      <div class="col-md Mx(1) order-3" *ngIf="false">
+    <!--  <div class="col-md Mx(1) order-3">
         <div class="d-block d-md-none My(1)"></div>
         <div class="text-center text-md-left c-smaller c-bold c-accent-color section-text">Playlists</div>
         <div class="row no-gutters Mt(0.25) d-flex flex-nowrap justify-content-center" (click)="currentPlayingPlaylist = 'PLAYLIST'">
           <div *ngFor="let playlist of playlists" class="col d-flex align-items-center justify-content-center playlist-icon-col" (click)="setPlaylistActive(playlist)">
-            <div class="playlist-icon" [ngClass]="{'playlist-active': currentPlaylist.uuid === playlist.uuid}" [style.background]="'#' + playlist.iconColor"></div>
+            <div class="playlist-icon" [ngClass]="{'playlist-active': currentPlaylist.uuid === playlist.uuid}" [style.background]="'#'+playlist.iconColor"></div>
           </div>
         </div>
         <div *ngIf="playlistLoading" class="help-text">
@@ -46,7 +63,7 @@
           <div class="c-font-circular c-smaller c-light Py(2)">No videos in this playlist. Try adding some.</div>
         </div>
         <div class="d-block d-md-none My(1.5)"></div>
-      </div>
+      </div>-->
     </div>
     <div class="row no-gutters h-100" [ngStyle]="{'max-height': isPlaying ? '160px' : '60px'}">
       <div class="col">

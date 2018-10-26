@@ -18,6 +18,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
 
   public videoList: any = [];
   public recommendedList: any = [];
+  public upNextList: any = [];
   public playlists: any = [];
   public currentPlaylist: any = {id: ''};
   public playlistLoading = false;
@@ -33,6 +34,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   private getPlaylistVideosSubscription: Subscription;
   private audioPlayingEventSubscription: Subscription;
   private eventBusSubscription: Subscription;
+  private eventNowPlayingVideoSubscription: Subscription;
 
   public query: string;
   public previousQuery: string;
@@ -42,6 +44,8 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   public isNotificationCenterModeEnabled: boolean;
 
   public loaded: boolean;
+
+  public nowPlayingList = [];
 
   static updateComponent(component, index, list) {
     component.index = index;
@@ -78,7 +82,14 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       });
       this.recommendedResultsSubscription = this.videoRecommendedService.getResultList().subscribe((recommendedResults) => {
         this.recommendedList = [];
-        this.loadIncrementally(recommendedResults, this.recommendedList);
+        if (this.nowPlayingList.length > 0) {
+          let upNextList = [];
+          this.upNextList = [];
+          upNextList.push(recommendedResults.nextUpVideo);
+          this.audioPlayerService.triggerNextUpVideoEvent(upNextList);
+          this.loadIncrementally(upNextList, this.upNextList);
+        }
+        this.loadIncrementally(recommendedResults.recommendedVideos, this.recommendedList);
       });
       // this.signInEventSubscription = this.userService.userSignedInEmitter$.subscribe((response) => {
       //   const user: any = response;
@@ -103,11 +114,16 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       });
       this.audioPlayingEventSubscription = this.audioPlayerService.triggerTogglePlayingEmitter$.subscribe((e) => {
         this.isPlaying = e.toggle;
+        if (this.nowPlayingList.length === 0) {
+          this.upNextList = [];
+        }
+      });
+      this.eventNowPlayingVideoSubscription = this.audioPlayerService.triggerNowPlayingVideoEmitter$.subscribe((e) => {
+        this.nowPlayingList = e;
       });
   }
 
   public handleVideoSelect(index, playlist) {
-    console.log(index + '   ' + playlist.length);
     this.audioPlayerService.triggerVideoEvent({index:index, playlist:playlist});
   }
 
@@ -226,6 +242,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     this.getPlaylistVideosSubscription.unsubscribe();
     this.audioPlayingEventSubscription.unsubscribe();
     this.eventBusSubscription.unsubscribe();
+    this.eventNowPlayingVideoSubscription.unsubscribe();
   }
 
 }

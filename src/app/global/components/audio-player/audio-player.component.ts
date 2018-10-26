@@ -62,12 +62,13 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private playlistActionSubscription: Subscription;
   private streamPrefetchSubscription: Subscription;
   private streamRecPrefetchSubscription: Subscription;
+  private upNextVideoEventSubscription: Subscription;
 
 
   private fetchedStreamUrl: any;
   private isChrome: boolean;
   private videoCount = 0;
-
+  public upNextList = [];
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
@@ -108,7 +109,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
           this.goToPrevious();
           break;
         case 'next':
-          this.goToNext();
+          //this.goToNext();
+          this.goToUpNextVideo();
           break;
       }
     });
@@ -139,7 +141,13 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       if (isScrolling) {
       }
     });
+    this.upNextVideoEventSubscription = this.audioPlayerService.triggerUpNextVideoEmitter$.subscribe((upNextList) => {
+      this.upNextList = upNextList;
+    });
+  }
 
+  private goToUpNextVideo() {
+    this.audioPlayerService.triggerVideoEvent({index: 0, playlist: this.upNextList});
   }
 
   private goToNext() {
@@ -154,15 +162,15 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   private goToPrevious() {
     if (this.currentPlaylistIndex === 0) {
-      if (this.seek <= 5) {
-        this.audioPlayerService.triggerVideoEvent({index: this.currentPlaylistIndex, playlist: this.currentPlaylist});
-        return;
-      }
+      this.audioPlayerService.triggerVideoEvent({index: this.currentPlaylistIndex, playlist: this.currentPlaylist});
       console.log('Cant go to previous');
       return;
     }
-    this.currentPlaylistIndex--;
-    this.audioPlayerService.triggerVideoEvent({index: this.currentPlaylistIndex, playlist: this.currentPlaylist});
+    if (this.seek <= 5) {
+      this.currentPlaylistIndex--;
+      this.audioPlayerService.triggerVideoEvent({index: this.currentPlaylistIndex, playlist: this.currentPlaylist});
+      return;
+    }
   }
 
   private checkCurrentPlaylist() {
@@ -254,20 +262,21 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   async buildAudioObject() {
-    //const streamConversionUrl = environment.streamUrl + '/stream?v=' + this.video.id + (this.headerService.getToken() ? '&token=' + this.headerService.getToken() : '');
     const streamConversionUrl = environment.streamUrl + '/stream/compress?&url=' + btoa(this.fetchedStreamUrl.streamUrl);
-
     let streamUrl: string;
-    console.log(JSON.stringify(this.fetchedStreamUrl));
     if (this.fetchedStreamUrl.success === true) {
-        streamUrl = this.fetchedStreamUrl.audioOnly ? this.fetchedStreamUrl.streamUrl : streamConversionUrl;
+      if (this.isChrome) {
+        streamUrl = (this.fetchedStreamUrl.audioOnly && this.fetchedStreamUrl.matchesExtension) ? this.fetchedStreamUrl.streamUrl : streamConversionUrl;
+      } else {
+        console.log('Is Not Chrome. Setting Audio Only false');
+        streamUrl = streamConversionUrl;
+      }
     } else {
       this.audioPlayerService.triggerToggleLoading({id: this.video.id, toggle: false});
       this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error playing this video.'});
       this.videoServiceLock = false;
       return;
     }
-    console.log('CHOSEN STREAM: ' + streamUrl);
 
     this.activeSound = new Howl({
       src: [streamUrl],
@@ -278,10 +287,10 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       onplay: () => {
         this.duration = this.video.duration;
         this.showNowPlayingBar = true;
-        this.audioPlayerService.triggerTogglePlaying({id: this.video.id, toggle: true});
         this.audioPlayerService.setPlaylingVideo(this.video);
         this.titleService.setTitle(this.video.title + ' - ' + this.video.owner);
         this.hasPrefetched = false;
+        this.audioPlayerService.triggerTogglePlaying({id: this.video.id, toggle: true});
         this.checkCurrentPlaylist();
         requestAnimationFrame(this.step.bind(this));
       },
@@ -302,12 +311,16 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         }, 1000);
       },
       onend: () => {
-        this.audioPlayerService.triggerPlaylistActionEvent({action: 'next'});
+        this.goToUpNextVideo();
+        // this.audioPlayerService.triggerPlaylistActionEvent({action: 'next'});
       },
       onload: () => {
-        // if (this.video.isRecommended === false && this.video.isPlaylist === false) {
-        //   this.videoRecommendedService.recommended(this.video.id);
-        // }
+        let nowPlayingList = [];
+        nowPlayingList.push(this.video);
+        this.audioPlayerService.triggerNowPlayingVideoEvent(nowPlayingList);
+        setTimeout(() => {
+            this.videoRecommendedService.recommended(this.video.id);
+        });
         this.streamPrefetchService.updateVideoWatched(this.video.id).subscribe(() => {
           console.log('Successfully updated video as watched on load of video');
         }, (error) => {
@@ -387,6 +400,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.playlistActionSubscription.unsubscribe();
     this.streamPrefetchSubscription.unsubscribe();
     this.streamRecPrefetchSubscription.unsubscribe();
+    this.upNextVideoEventSubscription.unsubscribe();
   }
 
 }

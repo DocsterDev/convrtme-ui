@@ -9,6 +9,8 @@ export class AudioPlayerService {
   public triggerVideoEventEmitter$: EventEmitter<any>;
   public triggerPlaylistActionEventEmitter$: EventEmitter<any>;
   public triggerPlaylistUpdateEventEmitter$: EventEmitter<any>;
+  public triggerUpNextVideoEmitter$: EventEmitter<any>;
+  public triggerNowPlayingVideoEmitter$: EventEmitter<any>;
 
   public video: any = {};
 
@@ -17,8 +19,10 @@ export class AudioPlayerService {
     this.triggerToggleLoadingEmitter$ = new EventEmitter();
     this.triggerHiddenEmitter$ = new EventEmitter();
     this.triggerVideoEventEmitter$ = new EventEmitter();
+    this.triggerUpNextVideoEmitter$ = new EventEmitter();
     this.triggerPlaylistActionEventEmitter$ = new EventEmitter();
     this.triggerPlaylistUpdateEventEmitter$ = new EventEmitter();
+    this.triggerNowPlayingVideoEmitter$ = new EventEmitter();
   }
 
   public triggerTogglePlaying(playingConfig: any): void {
@@ -31,6 +35,14 @@ export class AudioPlayerService {
 
   public triggerHidden(hiddenConfig: any): void {
     this.triggerHiddenEmitter$.emit(hiddenConfig);
+  }
+
+  public triggerNextUpVideoEvent(video: any) {
+    this.triggerUpNextVideoEmitter$.emit(video);
+  }
+
+  public triggerNowPlayingVideoEvent(video: any) {
+    this.triggerNowPlayingVideoEmitter$.emit(video);
   }
 
   public triggerVideoEvent(video: any) {
