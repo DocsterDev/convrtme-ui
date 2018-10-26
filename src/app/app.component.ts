@@ -24,6 +24,8 @@ export class AppComponent implements OnInit, OnDestroy {
   private scrollTimeout: any;
   private isScrolling: boolean;
 
+  private retryCount: number = 0;
+
   @HostListener('window:resize', ['$event'])
   onResize($event) {
     const isMobile = window.innerWidth < 768;
@@ -101,6 +103,13 @@ export class AppComponent implements OnInit, OnDestroy {
     this.localStorage.clear('token');
     this.localStorage.clear('email');
     this.userService.setUserValid(false);
+    console.error('Authentication error. Retrying...');
+    if (this.retryCount < 3) {
+      this.initAuthentication();
+      this.retryCount++;
+    } else {
+      console.error("Cannot authorize user and user context");
+    }
   }
 
   ngOnDestroy() {
@@ -108,5 +117,5 @@ export class AppComponent implements OnInit, OnDestroy {
     this.userAuthenticateSubscription.unsubscribe();
     this.ipSubscription.unsubscribe();
   }
-
+ 
 }

@@ -40,12 +40,12 @@ export class SearchCardComponent implements OnInit, OnDestroy {
     this.nowPlaying = this.audioPlayerService.getPlayingVideo().id === this.video.id;
     this.videoPlayingSubscription = this.audioPlayerService.triggerTogglePlayingEmitter$.subscribe((e) => {
       this.nowPlaying = false;
-      if (e.toggle === false) {
-        return;
-      }
-      if (e.id === this.video.id) {
-        this.nowPlaying = true;
-      }
+      // if (e.toggle === false) {
+      //   return;
+      // }
+      // if (e.id === this.video.id) {
+      //   this.nowPlaying = true;
+      // }
     });
     this.videoLoadingSubscription = this.audioPlayerService.triggerToggleLoadingEmitter$.subscribe((e) => {
       if (e.id === this.video.id) {

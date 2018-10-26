@@ -25,10 +25,14 @@ export class VideoRecommendedService implements OnDestroy {
 
   recommended(videoId: string) {
     this.videoRecommendationSubscription = this.getServiceObservable(videoId).subscribe((response) => {
-      this.resultList.next(response);
+      this.triggerVideoLoad(response);
     }, (error) => {
       console.log(error);
     });
+  }
+
+  public triggerVideoLoad(videoList:any) {
+    this.resultList.next(videoList);
   }
 
   getResultList(): Observable<any> {

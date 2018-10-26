@@ -72,12 +72,12 @@ export class YoutubeComponent implements OnInit, OnDestroy {
           this.loaded = true;
         }, 15);
 
-        if (searchResults.length > 0) {
+        if (searchResults.length > 0 && this.nowPlayingList.length === 0) {
           this.videoRecommendedService.recommended(searchResults[0].id);
+          this.recommendedList = [];
         }
         this.previousQuery = this.query;
         this.videoList = [];
-        this.recommendedList = [];
         this.loadIncrementally(searchResults, this.videoList);
       });
       this.recommendedResultsSubscription = this.videoRecommendedService.getResultList().subscribe((recommendedResults) => {

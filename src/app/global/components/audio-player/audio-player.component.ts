@@ -65,6 +65,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private upNextVideoEventSubscription: Subscription;
 
 
+  private nowPlayingVideoInfo: any;
   private fetchedStreamUrl: any;
   private isChrome: boolean;
   private videoCount = 0;
@@ -265,10 +266,11 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     const streamConversionUrl = environment.streamUrl + '/stream/compress?&url=' + btoa(this.fetchedStreamUrl.streamUrl);
     let streamUrl: string;
     if (this.fetchedStreamUrl.success === true) {
-      if (this.isChrome) {
+      if (!this.isChrome) {
         streamUrl = (this.fetchedStreamUrl.audioOnly && this.fetchedStreamUrl.matchesExtension) ? this.fetchedStreamUrl.streamUrl : streamConversionUrl;
       } else {
         console.log('Is Not Chrome. Setting Audio Only false');
+        console.log(streamConversionUrl);
         streamUrl = streamConversionUrl;
       }
     } else {
@@ -318,9 +320,9 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         let nowPlayingList = [];
         nowPlayingList.push(this.video);
         this.audioPlayerService.triggerNowPlayingVideoEvent(nowPlayingList);
-        setTimeout(() => {
-            this.videoRecommendedService.recommended(this.video.id);
-        });
+        // setTimeout(() => {
+        //     this.videoRecommendedService.recommended(this.video.id);
+        // });
         this.streamPrefetchService.updateVideoWatched(this.video.id).subscribe(() => {
           console.log('Successfully updated video as watched on load of video');
         }, (error) => {
@@ -341,7 +343,9 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       this.titleService.setTitle('moup.io');
     }
     this.streamPrefetchSubscription = this.streamPrefetchService.prefetchStreamUrl(videoId).subscribe((resp) => {
-      this.fetchedStreamUrl = resp;
+      this.nowPlayingVideoInfo = resp;
+      this.fetchedStreamUrl = this.nowPlayingVideoInfo.streamInfo;
+      this.videoRecommendedService.triggerVideoLoad(this.nowPlayingVideoInfo);
 
     }, (error) => {
       console.error('Error fetching stream url for video id ' + this.video.id);
