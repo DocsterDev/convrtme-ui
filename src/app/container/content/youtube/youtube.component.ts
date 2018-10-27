@@ -24,8 +24,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   public playlistLoading = false;
   public isPlaying: boolean;
 
-  public currentPlayingPlaylist; // Most recently added (9/11)
-
   private searchResultsSubscription: Subscription;
   private recommendedResultsSubscription: Subscription;
   private signInEventSubscription: Subscription;
@@ -83,7 +81,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       this.recommendedResultsSubscription = this.videoRecommendedService.getResultList().subscribe((recommendedResults) => {
         this.recommendedList = [];
         if (this.nowPlayingList.length > 0) {
-          let upNextList = [];
+          const upNextList = [];
           this.upNextList = [];
           upNextList.push(recommendedResults.nextUpVideo);
           this.audioPlayerService.triggerNextUpVideoEvent(upNextList);
@@ -124,7 +122,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   }
 
   public handleVideoSelect(index, playlist) {
-    this.audioPlayerService.triggerVideoEvent({index:index, playlist:playlist});
+    this.audioPlayerService.triggerVideoEvent({index: index, playlist: playlist});
   }
 
   public handlePlaylistVideoSort(dropResult) {

@@ -71,26 +71,28 @@ export class AppComponent implements OnInit, OnDestroy {
   private initAuthentication() {
     const token = this.localStorage.retrieve('token');
     if (!token) {
-      this.userRegisterSubscription = this.userService.register(UtilsService.generateUUID() + '@gmail.com', '1234', this.userInfo.query, this.userInfo.city, this.userInfo.region).subscribe((response2) => {
-        const resp: any = response2;
-        this.localStorage.store('token', resp.token);
-        this.handleSuccess(resp.user);
+      this.userRegisterSubscription = this.userService.register(UtilsService.generateUUID() + '@gmail.com', '1234', this.userInfo.query, this.userInfo.city, this.userInfo.region).subscribe((resp) => {
+        this.handleSuccess(resp);
       }, (error) => {
-        console.log('ERROR' + JSON.stringify(error));
+        console.error('AUTH REGISTRATION ERROR' + JSON.stringify(error));
         this.handleError();
       });
     } else {
-      this.userAuthenticateSubscription = this.userService.authenticate().subscribe((response3) => {
-        const resp: any = response3;
-        this.handleSuccess(resp.user);
+      this.userAuthenticateSubscription = this.userService.authenticate().subscribe((resp) => {
+        console.log('In authenticate');
+        this.handleSuccess(resp);
       }, (error) => {
-        console.log('ERROR' + JSON.stringify(error));
+        console.error('AUTH AUTHENTICATE ERROR' + JSON.stringify(error));
         this.handleError();
       });
     }
+    // this.localStorage.clear('token');
+    // this.localStorage.clear('email');
   }
 
-  private handleSuccess(user) {
+  private handleSuccess(resp) {
+    this.localStorage.store('token', resp.token);
+    const user = resp.user;
     if (user) {
       this.userService.triggerUserSignedInEvent({email: user.email, valid: true});
       this.localStorage.store('email', user.email);
@@ -108,7 +110,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.initAuthentication();
       this.retryCount++;
     } else {
-      console.error("Cannot authorize user and user context");
+      console.error('Cannot authorize user and user context');
     }
   }
 
