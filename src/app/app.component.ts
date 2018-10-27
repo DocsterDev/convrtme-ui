@@ -119,5 +119,5 @@ export class AppComponent implements OnInit, OnDestroy {
     this.userAuthenticateSubscription.unsubscribe();
     this.ipSubscription.unsubscribe();
   }
- 
+
 }
