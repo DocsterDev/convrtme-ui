@@ -71,15 +71,16 @@ export class AppComponent implements OnInit, OnDestroy {
   private initAuthentication() {
     const token = this.localStorage.retrieve('token');
     if (!token) {
-      this.userRegisterSubscription = this.userService.register(UtilsService.generateUUID() + '@gmail.com', '1234', this.userInfo.query, this.userInfo.city, this.userInfo.region).subscribe((resp) => {
+      const fakeEmail = UtilsService.generateUUID() + '@gmail.com';
+      const fakePin = '1234'
+      this.userRegisterSubscription = this.userService.register(fakeEmail, fakePin, this.userInfo).subscribe((resp) => {
         this.handleSuccess(resp);
       }, (error) => {
         console.error('AUTH REGISTRATION ERROR' + JSON.stringify(error));
         this.handleError();
       });
     } else {
-      this.userAuthenticateSubscription = this.userService.authenticate().subscribe((resp) => {
-        console.log('In authenticate');
+      this.userAuthenticateSubscription = this.userService.authenticate(this.userInfo).subscribe((resp) => {
         this.handleSuccess(resp);
       }, (error) => {
         console.error('AUTH AUTHENTICATE ERROR' + JSON.stringify(error));

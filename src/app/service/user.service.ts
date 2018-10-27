@@ -21,19 +21,12 @@ export class UserService {
     this.validUser = valid;
   }
 
-  public register(email: string, pin: string, ip: string, city: string, region: string) {
-    const user = {
-      email: email,
-      pin: pin,
-      ip: ip,
-      city: city,
-      region: region
-    };
-    return this.http.post(environment.apiUrl + '/api/user/register', user);
+  public register(email: string, pin: string, userLocation: any) {
+    return this.http.post(environment.apiUrl + '/api/user/register?email=' + email + '&pin=' + pin, userLocation);
   }
 
-  public authenticate() {
-    return this.http.post(environment.apiUrl + '/api/context/authenticate', null, this.headerService.getTokenHeader());
+  public authenticate(userLocation: any) {
+    return this.http.post(environment.apiUrl + '/api/user/authenticate', userLocation, this.headerService.getTokenHeader());
   }
 
 }
