@@ -87,7 +87,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const userAgent = navigator.userAgent;
-    console.log(userAgent);
     if (userAgent.indexOf('Chrome') !== -1) {
       this.isChrome = true;
     }
@@ -104,7 +103,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
           this.goToPrevious();
           break;
         case 'next':
-          //this.goToNext();
           this.goToUpNextVideo();
           break;
       }
@@ -158,7 +156,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private goToPrevious() {
     if (this.currentPlaylistIndex === 0) {
       this.audioPlayerService.triggerVideoEvent({index: this.currentPlaylistIndex, playlist: this.currentPlaylist});
-      console.log('Cant go to previous');
       return;
     }
     if (this.seek <= 5) {
@@ -166,6 +163,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       this.audioPlayerService.triggerVideoEvent({index: this.currentPlaylistIndex, playlist: this.currentPlaylist});
       return;
     }
+    this.audioPlayerService.triggerVideoEvent({index: this.currentPlaylistIndex, playlist: this.currentPlaylist});
+    return;
   }
 
   private checkCurrentPlaylist() {
@@ -233,15 +232,14 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.retryCount = 0;
     this.progress = '0';
     this.clearAudio();
-    this.video = video;
-    if (!this.isChrome) {
+    if (this.videoCount === 0 && !this.isChrome) {
       this.fetchedStreamUrl = {};
       this.fetchedStreamUrl.success = false;
-      this.buildAudioObject();
+      this.buildAudioObject(video);
       this.videoCount++;
       return;
     }
-    this.fetchAudioStream(this.video.id);
+    this.fetchAudioStream(video.id);
     let count = 0;
     do {
       await this.sleep(250);
@@ -253,15 +251,15 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       count++;
     }
     while (this.fetchedStreamUrl === null);
-    this.buildAudioObject();
+    this.buildAudioObject(video);
   }
 
-  private buildAudioObject() {
+  private buildAudioObject(video: any) {
     let streamUrl: string;
-    if (this.fetchedStreamUrl.success === true) {
+    if (this.fetchedStreamUrl && this.fetchedStreamUrl.success) {
       streamUrl = (this.fetchedStreamUrl.audioOnly && this.fetchedStreamUrl.matchesExtension) ? this.fetchedStreamUrl.streamUrl : (environment.streamUrl + '/stream/' + btoa(this.fetchedStreamUrl.streamUrl));
     } else {
-      streamUrl = environment.streamUrl + '/stream/videos/' + this.video.id;
+      streamUrl = environment.streamUrl + '/stream/videos/' + video.id;
     }
 
     this.activeSound = new Howl({
@@ -271,12 +269,12 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       preload: false,
       autoplay: false,
       onplay: () => {
-        this.duration = this.video.duration;
+        this.duration = video.duration;
         this.showNowPlayingBar = true;
-        this.audioPlayerService.setPlaylingVideo(this.video);
-        this.titleService.setTitle(this.video.title + ' - ' + this.video.owner);
+        this.audioPlayerService.setPlaylingVideo(video);
+        this.titleService.setTitle(video.title + ' - ' + video.owner);
         this.hasPrefetched = false;
-        this.audioPlayerService.triggerTogglePlaying({id: this.video.id, toggle: true});
+        this.audioPlayerService.triggerTogglePlaying({id: video.id, toggle: true});
         this.checkCurrentPlaylist();
         requestAnimationFrame(this.step.bind(this));
       },
@@ -286,37 +284,37 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       },
       onplayerror: (e) => {
         console.error(e);
-        this.audioPlayerService.triggerToggleLoading({id: this.video.id, toggle: false});
+        this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: false});
         this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error playing this video.'});
         this.videoServiceLock = false;
       },
       onloaderror: (e) => {
         console.error(e);
-        this.audioPlayerService.triggerToggleLoading({id: this.video.id, toggle: false});
+        this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: false});
         this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error loading this video.'});
         this.videoServiceLock = false;
       },
       onend: () => {
         this.goToUpNextVideo();
-        // this.audioPlayerService.triggerPlaylistActionEvent({action: 'next'});
       },
       onload: () => {
-        const nowPlayingList = [];
-        nowPlayingList.push(this.video);
-        this.audioPlayerService.triggerNowPlayingVideoEvent(nowPlayingList);
-        this.streamPrefetchService.updateVideoWatched(this.video.id).subscribe(() => {
-          console.log('Successfully updated video as watched on load of video');
-        }, (error) => {
-          console.error('Error updating video as watched: ' + error);
-        });
-        this.audioPlayerService.triggerToggleLoading({id: this.video.id, toggle: false});
         this.videoServiceLock = false;
+        this.audioPlayerService.triggerToggleLoading({id: video.id, toggle: false});
+        const nowPlayingList = [];
+        nowPlayingList.push(video);
+        this.audioPlayerService.triggerNowPlayingVideoEvent(nowPlayingList);
+        this.videoRecommendedService.recommended(video.id);
+        this.streamPrefetchService.updateVideoWatched(video.id).subscribe(() => {
+          console.log('Successfully updated video as watched on load of video');
+        });
+        this.video = video;
       }
     });
     this.activeSound.play();
   }
 
   private clearAudio() {
+    this.video = null;
     this.fetchedStreamUrl = null;
     this.showNowPlayingBar = false;
     if (this.activeSound) {
@@ -329,8 +327,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     // Fetch Stream URL
     this.streamPrefetchSubscription = this.streamPrefetchService.prefetchStreamUrl(videoId).subscribe((resp) => {
       this.fetchedStreamUrl = resp;
-      // Fetch Recommended Videos
-      this.videoRecommendedService.recommended(this.video.id);
     }, (error) => {
       console.error('Error fetching stream url for video id ' + this.video.id);
       this.audioPlayerService.triggerToggleLoading({id: this.video.id, toggle: false});
