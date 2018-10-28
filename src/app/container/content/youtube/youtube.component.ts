@@ -18,9 +18,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
 
   public videoList: any = [];
   public recommendedList: any = [];
-  public upNextList: any = [];
   public playlists: any = [];
-  public currentPlaylist: any = {id: ''};
   public playlistLoading = false;
   public isPlaying: boolean;
 
@@ -36,14 +34,15 @@ export class YoutubeComponent implements OnInit, OnDestroy {
 
   public query: string;
   public previousQuery: string;
+  public videoId: string;
+  public upNextVideoId: string;
+  public nowPlayingVideoId: string;
 
   public isMobile: boolean;
   public isSearchModeEnabled: boolean;
   public isNotificationCenterModeEnabled: boolean;
 
   public loaded: boolean;
-
-  public nowPlayingList = [];
 
   static updateComponent(component, index, list) {
     component.index = index;
@@ -87,6 +86,8 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       });
       this.route.queryParams.subscribe(params => {
         this.query = params.q;
+        const video = {id: params.v};
+        this.audioPlayerService.triggerVideoEvent(video);
         this.videoSearchService.search(this.query ? this.query : 'cnn');
       });
       this.audioPlayingEventSubscription = this.audioPlayerService.triggerTogglePlayingEmitter$.subscribe((e) => {
@@ -97,9 +98,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       });
       this.eventNowPlayingVideoSubscription = this.audioPlayerService.triggerNowPlayingVideoEmitter$.subscribe((e) => {
         this.nowPlayingList = e;
-        // if (this.nowPlayingList.length > 0) {
-        //   this.loadUpNextVideo()
-        // }
       });
       // this.signInEventSubscription = this.userService.userSignedInEmitter$.subscribe((response) => {
       //   const user: any = response;
@@ -128,8 +126,8 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     this.loadIncrementally(upNextList, this.upNextList);
   }
 
-  public handleVideoSelect(index, playlist) {
-    this.audioPlayerService.triggerVideoEvent({index: index, playlist: playlist});
+  public handleVideoSelect(video: any) {
+    this.audioPlayerService.triggerVideoEvent(video);
   }
 
   private loadIncrementally(data, list) {
@@ -149,18 +147,14 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   private applyDrag = (arr, dragResult) => {
     const {removedIndex, addedIndex, payload} = dragResult;
     if (removedIndex === null && addedIndex === null) return arr;
-
     const result = [...arr];
     let itemToAdd = payload;
-
     if (removedIndex !== null) {
       itemToAdd = result.splice(removedIndex, 1)[0];
     }
-
     if (addedIndex !== null) {
       result.splice(addedIndex, 0, itemToAdd);
     }
-
     return result;
   }
 

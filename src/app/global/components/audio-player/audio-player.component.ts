@@ -92,10 +92,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     }
     Howl.autoSuspend = false;
     this.progress = '0';
-    this.videoEventSubscription = this.audioPlayerService.triggerVideoEventEmitter$.subscribe((e) => {
-      this.currentPlaylist = e.playlist;
-      this.currentPlaylistIndex = e.index;
-      this.playMedia(this.currentPlaylist[this.currentPlaylistIndex]);
+    this.videoEventSubscription = this.audioPlayerService.triggerVideoEventEmitter$.subscribe((videoId) => {
+      this.playMedia(videoId);
     });
     this.playlistActionSubscription = this.audioPlayerService.triggerPlaylistActionEventEmitter$.subscribe((e) => {
       switch (e.action) {
