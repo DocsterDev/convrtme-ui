@@ -1,5 +1,5 @@
 import {EventEmitter, Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {HeaderService} from './header.service';
 import {environment} from '../../environments/environment';
 
@@ -27,6 +27,16 @@ export class UserService {
 
   public authenticate(userLocation: any) {
     return this.http.post(environment.apiUrl + '/api/user/authenticate', userLocation, this.headerService.getTokenHeader());
+  }
+
+  public login(email: string, pin: string, userLocation: any) {
+    const header = {
+      headers: new HttpHeaders({
+        'email': email,
+        'pin': pin
+      })
+    };
+    return this.http.post(environment.apiUrl + '/api/user/login', userLocation, header);
   }
 
 }

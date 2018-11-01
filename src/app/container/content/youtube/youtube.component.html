@@ -8,33 +8,33 @@
     <div *ngIf="loaded && videoList.length > 0 && !isMobile || (isMobile && !isSearchModeEnabled && !isNotificationCenterModeEnabled)" class="row d-flex justify-content-center no-gutters" >
       <!-- SEARCH MODULE -->
       <div class="col Mx(1) order-1 solidify">
-        <div class="text-left pb-3 pt-2 pt-md-0 c-smaller c-bold section-text" *ngIf="!previousQuery || nowPlayingList.length > 0">{{(nowPlayingList.length > 0 || !loaded) ? 'Now playing' : 'Today&rsquo;s headlines'}}</div>
-        <div class="mb-2 mb-md-5" *ngIf="nowPlayingList.length > 0">
-          <app-search-card (selected)="handleVideoSelect(0, nowPlayingList)" [video]="nowPlayingList[0]"></app-search-card>
+        <div class="text-left pb-3 pt-2 pt-md-0 c-smaller c-bold section-text" *ngIf="!previousQuery || this.video">{{(this.video || !loaded) ? 'Now playing' : 'Today&rsquo;s headlines'}}</div>
+        <div class="mb-2 mb-md-5" *ngIf="this.video">
+          <app-search-card [routerLink]="['/']" [queryParams]="{v: this.video.id}" queryParamsHandling="merge" [video]="this.video"></app-search-card>
         </div>
-        <div *ngIf="isMobile && upNextList.length > 0 && nowPlayingList.length > 0" class="text-left pb-3 pt-2 pt-md-0 c-smaller c-bold section-text">Up next:</div>
-        <div *ngIf="isMobile && upNextList.length > 0 && nowPlayingList.length > 0" class="mb-5">
-          <div *ngFor="let video of upNextList; let i = index;">
-            <app-search-card (selected)="handleVideoSelect(0, upNextList)" [video]="video"></app-search-card>
+        <div *ngIf="isMobile && this.videoNext && this.video" class="text-left pb-3 pt-2 pt-md-0 c-smaller c-bold section-text">Up next:</div>
+        <div *ngIf="isMobile && this.videoNext && this.video" class="mb-5">
+          <div *ngIf="this.videoNext">
+            <app-search-card [routerLink]="['/']" [queryParams]="{v: this.videoNext.id}" queryParamsHandling="merge" [video]="this.videoNext"></app-search-card>
           </div>
         </div>
         <div class="text-left c-bold c-smaller section-text pb-3 truncate-single-line" *ngIf="previousQuery">Showing results for: <span class="c-bold c-smaller c-accent-color">{{previousQuery}}</span></div>
-        <div class="text-left pb-3 pt-2 pt-md-0 c-smaller c-bold section-text" *ngIf="!previousQuery && upNextList.length > 0 && nowPlayingList.length > 0">Today&rsquo;s headlines</div>
+        <div class="text-left pb-3 pt-2 pt-md-0 c-smaller c-bold section-text" *ngIf="!previousQuery && this.videoNext && this.video">Today&rsquo;s headlines</div>
         <div *ngFor="let video of videoList; let i = index;" class="mb-2">
-          <app-search-card (selected)="handleVideoSelect(i, videoList)" [video]="video"></app-search-card>
+          <app-search-card [routerLink]="['/']" [queryParams]="{v: video.id}" queryParamsHandling="merge" [video]="video"></app-search-card>
         </div>
       </div>
       <!-- RECOMMENDED MODULE -->
       <div class="col-md Mx(1) order-2 solidify">
-        <div *ngIf="!isMobile && upNextList.length > 0" class="text-center text-md-left pb-3 pt-2 pt-md-0 c-smaller c-bold section-text">Up next:</div>
-        <div *ngIf="!isMobile && upNextList.length > 0" class="mb-5">
-          <div *ngFor="let video of upNextList; let i = index;">
-            <app-search-card (selected)="handleVideoSelect(0, upNextList)" [video]="video"></app-search-card>
+        <div *ngIf="!isMobile && this.videoNext" class="text-center text-md-left pb-3 pt-2 pt-md-0 c-smaller c-bold section-text">Up next:</div>
+        <div *ngIf="!isMobile && this.videoNext" class="mb-5">
+          <div *ngIf="this.videoNext">
+            <app-search-card [routerLink]="['/']" [queryParams]="{v: this.videoNext.id}" queryParamsHandling="merge" [video]="this.videoNext"></app-search-card>
           </div>
         </div>
         <div class="text-center text-md-left pb-3 pt-2 pt-md-0 c-smaller c-bold section-text">Recommended for you</div>
         <div *ngFor="let video of recommendedList; let i = index;" class="mb-2">
-          <app-search-card (selected)="handleVideoSelect(i, recommendedList)" [video]="video"></app-search-card>
+          <app-search-card [routerLink]="['/']" [queryParams]="{v: video.id}" queryParamsHandling="merge" [video]="video"></app-search-card>
         </div>
       </div>
       <!-- PLAYLIST MODULE -->

@@ -18,8 +18,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
 
   public videoList: any = [];
   public recommendedList: any = [];
-  public playlists: any = [];
-  public playlistLoading = false;
   public isPlaying: boolean;
 
   private searchResultsSubscription: Subscription;
@@ -31,12 +29,13 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   private audioPlayingEventSubscription: Subscription;
   private eventBusSubscription: Subscription;
   private eventNowPlayingVideoSubscription: Subscription;
+  private upNextVideoEventSubscription: Subscription;
 
   public query: string;
-  public previousQuery: string;
   public videoId: string;
-  public upNextVideoId: string;
-  public nowPlayingVideoId: string;
+  public previousQuery: string;
+  public video: any = {};
+  public videoNext: any = {};
 
   public isMobile: boolean;
   public isSearchModeEnabled: boolean;
@@ -69,7 +68,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
           this.loaded = true;
         }, 15);
 
-        if (searchResults.length > 0 && this.nowPlayingList.length === 0) {
+        if (!this.videoId && searchResults.length > 0 && this.video) {
           this.videoRecommendedService.recommended(searchResults[0].id);
           this.recommendedList = [];
         }
@@ -79,25 +78,30 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       });
       this.recommendedResultsSubscription = this.videoRecommendedService.getResultList().subscribe((recommendedResults) => {
         this.recommendedList = [];
-        if (this.nowPlayingList.length > 0) {
+        if (recommendedResults && recommendedResults.nowPlayingVideo) {
+          this.audioPlayerService.triggerNowPlayingVideoEvent(recommendedResults.nowPlayingVideo);
+        }
+        if (this.video && recommendedResults && recommendedResults.nextUpVideo) {
           this.loadUpNextVideo(recommendedResults.nextUpVideo);
         }
         this.loadIncrementally(recommendedResults.recommendedVideos, this.recommendedList);
       });
       this.route.queryParams.subscribe(params => {
         this.query = params.q;
-        const video = {id: params.v};
-        this.audioPlayerService.triggerVideoEvent(video);
+        this.videoId = params.v;
+        if (this.videoId) {
+          this.audioPlayerService.triggerVideoEvent(this.videoId);
+        }
         this.videoSearchService.search(this.query ? this.query : 'cnn');
       });
       this.audioPlayingEventSubscription = this.audioPlayerService.triggerTogglePlayingEmitter$.subscribe((e) => {
         this.isPlaying = e.toggle;
-        if (this.nowPlayingList.length === 0) {
-          this.upNextList = [];
-        }
       });
       this.eventNowPlayingVideoSubscription = this.audioPlayerService.triggerNowPlayingVideoEmitter$.subscribe((e) => {
-        this.nowPlayingList = e;
+        this.video = e;
+      });
+      this.upNextVideoEventSubscription = this.audioPlayerService.triggerUpNextVideoEmitter$.subscribe((videoNext) => {
+        this.videoNext = videoNext;
       });
       // this.signInEventSubscription = this.userService.userSignedInEmitter$.subscribe((response) => {
       //   const user: any = response;
@@ -119,15 +123,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   }
 
   private loadUpNextVideo(video: any) {
-    const upNextList = [];
-    this.upNextList = [];
-    upNextList.push(video);
-    this.audioPlayerService.triggerNextUpVideoEvent(upNextList);
-    this.loadIncrementally(upNextList, this.upNextList);
-  }
-
-  public handleVideoSelect(video: any) {
-    this.audioPlayerService.triggerVideoEvent(video);
+    this.audioPlayerService.triggerNextUpVideoEvent(video);
   }
 
   private loadIncrementally(data, list) {
@@ -144,6 +140,25 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     });
   }
 
+  ngOnDestroy() {
+    this.searchResultsSubscription.unsubscribe();
+    this.recommendedResultsSubscription.unsubscribe();
+    this.signInEventSubscription.unsubscribe();
+    this.playlistActionSubscription.unsubscribe();
+    this.playlistUpdateSubscription.unsubscribe();
+    this.getPlaylistVideosSubscription.unsubscribe();
+    this.audioPlayingEventSubscription.unsubscribe();
+    this.eventBusSubscription.unsubscribe();
+    this.eventNowPlayingVideoSubscription.unsubscribe();
+    this.upNextVideoEventSubscription.unsubscribe();
+  }
+
+}
+
+
+/*
+
+
   private applyDrag = (arr, dragResult) => {
     const {removedIndex, addedIndex, payload} = dragResult;
     if (removedIndex === null && addedIndex === null) return arr;
@@ -157,23 +172,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     }
     return result;
   }
-
-  ngOnDestroy() {
-    this.searchResultsSubscription.unsubscribe();
-    this.recommendedResultsSubscription.unsubscribe();
-    this.signInEventSubscription.unsubscribe();
-    this.playlistActionSubscription.unsubscribe();
-    this.playlistUpdateSubscription.unsubscribe();
-    this.getPlaylistVideosSubscription.unsubscribe();
-    this.audioPlayingEventSubscription.unsubscribe();
-    this.eventBusSubscription.unsubscribe();
-    this.eventNowPlayingVideoSubscription.unsubscribe();
-  }
-
-}
-
-
-/*
 
 
   public handlePlaylistVideoSort(dropResult) {

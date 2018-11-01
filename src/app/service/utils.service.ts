@@ -18,6 +18,9 @@ export class UtilsService {
   }
 
   public static formatDuration (duration) {
+    if (!duration) {
+      return 0;
+    }
     if (duration.length > 5) {
       return moment(duration, 'h:mm:ss').diff(moment().startOf('day'), 'seconds');
     }
@@ -30,16 +33,4 @@ export class UtilsService {
     }
     return moment.utc(seconds * 1000).format('m:ss');
   }
-
-  public static findNewBadge(video: any) {
-    if (video.badges && video.badges.length > 0) {
-      video.badges.forEach((e) => {
-        if (e.metadataBadgeRenderer.label === 'NEW') {
-          return true;
-        }
-      });
-    }
-    return false;
-  }
-
 }
