@@ -27,7 +27,6 @@ export class SearchCardComponent implements OnInit, OnDestroy {
 
   private videoPlayingSubscription: Subscription;
   private videoLoadingSubscription: Subscription;
-  private hiddenSubscription: Subscription;
   private notificationSubscription: Subscription;
 
   constructor(private audioPlayerService: AudioPlayerService,
@@ -37,24 +36,18 @@ export class SearchCardComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.lastUpdated = moment(this.video.timestamp);
-    this.nowPlaying = this.audioPlayerService.getPlayingVideo().id === this.video.id;
     this.videoPlayingSubscription = this.audioPlayerService.triggerTogglePlayingEmitter$.subscribe((e) => {
       this.nowPlaying = false;
-      // if (e.toggle === false) {
-      //   return;
-      // }
-      // if (e.id === this.video.id) {
-      //   this.nowPlaying = true;
-      // }
+      if (e.toggle === false) {
+        return;
+      }
+      if (e.id === this.video.id) {
+        this.nowPlaying = true;
+      }
     });
     this.videoLoadingSubscription = this.audioPlayerService.triggerToggleLoadingEmitter$.subscribe((e) => {
       if (e.id === this.video.id) {
         this.nowLoading = e.toggle;
-      }
-    });
-    this.hiddenSubscription = this.audioPlayerService.triggerHiddenEmitter$.subscribe((e) => {
-      if (e.id === this.video.id) {
-        this.hidden = true;
       }
     });
   }
@@ -81,7 +74,6 @@ export class SearchCardComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.videoPlayingSubscription.unsubscribe();
     this.videoLoadingSubscription.unsubscribe();
-    this.hiddenSubscription.unsubscribe();
     if (this.notificationSubscription) {
       this.notificationSubscription.unsubscribe();
     }

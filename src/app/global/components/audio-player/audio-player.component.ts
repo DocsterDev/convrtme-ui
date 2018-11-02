@@ -92,7 +92,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     Howl.autoSuspend = false;
     this.progress = '0';
     this.videoEventSubscription = this.audioPlayerService.triggerVideoEventEmitter$.subscribe((videoId) => {
-
+      console.log('VIDEO COMING IN : ' + videoId);
       this.video = null;
       this.videoRecommendedService.recommended(videoId);
       this.fetchAudioStream(videoId);
@@ -150,16 +150,16 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   private goToUpNextVideo() {
-    this.audioPlayerService.triggerVideoEvent(this.videoNext);
+    this.audioPlayerService.triggerVideoEvent(this.videoNext.id);
   }
 
   private goToPrevious() {
     if (this.isPlaying && this.seek > 5) {
-      this.audioPlayerService.triggerVideoEvent(this.video);
+      this.audioPlayerService.triggerVideoEvent(this.video.id);
       return;
     }
     if (this.isPlaying && this.seek <= 5) {
-      this.audioPlayerService.triggerVideoEvent(this.videoPrevious);
+      this.audioPlayerService.triggerVideoEvent(this.videoPrevious.id);
       return;
     }
   }
@@ -234,14 +234,14 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     if (this.videoCount === 0 && !this.isChrome) {
       this.fetchedStreamUrl = {};
       this.fetchedStreamUrl.success = false;
-      this.buildAudioObject();
+      this.buildAudioObject(videoId);
       this.videoCount++;
       return;
     }
     // this.fetchAudioStream(video.id);
     let count = 0;
     do {
-      await this.sleep(500);
+      await this.sleep(250);
       if (count > 20) {
         console.error('Unable to retrieve stream URL');
         this.streamPrefetchSubscription.unsubscribe();
@@ -249,16 +249,18 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       }
       count++;
     }
-    while (this.fetchedStreamUrl === null && this.video === null);
-    this.buildAudioObject();
+    while (this.fetchedStreamUrl == null);
+    console.log(this.fetchedStreamUrl);
+    this.buildAudioObject(videoId);
   }
 
-  private buildAudioObject() {
+  private buildAudioObject(videoId: string) {
+    console.log('Video ID: ' + videoId);
     let streamUrl: string;
     if (this.fetchedStreamUrl && this.fetchedStreamUrl.success === true) {
       streamUrl = (this.fetchedStreamUrl.audioOnly && this.fetchedStreamUrl.matchesExtension) ? this.fetchedStreamUrl.streamUrl : (environment.streamUrl + '/stream/' + btoa(this.fetchedStreamUrl.streamUrl));
     } else {
-      streamUrl = environment.streamUrl + '/stream/videos/' + this.video.id;
+      streamUrl = environment.streamUrl + '/stream/videos/' + videoId;
     }
 
     this.activeSound = new Howl({
@@ -268,7 +270,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       preload: false,
       autoplay: false,
       onplay: () => {
-        this.duration = this.video.duration;
+        // this.duration = this.video.duration;
+        this.duration = UtilsService.formatTime(this.activeSound.duration());
         this.showNowPlayingBar = true;
         this.audioPlayerService.setPlaylingVideo(this.video);
         this.titleService.setTitle(this.video.title + ' - ' + this.video.owner);
@@ -318,7 +321,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   private fetchAudioStream(videoId: string) {
-    // Fetch Stream URL
     this.streamPrefetchSubscription = this.streamPrefetchService.prefetchStreamUrl(videoId).subscribe((resp) => {
       this.fetchedStreamUrl = resp;
     }, (error) => {
@@ -340,7 +342,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private step() {
     if (this.activeSound) {
       this.seek = this.activeSound ? this.activeSound.seek() : 0;
-      const duration: number = UtilsService.formatDuration(this.audioPlayerService.getPlayingVideo().duration);
+      // const duration: number = UtilsService.formatDuration(this.audioPlayerService.getPlayingVideo().duration);
+      const duration: number = this.activeSound.duration();
       this.progress = (((this.seek / duration) * 100) || 0);
       this.elapsed = UtilsService.formatTime(Math.round(this.seek));
       // PREFETCH VIDEO URL -- 10/21 - No longer necessary
