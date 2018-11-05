@@ -32,18 +32,18 @@
     </div>
     <div class="row align-items-center text-center Mx(1.5)">
       <div class="col">
-        <div class="c-font-circular title truncate Px(1.5)">{{video.title}}</div>
+        <div class="c-font-circular title truncate Px(1.5)">{{video && video.title ? video.title : 'Unknown'}}</div>
       </div>
     </div>
-    <div class="row align-items-center text-center Mx(1.5)">
+    <div class="row align-items-center text-center mb-2 mb-md-1 Mx(1.5)">
       <div class="col">
-        <div class="c-font-circular sub-title truncate Px(1.5)">{{video.owner}}</div>
+        <div class="c-font-circular sub-title truncate Px(1.5)">{{video && video.owner ? video.owner : 'Unknown'}}</div>
       </div>
     </div>
-    <div class="row align-items-center no-gutters mt-2 Px(0.5)">
+    <div class="row align-items-center no-gutters Px(0.5)">
       <div class="col-auto d-none d-md-flex text-right Mstart(1)"><div class="c-font-circular timer" style="min-width:35px;">{{seekBarHandleEnabled ? seekTimer : elapsed}}</div></div>
       <div class="col mx-3">
-        <div class="playback-seek-bar" (click)="seekToPosition($event, seekBarHandlePosX, video.duration)" (mousemove)="bindMouseMoveSeekBar($event, seekbar.offsetWidth, video.duration);" (mouseenter)="seekBarHandleEnabled = true;" (mouseleave)="seekBarHandleEnabled = false;" #seekbar>
+        <div class="playback-seek-bar" (click)="seekToPosition($event, seekBarHandlePosX)" (mousemove)="bindMouseMoveSeekBar($event, seekbar.offsetWidth);" (mouseenter)="seekBarHandleEnabled = true;" (mouseleave)="seekBarHandleEnabled = false;" #seekbar>
           <div [ngStyle]="{'max-width': (seekBarHandleEnabled ? seekBarHandlePosX : progress) + '%'}" class="playback-seek-bar-progress"></div>
           <!--<div class="seek-bar-handle" [style.left]="(seekBarHandleEnabled ? seekPositionX : progress) + '%'">-->
 

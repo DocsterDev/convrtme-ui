@@ -82,16 +82,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.eventBusService.triggerNotificationCenterEvent(false);
       }
     });
-    this.pollNotificiations();
+    this.pollNotifications();
   }
 
-  private pollNotificiations() {
+  private pollNotifications() {
     this.pollNotificationsSubscription = this.notificationCenterService.pollNotifications().subscribe((response) => {
       const resp: any = response;
       this.numAlertNotifications = resp.count;
       this.notificationDirty = false;
         setTimeout(() => {
-          this.pollNotificiations(); // TODO - I only really need to poll when the notifications have been clicked
+          this.pollNotifications(); // TODO - I only really need to poll when the notifications have been clicked
         }, 1800000);
     }, (error) => {
       console.error(JSON.stringify(error));

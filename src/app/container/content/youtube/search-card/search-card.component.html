@@ -1,4 +1,5 @@
-<div class="search-card" [routerLink]="['/']" [queryParams]="{v: video.id}" queryParamsHandling="merge" [ngClass]="{'now-playing': nowPlaying, 'now-loading': nowLoading}" (click)="selectContent()">
+<a class="link-no-style" [routerLink]="['/']" [queryParams]="{v: video.id}" queryParamsHandling="merge"><div class="search-card" [ngClass]="{'now-playing': nowPlaying, 'now-loading': nowLoading}" (click)="selectContent()">
+  <!--[attr.href]="linkUrl + '?v=' + video.id" (click)="navigate($event, video.id);"-->
   <div class="row flex-nowrap no-gutters align-items-start">
     <div class="col thumbnail-container">
         <img class="thumbnail" src="{{video.thumbnailUrl}}"/>
@@ -8,27 +9,13 @@
     </div>
     <div class="col" style="min-width: 100px;">
         <div class="text-left c-font-circular c-small c-light title-text Mstart(0.5) mt-1" [ngClass]="{'c-accent-color': nowPlaying, 'c-color': !nowPlaying}" style="max-height: 90px !important">
-          <div class="title truncate-double-line">{{video.title}}</div>
+          <div class="title truncate-double-line">{{video.title ? video.title : 'Unknown'}}</div>
           <div class="Pt(0.25)"></div>
-          <!--<span (click)="subscribe($event, video.owner)" class="text-owner">{{video.owner}}</span>-->
           <div class="subtitle-owner c-smallest truncate-single-line" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}"><span (click)="subscribe($event, video.owner, video.channelThumbnailUrl)" class="text-owner">{{video.owner}}</span></div>
           <div class="subtitle c-smallest truncate-single-line" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{video.publishedTimeAgo}}</div>
-          <!--<span class="label c-bold" *ngIf="video.new">New</span>-->
-          <div class="subtitle c-smallest truncate-single-line" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{video.viewCount}} </div>
+          <div class="subtitle c-smallest truncate-single-line" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{video.viewCount}} <span class="label c-bold" *ngIf="video.new">New</span></div>
         </div>
     </div>
-    <!--<div class="col align-self-start play-icon-active d-none d-md-block Mt(0.25)" style="max-width:35px;">-->
-      <!--<img style="width:15px;height:12px;" src="/assets/img/svg/ic-sound-active.svg">-->
-    <!--</div>-->
-    <!--<div class="col align-self-center d-none d-md-block" style="max-width:20px;" (click)="addedContent($event, video)">-->
-      <!--<div class="text-center">-->
-        <!--<div *ngFor="let nplaylist of video.addedByPlaylists">-->
-          <!--<div class="playlist-icon" [style.background]="'#' + playlist.iconColor"></div>-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
-    <!--<div class="col d-none d-lg-flex align-self-center justify-content-center playlist-icon-add Py(0.75)" style="max-width:45px;border-radius:50%;" (click)="addedContent($event, video)">-->
-      <!--<img style="width:19px;height:19px;" src="/assets/img/svg/ic-plus-playlist.svg">-->
-    <!--</div>-->
   </div>
 </div>
+</a>

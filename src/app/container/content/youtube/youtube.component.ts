@@ -34,8 +34,8 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   public query: string;
   public videoId: string;
   public previousQuery: string;
-  public video: any = {};
-  public videoNext: any = {};
+  public video: any;
+  public videoNext: any;
 
   public isMobile: boolean;
   public isSearchModeEnabled: boolean;
@@ -68,9 +68,12 @@ export class YoutubeComponent implements OnInit, OnDestroy {
           this.loaded = true;
         }, 15);
 
-        if (!this.videoId && searchResults.length > 0 && this.video) {
-          this.videoRecommendedService.recommended(searchResults[0].id);
+        if (!this.videoId && searchResults.length > 0) {
           this.recommendedList = [];
+          this.videoRecommendedService.recommended(searchResults[0].id);
+          if (this.videoId) {
+            searchResults = searchResults.filter(video => video.id !== this.videoId);
+          }
         }
         this.previousQuery = this.query;
         this.videoList = [];
@@ -78,12 +81,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       });
       this.recommendedResultsSubscription = this.videoRecommendedService.getResultList().subscribe((recommendedResults) => {
         this.recommendedList = [];
-        if (recommendedResults && recommendedResults.nowPlayingVideo) {
-          this.audioPlayerService.triggerNowPlayingVideoEvent(recommendedResults.nowPlayingVideo);
-        }
-        if (this.video && recommendedResults && recommendedResults.nextUpVideo) {
-          this.loadUpNextVideo(recommendedResults.nextUpVideo);
-        }
         this.loadIncrementally(recommendedResults.recommendedVideos, this.recommendedList);
       });
       this.route.queryParams.subscribe(params => {
@@ -120,10 +117,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       //     console.log('PREVIOUS');
       //   }
       // });
-  }
-
-  private loadUpNextVideo(video: any) {
-    this.audioPlayerService.triggerNextUpVideoEvent(video);
   }
 
   private loadIncrementally(data, list) {

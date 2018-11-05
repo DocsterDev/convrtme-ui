@@ -15,7 +15,7 @@ export class VideoRecommendedService implements OnDestroy {
 
   private resultList = new Subject<any>();
 
-  getServiceObservable(videoId: string) {
+  public getServiceObservable(videoId: string) {
     return this.http.get(environment.apiUrl + '/api/videos/recommended', {
       params: {
         v: videoId

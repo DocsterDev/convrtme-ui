@@ -58,7 +58,7 @@ export class AudioPlayerService {
   }
 
   public getPlayingVideo() {
-    return this.video;
+    return this.video ? this.video : {};
   };
 
   public setPlaylingVideo(video: any) {

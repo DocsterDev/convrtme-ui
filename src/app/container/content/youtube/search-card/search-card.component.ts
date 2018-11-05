@@ -4,6 +4,7 @@ import {AudioPlayerService} from '../../../../global/components/audio-player/aud
 import {Subscription} from 'rxjs/Subscription';
 import {NotificationCenterService} from '../../../../service/notification-center.service';
 import {NotificationService} from '../../../../global/components/notification/notification.service';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-search-card',
@@ -25,16 +26,25 @@ export class SearchCardComponent implements OnInit, OnDestroy {
 
   public lastUpdated;
 
+  public linkUrl: string;
+
   private videoPlayingSubscription: Subscription;
   private videoLoadingSubscription: Subscription;
   private notificationSubscription: Subscription;
 
   constructor(private audioPlayerService: AudioPlayerService,
               private notificationCenterService: NotificationCenterService,
-              private notificationService: NotificationService) {
+              private notificationService: NotificationService,
+              private router: Router,
+              private route: ActivatedRoute) {
   }
 
   ngOnInit() {
+    if (!this.video) {
+      this.video = {};
+    } else {
+      this.nowPlaying = this.audioPlayerService.getPlayingVideo().id === this.video.id;
+    }
     this.lastUpdated = moment(this.video.timestamp);
     this.videoPlayingSubscription = this.audioPlayerService.triggerTogglePlayingEmitter$.subscribe((e) => {
       this.nowPlaying = false;
@@ -50,6 +60,7 @@ export class SearchCardComponent implements OnInit, OnDestroy {
         this.nowLoading = e.toggle;
       }
     });
+    this.linkUrl = window.location.pathname;
   }
 
   selectContent() {
@@ -61,22 +72,28 @@ export class SearchCardComponent implements OnInit, OnDestroy {
     this.added.emit(video);
   }
 
+  public navigate($event, videoId: string) {
+    $event.preventDefault();
+    //this.router.navigate(['/'], {queryParamsHandling: "merge"});
+    this.router.navigate(['.'], { relativeTo: this.route, queryParams: {v: videoId}, queryParamsHandling: "merge" });
+  }
+
   public subscribe($event, channel, avatarUrl) {
     $event.stopPropagation();
     this.notificationSubscription = this.notificationCenterService.addSubscription(channel, avatarUrl).subscribe((resp) => {
       const response: any = resp;
-      this.notificationService.showNotification({type: 'success', message: 'Successfully added ' + response.channel.name + ' to Subcriptions.'});
+      this.notificationService.showNotification({type: 'success', message: 'Successfully added ' + response.channel.name + ' to subscriptions'});
     }, (error) => {
       console.error(error);
     });
   }
 
   ngOnDestroy() {
-    this.videoPlayingSubscription.unsubscribe();
-    this.videoLoadingSubscription.unsubscribe();
-    if (this.notificationSubscription) {
+    if (this.videoPlayingSubscription)
+      this.videoPlayingSubscription.unsubscribe();
+    if (this.videoLoadingSubscription)
+      this.videoLoadingSubscription.unsubscribe();
+    if (this.notificationSubscription)
       this.notificationSubscription.unsubscribe();
-    }
   }
-
 }
