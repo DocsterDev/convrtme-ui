@@ -10,7 +10,8 @@ import {HeaderService} from '../../../service/header.service';
 import {EventBusService} from '../../../service/event-bus.service';
 import {StreamPrefetchService} from '../../../service/stream-prefetch.service';
 import {VideoSearchService} from '../../../service/video-search.service';
-import {forkJoin, Observable, Subscription} from 'rxjs';
+import {forkJoin, Subscription} from 'rxjs';
+import 'rxjs/Rx';
 
 
 
@@ -214,11 +215,17 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       this.videoRecommendedService.getServiceObservable(videoId)
         .map((res:any) => {
           return res;
+        }, (error) => {
+          console.error(error);
+          this.showLoadingError(videoId);
         }),
       this.streamPrefetchService.prefetchStreamUrl(videoId)
         .map((res:any) => {
-        return res;
-      })
+          return res;
+        }, (error) => {
+          console.error(error);
+          this.showLoadingError(videoId);
+        })
     ])
     .map((data: any[]) => {
       if (data[0]) {
@@ -267,12 +274,10 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     let count = 0;
     do {
       await this.sleep(250);
-      if (count > 20) {
+      if (count > 40) {
         console.error('Unable to retrieve stream URL');
         this.fetchedStreamUrl = {success: false};
-        this.dataLoaded = true;
-        //this.showLoadingError(videoId);
-        this.forkJoinSubscription.unsubscribe();
+        this.showLoadingError(videoId);
       }
       count++;
     }
@@ -282,6 +287,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   private showLoadingError(videoId: string) {
     this.clearAudio();
+    this.forkJoinSubscription.unsubscribe();
+    this.dataLoaded = true;
     this.audioPlayerService.triggerToggleLoading({id: videoId, toggle: false});
     this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error loading this video.'});
     this.videoServiceLock = false;

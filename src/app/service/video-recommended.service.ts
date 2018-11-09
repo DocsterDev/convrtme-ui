@@ -4,6 +4,7 @@ import {Subject} from 'rxjs/Subject';
 import {HttpClient} from '@angular/common/http';
 import {Subscription} from 'rxjs/Subscription';
 import {environment} from '../../environments/environment';
+import 'rxjs/Rx';
 
 @Injectable()
 export class VideoRecommendedService implements OnDestroy {
