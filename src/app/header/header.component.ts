@@ -138,8 +138,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.isFocused = false;
       this.renderer.invokeElementMethod(this.searchInputText.nativeElement, 'blur', []);
       this.mobileSearchEnabled = false;
-      this.eventBusService.triggerSearchModeEvent(false);
     }
+    this.eventBusService.triggerSearchModeEvent(false);
   }
 
   public handleSubmitSearch(searchQuery) {

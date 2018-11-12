@@ -30,6 +30,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   private eventBusSubscription: Subscription;
   private eventNowPlayingVideoSubscription: Subscription;
   private upNextVideoEventSubscription: Subscription;
+  private videoEventSubscription: Subscription;
 
   public query: string;
   public videoId: string;
@@ -42,6 +43,8 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   public isNotificationCenterModeEnabled: boolean;
 
   public loaded: boolean;
+
+  public showNowPlayingContainer: boolean;
 
   static updateComponent(component, index, list) {
     component.index = index;
@@ -67,12 +70,12 @@ export class YoutubeComponent implements OnInit, OnDestroy {
         setTimeout(()=>{
           this.loaded = true;
         }, 15);
-
-        if (!this.videoId && searchResults.length > 0) {
-          this.recommendedList = [];
-          this.videoRecommendedService.recommended(searchResults[0].id);
+        if (searchResults.length > 0) {
           if (this.videoId) {
             searchResults = searchResults.filter(video => video.id !== this.videoId);
+          } else {
+            this.recommendedList = [];
+            this.videoRecommendedService.recommended(searchResults[0].id);
           }
         }
         this.previousQuery = this.query;
@@ -87,18 +90,29 @@ export class YoutubeComponent implements OnInit, OnDestroy {
         this.query = params.q;
         this.videoId = params.v;
         if (this.videoId) {
+          this.showNowPlayingContainer = true;
           this.audioPlayerService.triggerVideoEvent(this.videoId);
         }
-        this.videoSearchService.search(this.query ? this.query : 'cnn');
+        if (this.previousQuery !== this.query) {
+          this.videoSearchService.search(this.query);
+        } else if (!this.query && this.videoList.length === 0) {
+          this.videoSearchService.search('fox news');
+        }
       });
       this.audioPlayingEventSubscription = this.audioPlayerService.triggerTogglePlayingEmitter$.subscribe((e) => {
         this.isPlaying = e.toggle;
       });
       this.eventNowPlayingVideoSubscription = this.audioPlayerService.triggerNowPlayingVideoEmitter$.subscribe((e) => {
         this.video = e;
+        if (!e) {
+          this.showNowPlayingContainer = false;
+        }
       });
       this.upNextVideoEventSubscription = this.audioPlayerService.triggerUpNextVideoEmitter$.subscribe((videoNext) => {
         this.videoNext = videoNext;
+      });
+      this.videoEventSubscription = this.audioPlayerService.triggerVideoEventEmitter$.subscribe((videoEvent) => {
+        this.showNowPlayingContainer = true;
       });
       // this.signInEventSubscription = this.userService.userSignedInEmitter$.subscribe((response) => {
       //   const user: any = response;
@@ -144,6 +158,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     this.eventBusSubscription.unsubscribe();
     this.eventNowPlayingVideoSubscription.unsubscribe();
     this.upNextVideoEventSubscription.unsubscribe();
+    this.videoEventSubscription.unsubscribe();
   }
 
 }

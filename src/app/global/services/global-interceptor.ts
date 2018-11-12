@@ -40,7 +40,7 @@ export class GlobalInterceptor implements HttpInterceptor {
             break;
           }
           default: {
-            this.notificationService.showNotification({type: 'error', message: err.error.message});
+            // this.notificationService.showNotification({type: 'error', message: err.error.message});
             console.error(err);
             break;
           }

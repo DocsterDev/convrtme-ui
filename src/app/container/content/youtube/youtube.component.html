@@ -5,91 +5,64 @@
         <span class="c-font-circular c-light text-center c-smaller">You don&rsquo;t have any search results.<br/>Try searching for something normal.</span>
       </div>
     </div>
-    <!-- LOADING SPINNER -->
-    <!--<div class="row no-gutters m-5" *ngIf="!this.video && !this.videoNext">-->
-      <!--<div class="col d-flex align-items-center justify-content-center">-->
-        <!--<img src="/assets/img/svg/ic-loading-spinner.svg" />-->
-      <!--</div>-->
-    <!--</div>-->
-
-    <!--<div class="row no-gutters m-5" *ngIf="!this.video && !this.videoNext">-->
-      <!--<div class="col d-flex align-items-center justify-content-center">-->
-        <!--<img src="/assets/img/svg/ic-loading-spinner.svg" />-->
-      <!--</div>-->
-    <!--</div>-->
-
-    <!-- NOW PLAYING BAR -->
-    <!--<div class="row justify-content-center no-gutters" *ngIf="this.video && this.videoNext">-->
-      <!--<div class="col-md Mx(1) solidify" *ngIf="this.video">-->
-        <!--<div class="text-left pb-3 pt-2 pt-md-0 c-smaller c-bold section-text">Now playing</div>-->
-        <!--<div class="mb-2 mb-md-5">-->
-          <!--<app-search-card [video]="this.video"></app-search-card>-->
-        <!--</div>-->
-      <!--</div>-->
-      <!--<div class="col-md Mx(1) solidify" *ngIf="this.videoNext">-->
-        <!--<div class="text-left pb-3 pt-2 pt-md-0 c-smaller c-bold section-text">Up next</div>-->
-        <!--<div class="mb-5">-->
-          <!--<div>-->
-            <!--<app-search-card [video]="this.videoNext"></app-search-card>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
-    <div *ngIf="this.videoId" class="row justify-content-center no-gutters">
-      <div class="col-md Mx(1) solidify">
-        <div class="row no-gutters">
-          <div class="col">
-            <div class="text-left pb-3 pt-md-2 pt-md-0 c-smaller c-bold section-text section-text-style">Now playing</div>
-          </div>
-        </div>
-        <div *ngIf="this.video" class="row no-gutters">
-          <div class="col">
-            <div class="mb-2 mb-md-5">
-              <app-search-card [video]="this.video"></app-search-card>
+    <ng-container *ngIf="this.showNowPlayingContainer && !isMobile || (isMobile && !isSearchModeEnabled && !isNotificationCenterModeEnabled)">
+      <div class="row justify-content-center no-gutters loader-container">
+        <ng-container *ngIf="!this.video">
+            <div class="col d-flex align-items-center justify-content-center solidify">
+              <img src="/assets/img/svg/ic-loading-spinner.svg" />
+            </div>
+        </ng-container>
+        <ng-container *ngIf="this.video">
+          <div class="col-md Mx(1) solidify">
+            <div class="row no-gutters">
+              <div class="col">
+                <div class="text-left pb-3 pt-md-2 pt-md-0 c-smaller c-bold section-text">Now playing</div>
+              </div>
+            </div>
+            <div class="row no-gutters">
+              <div class="col">
+                <div class="mb-2 mb-md-5">
+                  <app-search-card [video]="this.video"></app-search-card>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div *ngIf="!this.video" class="row no-gutters m-5">
-          <div class="col d-flex align-items-center justify-content-center">
-            <img src="/assets/img/svg/ic-loading-spinner.svg" />
-          </div>
-        </div>
-      </div>
-      <div class="col-md Mx(1) solidify">
-        <div class="row no-gutters">
-          <div class="col">
-            <div class="text-left pb-3 pt-2 c-smaller c-bold section-text section-text-style">Up next</div>
-          </div>
-        </div>
-        <div *ngIf="this.videoNext" class="row no-gutters">
-          <div class="col">
-            <div class="mb-5">
-              <app-search-card [video]="this.videoNext"></app-search-card>
+          <div class="col-md Mx(1) solidify">
+            <div class="row no-gutters">
+              <div class="col">
+                <div class="text-left pb-3 pt-2 c-smaller c-bold section-text">Up next</div>
+              </div>
+            </div>
+            <div class="row no-gutters">
+              <div class="col">
+                <div class="mb-5">
+                  <app-search-card [video]="this.videoNext"></app-search-card>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div *ngIf="!this.videoNext"  class="row no-gutters m-5">
-          <div class="col d-flex align-items-center justify-content-center">
-            <img src="/assets/img/svg/ic-loading-spinner.svg" />
-          </div>
-        </div>
+        </ng-container>
       </div>
-    </div>
+    </ng-container>
     <div *ngIf="loaded && videoList.length > 0 && !isMobile || (isMobile && !isSearchModeEnabled && !isNotificationCenterModeEnabled)" class="row d-flex justify-content-center no-gutters" >
       <!-- SEARCH MODULE -->
-      <div class="col Mx(1) order-1 solidify" *ngIf="videoList.length > 0">
-        <div class="text-left c-bold c-smaller section-text pb-3 truncate-single-line" *ngIf="previousQuery">Showing results for: <span class="c-bold c-smaller c-accent-color">{{previousQuery}}</span></div>
-        <div class="text-left pb-3 pt-md-2 pt-md-0 c-small c-bold section-text section-main-text-style" *ngIf="!previousQuery">Today&rsquo;s headlines</div>
-        <div *ngFor="let video of videoList" class="mb-2">
-          <app-search-card [video]="video"></app-search-card>
-        </div>
+      <div class="col Mx(1) order-1 solidify">
+        <ng-container *ngIf="videoList.length > 0">
+          <div class="text-left c-bold c-smaller section-text pb-3 truncate-single-line" *ngIf="previousQuery">Showing results for: <span class="c-bold c-smaller c-accent-color">{{previousQuery}}</span></div>
+          <div class="text-left pb-3 pt-md-2 pt-md-0 c-small c-bold section-text section-main-text-style" *ngIf="!previousQuery">Today&rsquo;s headlines</div>
+          <div *ngFor="let video of videoList" class="mb-2">
+            <app-search-card [video]="video"></app-search-card>
+          </div>
+        </ng-container>
       </div>
       <!-- RECOMMENDED MODULE -->
-      <div *ngIf="recommendedList.length > 0" class="col-md Mx(1) order-2 solidify">
-        <div class="text-center text-md-left pb-3 pt-2 pt-md-0 c-small c-bold section-text section-main-text-style">Recommended for you</div>
-        <div *ngFor="let video of recommendedList" class="mb-2">
-          <app-search-card [video]="video"></app-search-card>
-        </div>
+      <div class="col-md Mx(1) order-2 solidify">
+        <ng-container *ngIf="recommendedList.length > 0">
+          <div class="text-center text-md-left pb-3 pt-2 pt-md-0 c-small c-bold section-text">Recommended for you</div>
+          <div *ngFor="let video of recommendedList" class="mb-2">
+            <app-search-card [video]="video"></app-search-card>
+          </div>
+        </ng-container>
       </div>
       <!-- PLAYLIST MODULE -->
     <!--  <div class="col-md Mx(1) order-3">

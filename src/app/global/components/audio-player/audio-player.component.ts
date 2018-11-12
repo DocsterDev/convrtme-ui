@@ -12,7 +12,7 @@ import {StreamPrefetchService} from '../../../service/stream-prefetch.service';
 import {VideoSearchService} from '../../../service/video-search.service';
 import {forkJoin, Subscription} from 'rxjs';
 import 'rxjs/Rx';
-
+import * as moment from 'moment';
 
 
 @Component({
@@ -25,10 +25,14 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   public video: any;
   public videoPrevious: any;
   public videoNext: any;
+
+  private tempRecommendedResults: any;
   private tempNowPlayingVideo: any;
   private tempUpNextVideo: any;
+
+
   public progress;
-  public duration: string;
+  public duration: number;
   public elapsed: string;
   public seekTimer: string;
   private seek: number;
@@ -102,11 +106,12 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       this.video = null;
       this.tempNowPlayingVideo = {};
       this.tempUpNextVideo = {};
-      this.audioPlayerService.triggerNowPlayingVideoEvent(null);
-      this.audioPlayerService.triggerNextUpVideoEvent(null);
+      this.audioPlayerService.triggerNowPlayingVideoEvent(false);
+      this.audioPlayerService.triggerNextUpVideoEvent(false);
       this.dataLoaded = false;
-      this.callData(videoId);
+      this.fetchAudioStream(videoId);
       this.playMedia(videoId);
+      this.fetchRecommendedVideos(videoId);
     });
     this.playlistActionSubscription = this.audioPlayerService.triggerPlaylistActionEventEmitter$.subscribe((e) => {
       switch (e.action) {
@@ -128,14 +133,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.eventBusSubscription = this.eventBusService.deviceListenerEvent$.subscribe((isMobile) => this.isMobile = isMobile);
     this.eventBusSubscription = this.eventBusService.searchModeEvent$.subscribe((isSearchModeEnabled) => {
       this.isSearchModeEnabled = isSearchModeEnabled;
-      if (this.isMobile) {
-        if (this.isSearchModeEnabled) {
-          this.savedShowNowPlayingBar = this.showNowPlayingBar;
-          this.showNowPlayingBar = false;
-        } else {
-          this.showNowPlayingBar = this.savedShowNowPlayingBar;
-        }
-      }
+      this.showNowPlayingBar = this.isPlaying && !this.isSearchModeEnabled;
     });
     this.eventBusSubscription = this.eventBusService.scrollEvent$.subscribe((isScrolling) => {
       if (isScrolling) {
@@ -210,47 +208,25 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  private callData(videoId: string) {
-    this.forkJoinSubscription = forkJoin([
-      this.videoRecommendedService.getServiceObservable(videoId)
-        .map((res:any) => {
-          return res;
-        }, (error) => {
-          console.error(error);
-          this.showLoadingError(videoId);
-        }),
-      this.streamPrefetchService.prefetchStreamUrl(videoId)
-        .map((res:any) => {
-          return res;
-        }, (error) => {
-          console.error(error);
-          this.showLoadingError(videoId);
-        })
-    ])
-    .map((data: any[]) => {
-      if (data[0]) {
-        const recommendedResults = data[0];
-        if (recommendedResults && recommendedResults.nowPlayingVideo) {
-          this.tempNowPlayingVideo = recommendedResults.nowPlayingVideo;
-        }
-        if (recommendedResults && recommendedResults.nextUpVideo) {
-          this.tempUpNextVideo = recommendedResults.nextUpVideo;
-        }
-        this.videoRecommendedService.triggerVideoLoad(recommendedResults);
-      }
-      if (data[1]) {
-        const streamData = data[1];
-        this.fetchedStreamUrl = streamData;
-      }
-      setTimeout(() => {
+  private fetchAudioStream(videoId: string) {
+    this.streamPrefetchSubscription = this.streamPrefetchService.prefetchStreamUrl(videoId).subscribe((resp: any) => {
+      this.fetchedStreamUrl = resp;
+      setTimeout(()=>{
         this.dataLoaded = true;
-      },840);
-
-    }, (error:any) => {
+      });
+    }, (error) => {
       console.error(error);
       this.showLoadingError(videoId);
-    })
-    .subscribe();
+    });
+  }
+
+  private fetchRecommendedVideos(videoId: string) {
+    this.recommendedResultsSubscription = this.videoRecommendedService.getServiceObservable(videoId).subscribe((resp: any)=> {
+      this.tempRecommendedResults = resp;
+    }, (error) => {
+      console.error(error);
+      this.showLoadingError(videoId);
+    });
   }
 
   async playMedia(videoId) {
@@ -273,8 +249,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     }
     let count = 0;
     do {
-      await this.sleep(250);
-      if (count > 40) {
+      await this.sleep(125);
+      if (count > 80) {
         console.error('Unable to retrieve stream URL');
         this.fetchedStreamUrl = {success: false};
         this.showLoadingError(videoId);
@@ -309,9 +285,9 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       preload: false,
       autoplay: false,
       onplay: () => {
-        this.duration = UtilsService.formatTime(this.activeSound.duration());
-        this.audioPlayerService.triggerNowPlayingVideoEvent(this.tempNowPlayingVideo);
-        this.audioPlayerService.triggerNextUpVideoEvent(this.tempUpNextVideo);
+        this.audioPlayerService.triggerNowPlayingVideoEvent(this.buildNowPlayingVideo());
+        this.audioPlayerService.triggerNextUpVideoEvent(this.tempRecommendedResults.nextUpVideo);
+        this.videoRecommendedService.triggerVideoLoad(this.tempRecommendedResults);
         this.showNowPlayingBar = true;
         this.hasPrefetched = false;
         this.titleService.setTitle(this.video.title + ' - ' + this.video.owner);
@@ -343,9 +319,22 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.activeSound.play();
   }
 
+  private buildNowPlayingVideo(){
+    const stream = this.fetchedStreamUrl;
+    this.duration = stream.duration;
+    return {
+      id: stream.id,
+      title: stream.title,
+      duration: UtilsService.formatTime(stream.duration),
+      owner: stream.owner,
+      thumbnailUrl: 'http://i.ytimg.com/vi/' + stream.id + '/mqdefault.jpg',
+      publishedTimeAgo: 'Uploaded on ' + moment(stream.uploadDate, 'YYYY-MM-DD').format('ddd, MMMM Do YYYY')
+    };
+  }
+
   private clearAudio() {
-    this.audioPlayerService.triggerNowPlayingVideoEvent(null);
-    this.audioPlayerService.triggerNextUpVideoEvent(null);
+    this.audioPlayerService.triggerNowPlayingVideoEvent(false);
+    this.audioPlayerService.triggerNextUpVideoEvent(false);
     this.fetchedStreamUrl = null;
     this.showNowPlayingBar = false;
     if (this.activeSound) {
@@ -365,10 +354,9 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private step() {
     if (this.activeSound) {
       this.seek = this.activeSound ? this.activeSound.seek() : 0;
-      const duration: number = this.activeSound.duration();
-      this.progress = (((this.seek / duration) * 100) || 0);
+      this.progress = (((this.seek / this.duration) * 100) || 0);
       this.elapsed = UtilsService.formatTime(Math.round(this.seek));
-      if ((duration - Math.floor(this.seek)) === 15 && !this.hasPrefetched) {
+      if ((this.duration - Math.floor(this.seek)) === 15 && !this.hasPrefetched) {
         this.hasPrefetched = true;
         this.prefetchAudioStream();
       }
@@ -394,17 +382,3 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.forkJoinSubscription.unsubscribe();
   }
 }
-
-/*
-private fetchAudioStream(videoId: string) {
-  this.streamPrefetchSubscription = this.streamPrefetchService.prefetchStreamUrl(videoId).subscribe((resp) => {
-	this.fetchedStreamUrl = resp;
-  }, (error) => {
-	console.error('Error fetching stream url for video id ' + this.video.id);
-	this.audioPlayerService.triggerToggleLoading({id: this.video.id, toggle: false});
-	this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error playing this video.'});
-	this.videoServiceLock = false;
-  });
-}
-*/
-
