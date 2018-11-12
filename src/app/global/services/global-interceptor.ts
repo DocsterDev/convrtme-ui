@@ -2,13 +2,14 @@ import 'rxjs/add/operator/do';
 import {HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {NotificationService} from '../components/notification/notification.service';
 import {Injectable} from '@angular/core';
+import {LocalStorageService} from 'ngx-webstorage';
 
 @Injectable()
 export class GlobalInterceptor implements HttpInterceptor {
 
   private retryCount = 0;
 
-  constructor(private notificationService: NotificationService) {
+  constructor(private notificationService: NotificationService, private localStorage: LocalStorageService) {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler) {

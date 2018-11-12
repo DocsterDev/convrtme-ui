@@ -82,7 +82,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.eventBusService.triggerNotificationCenterEvent(false);
       }
     });
-    this.pollNotifications();
+    // this.pollNotifications();
   }
 
   private pollNotifications() {
