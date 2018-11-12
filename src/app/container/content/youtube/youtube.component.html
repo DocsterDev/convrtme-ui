@@ -5,7 +5,7 @@
         <span class="c-font-circular c-light text-center c-smaller">You don&rsquo;t have any search results.<br/>Try searching for something normal.</span>
       </div>
     </div>
-    <ng-container *ngIf="this.showNowPlayingContainer && !isMobile || (isMobile && !isSearchModeEnabled && !isNotificationCenterModeEnabled)">
+    <ng-container *ngIf="this.showNowPlayingContainer && (isMobile && !isSearchModeEnabled && !isNotificationCenterModeEnabled)">
       <div class="row justify-content-center no-gutters loader-container">
         <ng-container *ngIf="!this.video">
             <div class="col d-flex align-items-center justify-content-center solidify">
