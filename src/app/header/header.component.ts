@@ -119,7 +119,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.clearAutoSuggestions();
       this.isSearchAutoCompleteOpen = false;
       this.isFocused = false;
-      this.renderer.invokeElementMethod(this.searchInputText.nativeElement, 'blur', []);
+      setTimeout(()=>{
+        this.renderer.invokeElementMethod(this.searchInputText.nativeElement, 'blur', []);
+      }, 5);
       this.mobileSearchEnabled = false;
     }
   }
@@ -136,7 +138,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.clearAutoSuggestions();
       this.isSearchAutoCompleteOpen = false;
       this.isFocused = false;
-      this.renderer.invokeElementMethod(this.searchInputText.nativeElement, 'blur', []);
+      setTimeout(()=>{
+        this.renderer.invokeElementMethod(this.searchInputText.nativeElement, 'blur', []);
+      }, 5);
       this.mobileSearchEnabled = false;
     }
     this.eventBusService.triggerSearchModeEvent(false);
@@ -150,7 +154,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
     this.clearAutoSuggestions();
     this.isFocused = false;
-    this.renderer.invokeElementMethod(this.searchInputText.nativeElement, 'blur', []);
+    setTimeout(()=>{
+      this.renderer.invokeElementMethod(this.searchInputText.nativeElement, 'blur', []);
+    }, 5);
     this.router.navigate(['.'], { relativeTo: this.route, queryParams: {q: searchQuery} });
     this.eventBusService.triggerSearchModeEvent(false);
   }
@@ -168,7 +174,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public focusSearchBar() {
     setTimeout(() => {
       this.renderer.invokeElementMethod(this.searchInputText.nativeElement, 'focus', []);
-    });
+    }, 5);
   }
 
   public toggleNotificationCenter() {

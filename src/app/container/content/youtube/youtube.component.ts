@@ -83,8 +83,10 @@ export class YoutubeComponent implements OnInit, OnDestroy {
         this.loadIncrementally(searchResults, this.videoList);
       });
       this.recommendedResultsSubscription = this.videoRecommendedService.getResultList().subscribe((recommendedResults) => {
-        this.recommendedList = [];
-        this.loadIncrementally(recommendedResults.recommendedVideos, this.recommendedList);
+        if (recommendedResults && recommendedResults.recommendedVideos) {
+          this.recommendedList = [];
+          this.loadIncrementally(recommendedResults.recommendedVideos, this.recommendedList);
+        }
       });
       this.route.queryParams.subscribe(params => {
         this.query = params.q;

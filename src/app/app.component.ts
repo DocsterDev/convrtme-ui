@@ -69,6 +69,8 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private initAuthentication() {
+    this.localStorage.clear('token');
+    this.localStorage.clear('email');
     const token = this.localStorage.retrieve('token');
     if (!token) {
       const fakeEmail = UtilsService.generateUUID() + '@gmail.com';
@@ -87,8 +89,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this.handleError();
       });
     }
-    // this.localStorage.clear('token');
-    // this.localStorage.clear('email');
+
   }
 
   private handleSuccess(resp) {

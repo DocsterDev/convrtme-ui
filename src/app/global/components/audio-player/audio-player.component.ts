@@ -73,7 +73,9 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private isChrome: boolean;
   private videoCount = 0;
 
-  private dataLoaded:boolean = false;
+  private dataLoaded: boolean = false;
+
+  private firstPlayed: boolean = true;
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
@@ -106,9 +108,19 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       this.video = null;
       this.tempNowPlayingVideo = {};
       this.tempUpNextVideo = {};
-      this.audioPlayerService.triggerNowPlayingVideoEvent(false);
-      this.audioPlayerService.triggerNextUpVideoEvent(false);
+
+      // TODO - Open bar and loading icon here
       this.dataLoaded = false;
+      if (this.firstPlayed) {
+        console.log('First played');
+        setTimeout(() => {
+          this.showNowPlayingBar = true;
+          this.audioPlayerService.triggerToggleLoading({id: videoId, toggle: true});
+        }, 250);
+      }
+      this.showNowPlayingBar = false; // TODO - Remove this if we want the bar open all the time
+      this.firstPlayed = false;
+
       this.fetchAudioStream(videoId);
       this.playMedia(videoId);
       this.fetchRecommendedVideos(videoId);
@@ -225,7 +237,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       this.tempRecommendedResults = resp;
     }, (error) => {
       console.error(error);
-      this.showLoadingError(videoId);
+      //this.showLoadingError(videoId);
     });
   }
 
@@ -250,7 +262,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     let count = 0;
     do {
       await this.sleep(125);
-      if (count > 80) {
+      if (count > 240) {
         console.error('Unable to retrieve stream URL');
         this.fetchedStreamUrl = {success: false};
         this.showLoadingError(videoId);
@@ -263,19 +275,34 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   private showLoadingError(videoId: string) {
     this.clearAudio();
-    this.forkJoinSubscription.unsubscribe();
+    this.streamPrefetchSubscription.unsubscribe();
+    this.recommendedResultsSubscription.unsubscribe();
     this.dataLoaded = true;
     this.audioPlayerService.triggerToggleLoading({id: videoId, toggle: false});
     this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error loading this video.'});
     this.videoServiceLock = false;
+    this.showNowPlayingBar = false;
   }
 
   private buildAudioObject(videoId: string) {
     let streamUrl: string;
     if (this.fetchedStreamUrl && this.fetchedStreamUrl.success === true) {
-      streamUrl = (this.fetchedStreamUrl.audioOnly && this.fetchedStreamUrl.matchesExtension) ? this.fetchedStreamUrl.streamUrl : (environment.streamUrl + '/stream/' + btoa(this.fetchedStreamUrl.streamUrl));
+      console.log('Audio Only: ' + this.fetchedStreamUrl.audioOnly);
+      console.log('Matches Extension: ' + this.fetchedStreamUrl.matchesExtension);
+      console.log('Is Chrome: ' + this.isChrome);
+      if (this.fetchedStreamUrl.audioOnly && this.isChrome) {
+        streamUrl = this.fetchedStreamUrl.streamUrl;
+        console.log('Should not convert ??: true');
+      } else if (this.fetchedStreamUrl.audioOnly && !this.isChrome && this.fetchedStreamUrl.matchesExtension) {
+        streamUrl = this.fetchedStreamUrl.streamUrl;
+        console.log('Should not convert ??: true');
+      } else {
+        streamUrl = environment.streamUrl + '/stream/videos/' + videoId;
+        console.log('Should not convert ??: false');
+      }
     } else {
       streamUrl = environment.streamUrl + '/stream/videos/' + videoId;
+      console.log('Should not convert ??: false');
     }
 
     this.activeSound = new Howl({
@@ -285,13 +312,13 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       preload: false,
       autoplay: false,
       onplay: () => {
-        this.audioPlayerService.triggerNowPlayingVideoEvent(this.buildNowPlayingVideo());
-        this.audioPlayerService.triggerNextUpVideoEvent(this.tempRecommendedResults.nextUpVideo);
-        this.videoRecommendedService.triggerVideoLoad(this.tempRecommendedResults);
         this.showNowPlayingBar = true;
         this.hasPrefetched = false;
-        this.titleService.setTitle(this.video.title + ' - ' + this.video.owner);
+        this.audioPlayerService.triggerToggleLoading({id: videoId, toggle: false});
         this.audioPlayerService.triggerTogglePlaying({id: videoId, toggle: true});
+        if (!this.firstPlayed) {
+          this.titleService.setTitle(this.video.title + ' - ' + this.video.owner);
+        }
         requestAnimationFrame(this.step.bind(this));
       },
       onpause: () => {
@@ -310,7 +337,16 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       },
       onload: () => {
         this.videoServiceLock = false;
-        this.audioPlayerService.triggerToggleLoading({id: videoId, toggle: false});
+        if (!this.firstPlayed) {
+          setTimeout(()=>{
+            this.videoRecommendedService.triggerVideoLoad(this.tempRecommendedResults);
+            this.audioPlayerService.triggerNowPlayingVideoEvent(this.buildNowPlayingVideo());
+            if (this.tempRecommendedResults) {
+              this.audioPlayerService.triggerNextUpVideoEvent(this.tempRecommendedResults.nextUpVideo);
+            }
+            this.titleService.setTitle(this.video.title + ' - ' + this.video.owner);
+          }, 20);
+        }
         this.streamPrefetchService.updateVideoWatched(videoId).subscribe(() => {
           console.log('Successfully updated video as watched on load of video');
         });
@@ -322,6 +358,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private buildNowPlayingVideo(){
     const stream = this.fetchedStreamUrl;
     this.duration = stream.duration;
+    console.log('Duration: ' + this.duration);
     return {
       id: stream.id,
       title: stream.title,
@@ -334,9 +371,9 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   private clearAudio() {
     this.audioPlayerService.triggerNowPlayingVideoEvent(false);
-    this.audioPlayerService.triggerNextUpVideoEvent(false);
+    //this.audioPlayerService.triggerNextUpVideoEvent(false);
     this.fetchedStreamUrl = null;
-    this.showNowPlayingBar = false;
+    //this.showNowPlayingBar = false;
     if (this.activeSound) {
       this.activeSound.unload();
       this.titleService.setTitle('moup.io');
@@ -379,6 +416,5 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.upNextVideoEventSubscription.unsubscribe();
     this.recommendedResultsSubscription.unsubscribe();
     this.nowPlayingVideoSubscription.unsubscribe();
-    this.forkJoinSubscription.unsubscribe();
   }
 }

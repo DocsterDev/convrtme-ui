@@ -5,7 +5,8 @@
         <span class="c-font-circular c-light text-center c-smaller">You don&rsquo;t have any search results.<br/>Try searching for something normal.</span>
       </div>
     </div>
-    <ng-container *ngIf="this.showNowPlayingContainer && (isMobile && !isSearchModeEnabled && !isNotificationCenterModeEnabled)">
+    <!--
+    <ng-container *ngIf="this.showNowPlayingContainer && (!isSearchModeEnabled && !isNotificationCenterModeEnabled)">
       <div class="row justify-content-center no-gutters loader-container">
         <ng-container *ngIf="!this.video">
             <div class="col d-flex align-items-center justify-content-center solidify">
@@ -44,6 +45,7 @@
         </ng-container>
       </div>
     </ng-container>
+    -->
     <div *ngIf="loaded && videoList.length > 0 && !isMobile || (isMobile && !isSearchModeEnabled && !isNotificationCenterModeEnabled)" class="row d-flex justify-content-center no-gutters" >
       <!-- SEARCH MODULE -->
       <div class="col Mx(1) order-1 solidify">
@@ -56,8 +58,26 @@
         </ng-container>
       </div>
       <!-- RECOMMENDED MODULE -->
+      <!--<div class="row no-gutters">-->
+        <!--<div class="col">-->
+          <!--<div class="text-left pb-3 pt-2 c-smaller c-bold section-text">Up next</div>-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--<div class="row no-gutters">-->
+        <!--<div class="col">-->
+          <!--<div class="mb-5">-->
+            <!--<app-search-card [video]="this.videoNext"></app-search-card>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
       <div class="col-md Mx(1) order-2 solidify">
         <ng-container *ngIf="recommendedList.length > 0">
+          <ng-container *ngIf="this.videoNext">
+            <div class="mb-5">
+              <div class="text-center text-md-left pb-3 pt-2 pt-md-0 c-small c-bold section-text">Up next</div>
+              <app-search-card [video]="this.videoNext"></app-search-card>
+            </div>
+          </ng-container>
           <div class="text-center text-md-left pb-3 pt-2 pt-md-0 c-small c-bold section-text">Recommended for you</div>
           <div *ngFor="let video of recommendedList" class="mb-2">
             <app-search-card [video]="video"></app-search-card>
