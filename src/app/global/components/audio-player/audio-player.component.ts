@@ -111,14 +111,15 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
       // TODO - Open bar and loading icon here
       this.dataLoaded = false;
-      if (this.firstPlayed) {
+      this.showNowPlayingBar = false;
+      // if (this.firstPlayed) {
         console.log('First played');
         setTimeout(() => {
           this.showNowPlayingBar = true;
           this.audioPlayerService.triggerToggleLoading({id: videoId, toggle: true});
         }, 250);
-      }
-      this.showNowPlayingBar = false; // TODO - Remove this if we want the bar open all the time
+      // }
+      //this.showNowPlayingBar = false; // TODO - Remove this if we want the bar open all the time
       this.firstPlayed = false;
 
       this.fetchAudioStream(videoId);
@@ -157,6 +158,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.nowPlayingVideoSubscription = this.audioPlayerService.triggerNowPlayingVideoEmitter$.subscribe((e) => {
       this.video = e;
       this.audioPlayerService.setPlaylingVideo(this.video);
+      this.titleService.setTitle(this.video.title + ' - ' + this.video.owner);
     });
   }
 
@@ -256,9 +258,9 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       this.fetchedStreamUrl = {};
       this.fetchedStreamUrl.success = false;
       this.buildAudioObject(videoId);
-      this.videoCount++;
       return;
     }
+    this.videoCount++;
     let count = 0;
     do {
       await this.sleep(125);
@@ -316,9 +318,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.hasPrefetched = false;
         this.audioPlayerService.triggerToggleLoading({id: videoId, toggle: false});
         this.audioPlayerService.triggerTogglePlaying({id: videoId, toggle: true});
-        if (!this.firstPlayed) {
-          this.titleService.setTitle(this.video.title + ' - ' + this.video.owner);
-        }
         requestAnimationFrame(this.step.bind(this));
       },
       onpause: () => {
@@ -337,14 +336,13 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       },
       onload: () => {
         this.videoServiceLock = false;
+        this.audioPlayerService.triggerNowPlayingVideoEvent(this.buildNowPlayingVideo());
         if (!this.firstPlayed) {
           setTimeout(()=>{
             this.videoRecommendedService.triggerVideoLoad(this.tempRecommendedResults);
-            this.audioPlayerService.triggerNowPlayingVideoEvent(this.buildNowPlayingVideo());
             if (this.tempRecommendedResults) {
               this.audioPlayerService.triggerNextUpVideoEvent(this.tempRecommendedResults.nextUpVideo);
             }
-            this.titleService.setTitle(this.video.title + ' - ' + this.video.owner);
           }, 20);
         }
         this.streamPrefetchService.updateVideoWatched(videoId).subscribe(() => {
@@ -370,10 +368,13 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   private clearAudio() {
-    this.audioPlayerService.triggerNowPlayingVideoEvent(false);
-    //this.audioPlayerService.triggerNextUpVideoEvent(false);
+    // this.audioPlayerService.triggerNowPlayingVideoEvent(false);
+    // this.audioPlayerService.triggerNextUpVideoEvent(false);
     this.fetchedStreamUrl = null;
     //this.showNowPlayingBar = false;
+    if (this.recommendedResultsSubscription) {
+      this.recommendedResultsSubscription.unsubscribe();
+    }
     if (this.activeSound) {
       this.activeSound.unload();
       this.titleService.setTitle('moup.io');
