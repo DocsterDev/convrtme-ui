@@ -109,11 +109,9 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       this.tempNowPlayingVideo = {};
       this.tempUpNextVideo = {};
 
-      // TODO - Open bar and loading icon here
       this.dataLoaded = false;
       this.showNowPlayingBar = false;
       // if (this.firstPlayed) {
-        console.log('First played');
         setTimeout(() => {
           this.showNowPlayingBar = true;
           this.audioPlayerService.triggerToggleLoading({id: videoId, toggle: true});
@@ -207,6 +205,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   public seekToPosition($event, position) {
+    $event.stopPropagation();
     if (this.activeSound) {
       const seconds = UtilsService.formatDuration(this.duration);
       const seekPosition = Math.round(seconds * (position / 100));
@@ -214,7 +213,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.activeSound.play();
       }
       this.activeSound.seek(seekPosition);
-      $event.stopPropagation();
     }
   }
 
@@ -234,12 +232,14 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     });
   }
 
-  private fetchRecommendedVideos(videoId: string) {
+  private fetchRecommendedVideos(videoId: string, setImmediately?: boolean) {
     this.recommendedResultsSubscription = this.videoRecommendedService.getServiceObservable(videoId).subscribe((resp: any)=> {
       this.tempRecommendedResults = resp;
+      if (setImmediately) {
+        this.videoRecommendedService.triggerVideoLoad(this.tempRecommendedResults);
+      }
     }, (error) => {
       console.error(error);
-      //this.showLoadingError(videoId);
     });
   }
 
@@ -266,8 +266,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       await this.sleep(125);
       if (count > 240) {
         console.error('Unable to retrieve stream URL');
-        this.fetchedStreamUrl = {success: false};
         this.showLoadingError(videoId);
+        return;
       }
       count++;
     }
@@ -280,31 +280,40 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.streamPrefetchSubscription.unsubscribe();
     this.recommendedResultsSubscription.unsubscribe();
     this.dataLoaded = true;
+    this.videoServiceLock = false;
     this.audioPlayerService.triggerToggleLoading({id: videoId, toggle: false});
     this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error loading this video.'});
-    this.videoServiceLock = false;
     this.showNowPlayingBar = false;
   }
 
   private buildAudioObject(videoId: string) {
+    console.log(JSON.stringify(this.fetchedStreamUrl));
+    console.log(environment.streamUrl + '/stream/' + btoa(this.fetchedStreamUrl.streamUrl));
     let streamUrl: string;
     if (this.fetchedStreamUrl && this.fetchedStreamUrl.success === true) {
       console.log('Audio Only: ' + this.fetchedStreamUrl.audioOnly);
       console.log('Matches Extension: ' + this.fetchedStreamUrl.matchesExtension);
+
+      /****
+       *
+       * DELETE THIS
+       *
+       */
+      //this.isChrome = false;
+
       console.log('Is Chrome: ' + this.isChrome);
-      if (this.fetchedStreamUrl.audioOnly && this.isChrome) {
-        streamUrl = this.fetchedStreamUrl.streamUrl;
-        console.log('Should not convert ??: true');
-      } else if (this.fetchedStreamUrl.audioOnly && !this.isChrome && this.fetchedStreamUrl.matchesExtension) {
-        streamUrl = this.fetchedStreamUrl.streamUrl;
-        console.log('Should not convert ??: true');
+      if (this.isChrome) {
+        if (this.fetchedStreamUrl.audioOnly) {
+          streamUrl = this.fetchedStreamUrl.streamUrl;
+          console.log('Should not convert ??: true');
+        } else {
+          streamUrl = environment.streamUrl + '/stream/' + btoa(this.fetchedStreamUrl.streamUrl);
+          console.log('Should not convert ??: false');
+        }
       } else {
         streamUrl = environment.streamUrl + '/stream/videos/' + videoId;
         console.log('Should not convert ??: false');
       }
-    } else {
-      streamUrl = environment.streamUrl + '/stream/videos/' + videoId;
-      console.log('Should not convert ??: false');
     }
 
     this.activeSound = new Howl({
@@ -370,15 +379,12 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private clearAudio() {
     // this.audioPlayerService.triggerNowPlayingVideoEvent(false);
     // this.audioPlayerService.triggerNextUpVideoEvent(false);
-    this.fetchedStreamUrl = null;
-    //this.showNowPlayingBar = false;
-    if (this.recommendedResultsSubscription) {
-      this.recommendedResultsSubscription.unsubscribe();
-    }
+    // this.fetchedStreamUrl = null;
+    // this.showNowPlayingBar = false;
     if (this.activeSound) {
       this.activeSound.unload();
-      this.titleService.setTitle('moup.io');
     }
+    this.titleService.setTitle('moup.io');
   }
 
   private prefetchAudioStream() {

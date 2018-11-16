@@ -108,6 +108,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.autoCompleteSubscription = this.videoAutoCompleteService.getAutoComplete(searchQuery).subscribe((autoCompleteResponse) => {
         if (autoCompleteResponse && autoCompleteResponse[1]) {
           this.clearAutoSuggestions();
+          this.predictions.push(autoCompleteResponse[0]);
           autoCompleteResponse[1].forEach((e) => this.predictions.push(e));
         }
       });
