@@ -91,9 +91,12 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       this.route.queryParams.subscribe(params => {
         this.query = params.q;
         this.videoId = params.v;
+        console.log('Clicked new video: ' + this.videoId);
         if (this.videoId) {
           this.showNowPlayingContainer = true;
           this.audioPlayerService.triggerVideoEvent(this.videoId);
+        } else {
+          this.videoId = null;
         }
         if (this.previousQuery !== this.query) {
           this.videoSearchService.search(this.query);

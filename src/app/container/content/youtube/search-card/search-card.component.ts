@@ -74,7 +74,6 @@ export class SearchCardComponent implements OnInit, OnDestroy {
 
   public navigate($event, videoId: string) {
     $event.preventDefault();
-    //this.router.navigate(['/'], {queryParamsHandling: "merge"});
     this.router.navigate(['.'], { relativeTo: this.route, queryParams: {v: videoId}, queryParamsHandling: "merge" });
   }
 

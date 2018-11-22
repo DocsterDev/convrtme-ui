@@ -13,6 +13,7 @@ import {VideoSearchService} from '../../../service/video-search.service';
 import {forkJoin, Subscription} from 'rxjs';
 import 'rxjs/Rx';
 import * as moment from 'moment';
+import {ActivatedRoute, Router} from '@angular/router';
 
 
 @Component({
@@ -49,7 +50,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   private isMobile: boolean;
   private isSearchModeEnabled: boolean;
-  private savedShowNowPlayingBar: any;
 
   public seekBarHandlePosX: number;
   public seekBarHandleEnabled: boolean;
@@ -67,15 +67,11 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private recommendedResultsSubscription: Subscription;
   private nowPlayingVideoSubscription: Subscription;
 
-  private forkJoinSubscription: Subscription;
-
   private fetchedStreamUrl: any;
   private isChrome: boolean;
   private videoCount = 0;
 
   private dataLoaded: boolean = false;
-
-  private firstPlayed: boolean = true;
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
@@ -94,31 +90,36 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
               private titleService: Title,
               private headerService: HeaderService,
               private eventBusService: EventBusService,
-              private streamPrefetchService: StreamPrefetchService) {
+              private streamPrefetchService: StreamPrefetchService,
+              private router: Router,
+              private route: ActivatedRoute) {
   }
 
   ngOnInit() {
     const userAgent = navigator.userAgent;
-    if (userAgent.indexOf('Chrome') !== -1) {
-      this.isChrome = true;
-    }
+    // if (userAgent.indexOf('Chrome') !== -1) {
+    //   this.isChrome = true;
+    // }
+
+
+    /**
+     * DELETE THIS   --- DUDE NEXT STEP IS TO GET CACHE WORKING FOR URL IN THE API
+     */
+    //this.isChrome = false;
+
+
+
     Howl.autoSuspend = false;
     this.progress = '0';
     this.videoEventSubscription = this.audioPlayerService.triggerVideoEventEmitter$.subscribe((videoId) => {
-      this.video = null;
-      this.tempNowPlayingVideo = {};
-      this.tempUpNextVideo = {};
 
       this.dataLoaded = false;
       this.showNowPlayingBar = false;
-      // if (this.firstPlayed) {
-        setTimeout(() => {
-          this.showNowPlayingBar = true;
-          this.audioPlayerService.triggerToggleLoading({id: videoId, toggle: true});
-        }, 250);
-      // }
+      setTimeout(() => {
+        this.showNowPlayingBar = true;
+        this.audioPlayerService.triggerToggleLoading({id: videoId, toggle: true});
+      }, 250);
       //this.showNowPlayingBar = false; // TODO - Remove this if we want the bar open all the time
-      this.firstPlayed = false;
 
       this.fetchAudioStream(videoId);
       this.playMedia(videoId);
@@ -154,29 +155,46 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       this.videoNext = videoNext;
     });
     this.nowPlayingVideoSubscription = this.audioPlayerService.triggerNowPlayingVideoEmitter$.subscribe((e) => {
+      if (this.video) {
+        //this.videoPrevious = JSON.parse(JSON.stringify(this.video));
+        //TODO - Need to keep an array of video (OBJECTS in order to keep all of the data) to do this previous ONLY thing it needs to match the "back" button on browser
+      // TODO - Technically, all we have to do is if a user clicks back, go to that new position and then purge everything in front of it in the array that way we can always have youubtes next video
+      }
       this.video = e;
-      this.audioPlayerService.setPlaylingVideo(this.video);
-      this.titleService.setTitle(this.video.title + ' - ' + this.video.owner);
+      this.audioPlayerService.setPlaylingVideo(e);
+      this.titleService.setTitle(e.title + ' - ' + e.owner);
     });
   }
 
   private goToUpNextVideo() {
+    if(this.isLoading) {
+      return;
+    }
     if (this.videoNext)
-      this.audioPlayerService.triggerVideoEvent(this.videoNext.id);
+      this.router.navigate(['.'], { relativeTo: this.route, queryParams: {v: this.videoNext.id}, queryParamsHandling: "merge" });
   }
 
   private goToPrevious() {
-    if (this.isPlaying && this.video && this.seek > 5) {
-      this.audioPlayerService.triggerVideoEvent(this.video.id);
+    if(this.isLoading) {
       return;
     }
-    if (this.isPlaying && this.videoPrevious && this.seek <= 5) {
-      this.audioPlayerService.triggerVideoEvent(this.videoPrevious.id);
+    if (this.isPlaying && this.video && this.seek > 5) {
+      if (this.activeSound) {
+        this.activeSound.pause();
+        this.activeSound.seek(0);
+        this.activeSound.play();
+      }
       return;
+    }
+    if (this.videoPrevious) {
+      this.router.navigate(['.'], { relativeTo: this.route, queryParams: {v: this.videoPrevious.id}, queryParamsHandling: "merge" });
     }
   }
 
   public toggle() {
+    if(this.isLoading) {
+      return;
+    }
     if (this.activeSound) {
       if (this.activeSound.playing()) {
         this.activeSound.pause();
@@ -222,7 +240,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   private fetchAudioStream(videoId: string) {
     this.streamPrefetchSubscription = this.streamPrefetchService.prefetchStreamUrl(videoId).subscribe((resp: any) => {
-      this.fetchedStreamUrl = resp;
+      this.fetchedStreamUrl = resp; // TODO - Figure out where is need url field
       setTimeout(()=>{
         this.dataLoaded = true;
       });
@@ -254,13 +272,12 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.retryCount = 0;
     this.progress = '0';
     this.clearAudio();
-    if (this.videoCount === 0 && !this.isChrome) {
-      this.fetchedStreamUrl = {};
-      this.fetchedStreamUrl.success = false;
-      this.buildAudioObject(videoId);
-      return;
-    }
-    this.videoCount++;
+    // if (this.videoCount === 0 && !this.isChrome) {
+    //   this.fetchedStreamUrl = {};
+    //   this.buildAudioObject(videoId);
+    //   return;
+    // }
+    // this.videoCount++;
     let count = 0;
     do {
       await this.sleep(125);
@@ -287,33 +304,30 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   private buildAudioObject(videoId: string) {
-    console.log(JSON.stringify(this.fetchedStreamUrl));
-    console.log(environment.streamUrl + '/stream/' + btoa(this.fetchedStreamUrl.streamUrl));
+    if (!this.fetchedStreamUrl) {
+      console.error('No stream url object found.');
+    }
+    const recommendedFormat = this.fetchedStreamUrl.recommendedFormat;
     let streamUrl: string;
-    if (this.fetchedStreamUrl && this.fetchedStreamUrl.success === true) {
-      console.log('Audio Only: ' + this.fetchedStreamUrl.audioOnly);
-      console.log('Matches Extension: ' + this.fetchedStreamUrl.matchesExtension);
 
-      /****
-       *
-       * DELETE THIS
-       *
-       */
-      //this.isChrome = false;
+    /**
+     *
+     *
+     *
+     */
 
-      console.log('Is Chrome: ' + this.isChrome);
-      if (this.isChrome) {
-        if (this.fetchedStreamUrl.audioOnly) {
-          streamUrl = this.fetchedStreamUrl.streamUrl;
-          console.log('Should not convert ??: true');
-        } else {
-          streamUrl = environment.streamUrl + '/stream/' + btoa(this.fetchedStreamUrl.streamUrl);
-          console.log('Should not convert ??: false');
-        }
+    console.log('Is Chrome: ' + this.isChrome);
+    if (this.isChrome) {
+      if (recommendedFormat.audioOnly) {
+        streamUrl = recommendedFormat.url;
+        console.log('Should not convert ??: true');
       } else {
-        streamUrl = environment.streamUrl + '/stream/videos/' + videoId;
+        streamUrl = environment.streamUrl + '/stream/' + btoa(recommendedFormat.url);
         console.log('Should not convert ??: false');
       }
+    } else {
+      streamUrl = environment.streamUrl + '/stream/videos/' + videoId;
+      console.log('Should not convert ??: false');
     }
 
     this.activeSound = new Howl({
@@ -328,6 +342,9 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.audioPlayerService.triggerToggleLoading({id: videoId, toggle: false});
         this.audioPlayerService.triggerTogglePlaying({id: videoId, toggle: true});
         requestAnimationFrame(this.step.bind(this));
+      },
+      onseek: () => {
+        //requestAnimationFrame(this.step.bind(this));
       },
       onpause: () => {
         this.isPlaying = false;
@@ -346,14 +363,12 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       onload: () => {
         this.videoServiceLock = false;
         this.audioPlayerService.triggerNowPlayingVideoEvent(this.buildNowPlayingVideo());
-        if (!this.firstPlayed) {
           setTimeout(()=>{
             this.videoRecommendedService.triggerVideoLoad(this.tempRecommendedResults);
             if (this.tempRecommendedResults) {
               this.audioPlayerService.triggerNextUpVideoEvent(this.tempRecommendedResults.nextUpVideo);
             }
           }, 20);
-        }
         this.streamPrefetchService.updateVideoWatched(videoId).subscribe(() => {
           console.log('Successfully updated video as watched on load of video');
         });
@@ -377,10 +392,14 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   private clearAudio() {
-    // this.audioPlayerService.triggerNowPlayingVideoEvent(false);
-    // this.audioPlayerService.triggerNextUpVideoEvent(false);
-    // this.fetchedStreamUrl = null;
-    // this.showNowPlayingBar = false;
+    this.audioPlayerService.triggerNowPlayingVideoEvent(false);
+    this.audioPlayerService.triggerNextUpVideoEvent(false);
+    this.fetchedStreamUrl = null;
+    this.showNowPlayingBar = false; // TODO Redundant???
+    this.tempNowPlayingVideo = JSON.parse(JSON.stringify(this.video));
+    this.video = null;
+    //this.tempNowPlayingVideo = {}; // TODO - Temp object behavior may not be necessary?? - Keep an eye out
+    this.tempUpNextVideo = {};// TODO - Temp object behavior may not be necessary??
     if (this.activeSound) {
       this.activeSound.unload();
     }
