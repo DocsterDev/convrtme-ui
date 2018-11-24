@@ -97,9 +97,9 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const userAgent = navigator.userAgent;
-    // if (userAgent.indexOf('Chrome') !== -1) {
-    //   this.isChrome = true;
-    // }
+    if (userAgent.indexOf('Chrome') !== -1) {
+      this.isChrome = true;
+    }
 
 
     /**
@@ -326,7 +326,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         console.log('Should not convert ??: false');
       }
     } else {
-      streamUrl = environment.streamUrl + '/stream/videos/' + videoId;
+      streamUrl = environment.streamUrl + '/stream/' + btoa(recommendedFormat.url);
+      //streamUrl = environment.streamUrl + '/stream/videos/' + videoId;
       console.log('Should not convert ??: false');
     }
 

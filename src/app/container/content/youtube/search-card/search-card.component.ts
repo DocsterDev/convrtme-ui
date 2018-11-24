@@ -77,9 +77,10 @@ export class SearchCardComponent implements OnInit, OnDestroy {
     this.router.navigate(['.'], { relativeTo: this.route, queryParams: {v: videoId}, queryParamsHandling: "merge" });
   }
 
-  public subscribe($event, channel, avatarUrl) {
+  public subscribe($event, channel, avatarUrl, channelId) {
     $event.stopPropagation();
-    this.notificationSubscription = this.notificationCenterService.addSubscription(channel, avatarUrl).subscribe((resp) => {
+    $event.preventDefault();
+    this.notificationSubscription = this.notificationCenterService.addSubscription(channel, avatarUrl, channelId).subscribe((resp) => {
       const response: any = resp;
       this.notificationService.showNotification({type: 'success', message: 'Successfully added ' + response.channel.name + ' to subscriptions'});
     }, (error) => {

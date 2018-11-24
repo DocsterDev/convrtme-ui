@@ -19,6 +19,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   public videoList: any = [];
   public recommendedList: any = [];
   public isPlaying: boolean;
+  public isLoading: boolean;
 
   private searchResultsSubscription: Subscription;
   private recommendedResultsSubscription: Subscription;
@@ -89,9 +90,12 @@ export class YoutubeComponent implements OnInit, OnDestroy {
         }
       });
       this.route.queryParams.subscribe(params => {
+        if (this.isLoading) {
+          console.log('Cannot play new video.');
+          return;
+        }
         this.query = params.q;
         this.videoId = params.v;
-        console.log('Clicked new video: ' + this.videoId);
         if (this.videoId) {
           this.showNowPlayingContainer = true;
           this.audioPlayerService.triggerVideoEvent(this.videoId);
@@ -106,6 +110,9 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       });
       this.audioPlayingEventSubscription = this.audioPlayerService.triggerTogglePlayingEmitter$.subscribe((e) => {
         this.isPlaying = e.toggle;
+      });
+      this.audioPlayingEventSubscription = this.audioPlayerService.triggerToggleLoadingEmitter$.subscribe((e) => {
+        this.isLoading = e.toggle;
       });
       this.eventNowPlayingVideoSubscription = this.audioPlayerService.triggerNowPlayingVideoEmitter$.subscribe((e) => {
         this.video = e;
