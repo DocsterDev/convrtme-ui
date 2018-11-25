@@ -75,6 +75,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.userSignInSubscription = this.userService.userSignedInEmitter$.subscribe((user) => {
       this.user = user;
       this.loading = false;
+      if (this.user.valid === true) {
+        this.pollNotifications();
+      }
     });
     this.videoPlayingSubscription = this.audioPlayerService.triggerTogglePlayingEmitter$.subscribe((e) => {
       this.isPlaying = e.toggle;
@@ -82,7 +85,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.eventBusService.triggerNotificationCenterEvent(false);
       }
     });
-    // this.pollNotifications();
   }
 
   private pollNotifications() {
@@ -92,7 +94,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.notificationDirty = false;
         setTimeout(() => {
           this.pollNotifications(); // TODO - I only really need to poll when the notifications have been clicked
-        }, 1800000);
+        }, 600000);
     }, (error) => {
       console.error(JSON.stringify(error));
     });
