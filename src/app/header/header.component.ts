@@ -184,6 +184,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.eventBusService.triggerNotificationCenterEvent(!this.isNotificationCenterModeEnabled);
   }
 
+  public navigateToSignIn(){
+    this.router.navigate(['signin']);
+  }
+
   ngOnDestroy() {
     this.userSignInSubscription.unsubscribe();
     this.autoCompleteSubscription.unsubscribe();

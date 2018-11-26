@@ -1,3 +1,51 @@
-<p>
-  sign-in works!
-</p>
+<div class="container">
+    <div class="row my-5">
+      <div class="col d-flex justify-content-center align-items-center">
+        <img class="logo" width="50%" height="50%" src="/assets/img/svg/ic-logo.svg"/>
+      </div>
+    </div>
+    <div class="row no-gutters mb-3">
+      <div class="col d-flex justify-content-center align-items-center">
+        <div class="search-bar" [ngClass]="{'search-focus':emailFocused}">
+          <input
+            [(ngModel)]="email"
+            name="q"
+            class="search-bar-input px-4"
+            [ngClass]="{'search-bar-input-focused': emailFocused}"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            autocomplete="off"
+            placeholder="Email"
+            tabindex="0"
+            (focus)="emailFocused = true;"
+            (blur)="emailFocused = false;"/>
+        </div>
+      </div>
+    </div>
+  <div class="row no-gutters">
+    <div class="col d-flex justify-content-center align-items-center">
+      <div class="search-bar" [ngClass]="{'search-focus':passwordFocused}">
+      <input
+        [(ngModel)]="password"
+        name="q"
+        class="search-bar-input px-4"
+        [ngClass]="{'search-bar-input-focused': passwordFocused}"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        autocomplete="off"
+        placeholder="Password"
+        tabindex="1"
+        (focus)="passwordFocused = true;"
+        (blur)="passwordFocused = false;"/>
+      </div>
+    </div>
+  </div>
+  <div class="row my-5 py-3">
+    <div class="col d-flex justify-content-center align-items-center">
+      <!--<button type="submit" style="display:none">hidden submit</button>-->
+      <div class="button" (click)="this.onSubmit()"><span class="c-bold">Sign In</span></div>
+    </div>
+</div>
+</div>

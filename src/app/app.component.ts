@@ -1,9 +1,4 @@
 import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
-import {LocalStorageService} from 'ngx-webstorage';
-import {UserService} from './service/user.service';
-import {UtilsService} from './service/utils.service';
-import {Subscription} from 'rxjs/Subscription';
-import {IpService} from './service/ip.service';
 import {EventBusService} from "./service/event-bus.service";
 
 @Component({
@@ -13,18 +8,9 @@ import {EventBusService} from "./service/event-bus.service";
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-  private userRegisterSubscription: Subscription;
-  private userAuthenticateSubscription: Subscription;
-  private ipSubscription: Subscription;
-
-  private userInfo: any = {};
-
   private isMobile: boolean;
-
   private scrollTimeout: any;
   private isScrolling: boolean;
-
-  private retryCount: number = 0;
 
   @HostListener('window:resize', ['$event'])
   onResize($event) {
@@ -51,72 +37,17 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  constructor(
-    private localStorage: LocalStorageService,
-    private userService: UserService,
-    private ipService: IpService,
-    private eventBusService: EventBusService) {
+  constructor(private eventBusService: EventBusService) {
   }
 
   ngOnInit() {
-    this.ipSubscription = this.ipService.getCurrentIp().subscribe((response1) => {
-      this.userInfo = response1;
-      this.initAuthentication();
-    }, (error) => {
-      console.error('Could not fetch IP address / city /region for current user');
-      this.initAuthentication();
-    });
-  }
-
-  private initAuthentication() {
-    // this.localStorage.clear('token');
-    // this.localStorage.clear('email');
-    const token = this.localStorage.retrieve('token');
-    if (!token) {
-      const fakeEmail = UtilsService.generateUUID() + '@gmail.com';
-      const fakePin = '1234'
-      this.userRegisterSubscription = this.userService.register(fakeEmail, fakePin, this.userInfo).subscribe((resp) => {
-        this.handleSuccess(resp);
-      }, (error) => {
-        console.error('AUTH REGISTRATION ERROR' + JSON.stringify(error));
-        this.handleError();
-      });
-    } else {
-      this.userAuthenticateSubscription = this.userService.authenticate(this.userInfo).subscribe((resp) => {
-        this.handleSuccess(resp);
-      }, (error) => {
-        console.error('AUTH AUTHENTICATE ERROR' + JSON.stringify(error));
-        this.handleError();
-      });
-    }
 
   }
 
-  private handleSuccess(resp) {
-    const token = resp.token;
-    this.localStorage.store('token', token);
-    this.userService.triggerUserSignedInEvent({token: token, valid: true});
-    this.userService.setUserValid(true);
-  }
 
-  private handleError() {
-    this.userService.triggerUserSignedInEvent({valid: false});
-    this.localStorage.clear('token');
-    this.localStorage.clear('email');
-    this.userService.setUserValid(false);
-    console.error('Authentication error. Retrying...');
-    if (this.retryCount < 3) {
-      this.initAuthentication();
-      this.retryCount++;
-    } else {
-      console.error('Cannot authorize user and user context');
-    }
-  }
 
   ngOnDestroy() {
-    this.userRegisterSubscription.unsubscribe();
-    this.userAuthenticateSubscription.unsubscribe();
-    this.ipSubscription.unsubscribe();
+
   }
 
 }

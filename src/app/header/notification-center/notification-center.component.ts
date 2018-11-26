@@ -71,7 +71,7 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
     // this.closed.emit(false);
     console.log('LENGTH::: ' + JSON.stringify(video));
 
-    this.audioPlayerService.triggerVideoEvent(video);
+    //this.audioPlayerService.triggerVideoEvent(video);
   }
 
   public showSubscriptionManager() {

@@ -401,7 +401,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   private step() {
-    // if (this.activeSound) {
+    if (this.video) {
+      // if (this.activeSound) {
       this.seek = this.activeSound ? this.activeSound.seek() : 0;
       this.progress = (((this.seek / this.duration) * 100) || 0);
       this.elapsed = UtilsService.formatTime(Math.round(this.seek));
@@ -417,7 +418,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
           });
         }
       }
-    //}
+      //}
+    }
   }
 
   ngOnDestroy() {

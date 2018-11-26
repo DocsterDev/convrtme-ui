@@ -8,6 +8,9 @@ import {UserService} from '../../../service/user.service';
 import {NotificationService} from '../../../global/components/notification/notification.service';
 import {ActivatedRoute} from '@angular/router';
 import {EventBusService} from '../../../service/event-bus.service';
+import {UtilsService} from '../../../service/utils.service';
+import {IpService} from '../../../service/ip.service';
+import {LocalStorageService} from 'ngx-webstorage';
 
 @Component({
   selector: 'app-youtube',
@@ -26,12 +29,14 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   private signInEventSubscription: Subscription;
   private playlistActionSubscription: Subscription;
   private playlistUpdateSubscription: Subscription;
-  private getPlaylistVideosSubscription: Subscription;
   private audioPlayingEventSubscription: Subscription;
   private eventBusSubscription: Subscription;
   private eventNowPlayingVideoSubscription: Subscription;
   private upNextVideoEventSubscription: Subscription;
   private videoEventSubscription: Subscription;
+  private userRegisterSubscription: Subscription;
+  private userAuthenticateSubscription: Subscription;
+  private ipSubscription: Subscription;
 
   public query: string;
   public videoId: string;
@@ -47,6 +52,9 @@ export class YoutubeComponent implements OnInit, OnDestroy {
 
   public showNowPlayingContainer: boolean;
 
+  private userInfo: any = {};
+  private retryCount: number = 0;
+
   static updateComponent(component, index, list) {
     component.index = index;
     list.push(component);
@@ -59,7 +67,9 @@ export class YoutubeComponent implements OnInit, OnDestroy {
               private notificationService: NotificationService,
               private videoSearchService: VideoSearchService,
               private route: ActivatedRoute,
-              private eventBusService: EventBusService) {
+              private eventBusService: EventBusService,
+              private localStorage: LocalStorageService,
+              private ipService: IpService) {
   }
 
   ngOnInit() {
@@ -126,14 +136,21 @@ export class YoutubeComponent implements OnInit, OnDestroy {
       this.videoEventSubscription = this.audioPlayerService.triggerVideoEventEmitter$.subscribe((videoEvent) => {
         this.showNowPlayingContainer = true;
       });
-      // this.signInEventSubscription = this.userService.userSignedInEmitter$.subscribe((response) => {
-      //   const user: any = response;
-      //   if (user.valid) {
-      //     this.playlistService.getPlaylists().subscribe((resp) => {
-      //       this.playlists = resp;
-      //     });
-      //   }
-      // });
+      this.ipSubscription = this.ipService.getCurrentIp().subscribe((response1) => {
+        this.userInfo = response1;
+        this.initAuthentication();
+      }, (error) => {
+        console.error('Could not fetch IP address / city /region for current user');
+        this.initAuthentication();
+      });
+      this.signInEventSubscription = this.userService.userSignedInEmitter$.subscribe((response) => {
+        const user: any = response;
+        // if (user.valid) {
+        //   this.playlistService.getPlaylists().subscribe((resp) => {
+        //     this.playlists = resp;
+        //   });
+        // }
+      });
       // this.playlistActionSubscription = this.audioPlayerService.triggerPlaylistActionEventEmitter$.subscribe((resp) => {
       //   const action: any = resp;
       //   if (action.action === 'next') {
@@ -159,18 +176,66 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     });
   }
 
+  private initAuthentication() {
+    // this.localStorage.clear('token');
+    // this.localStorage.clear('email');
+    const token = this.localStorage.retrieve('token');
+    if (!token) {
+      const fakeEmail = UtilsService.generateUUID() + '@gmail.com';
+      const fakePin = '1234'
+      this.userRegisterSubscription = this.userService.register(fakeEmail, fakePin, this.userInfo).subscribe((resp) => {
+        this.handleSuccess(resp);
+      }, (error) => {
+        console.error('AUTH REGISTRATION ERROR' + JSON.stringify(error));
+        this.handleError();
+      });
+    } else {
+      this.userAuthenticateSubscription = this.userService.authenticate(this.userInfo).subscribe((resp) => {
+        this.handleSuccess(resp);
+      }, (error) => {
+        console.error('AUTH AUTHENTICATE ERROR' + JSON.stringify(error));
+        this.handleError();
+      });
+    }
+
+  }
+
+  private handleSuccess(resp) {
+    const token = resp.token;
+    this.localStorage.store('token', token);
+    this.userService.triggerUserSignedInEvent({token: token, valid: true});
+    this.userService.setUserValid(true);
+  }
+
+  private handleError() {
+    this.userService.triggerUserSignedInEvent({valid: false});
+    this.localStorage.clear('token');
+    this.localStorage.clear('user');
+    this.userService.setUserValid(false);
+    console.error('Authentication error. Retrying...');
+    if (this.retryCount < 3) {
+      this.initAuthentication();
+      this.retryCount++;
+    } else {
+      console.error('Cannot authorize user and user context');
+    }
+  }
+
   ngOnDestroy() {
     this.searchResultsSubscription.unsubscribe();
     this.recommendedResultsSubscription.unsubscribe();
     this.signInEventSubscription.unsubscribe();
-    this.playlistActionSubscription.unsubscribe();
-    this.playlistUpdateSubscription.unsubscribe();
-    this.getPlaylistVideosSubscription.unsubscribe();
+    // this.playlistActionSubscription.unsubscribe();
+    // this.playlistUpdateSubscription.unsubscribe();
+    // this.getPlaylistVideosSubscription.unsubscribe();
     this.audioPlayingEventSubscription.unsubscribe();
     this.eventBusSubscription.unsubscribe();
     this.eventNowPlayingVideoSubscription.unsubscribe();
     this.upNextVideoEventSubscription.unsubscribe();
     this.videoEventSubscription.unsubscribe();
+    // this.userRegisterSubscription.unsubscribe();
+    this.userAuthenticateSubscription.unsubscribe();
+    this.ipSubscription.unsubscribe();
   }
 
 }
