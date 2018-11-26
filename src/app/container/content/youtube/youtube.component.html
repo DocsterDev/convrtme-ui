@@ -10,19 +10,19 @@
       <div class="col Mx(1) order-1 solidify">
         <ng-container *ngIf="videoList.length > 0">
           <ng-container *ngIf="this.video">
-            <div class="mb-5">
-              <div class="text-left pb-3 pb-md-2 pt-2 pt-md-0 c-small c-bold section-text">Now playing</div>
+            <div class="mb-2 mb-md-5">
+              <div class="text-left pb-2 c-small c-bold section-text">Now playing</div>
               <app-search-card [video]="this.video"></app-search-card>
             </div>
           </ng-container>
           <ng-container *ngIf="this.videoNext && this.isMobile">
-            <div class="mb-5">
-              <div class="text-left pb-3 pt-2 pt-md-0 c-small c-bold section-text">Up next</div>
+            <div class="mb-5 mb-md-3">
+              <div class="text-left pb-2 pt-2 pt-md-0 c-small c-bold section-text">Up next</div>
               <app-search-card [video]="this.videoNext"></app-search-card>
             </div>
           </ng-container>
           <div class="text-left c-bold c-smaller section-text pb-3 truncate-single-line" *ngIf="previousQuery">Showing results for: <span class="c-bold c-smaller c-accent-color">{{previousQuery}}</span></div>
-          <div class="text-left pb-3 pt-md-2 c-small c-bold section-text" *ngIf="!previousQuery">Today&rsquo;s headlines</div>
+          <div class="text-left pb-3 c-small c-bold section-text" *ngIf="!previousQuery">Today&rsquo;s headlines</div>
           <div *ngFor="let video of videoList" class="mb-2">
             <app-search-card [video]="video"></app-search-card>
           </div>
@@ -32,7 +32,7 @@
         <ng-container *ngIf="recommendedList.length > 0">
           <ng-container *ngIf="this.videoNext && !this.isMobile">
             <div class="mb-5">
-              <div class="text-left pb-3 pt-2 pt-md-0 c-small c-bold section-text">Up next</div>
+              <div class="text-left pb-2 pt-2 pt-md-0 c-small c-bold section-text">Up next</div>
               <app-search-card [video]="this.videoNext"></app-search-card>
             </div>
           </ng-container>
