@@ -1,4 +1,4 @@
-<div class="notification-video" [ngClass]="{'now-playing': nowPlaying, 'now-loading': nowLoading}" (click)="selectContent()">
+<div class="notification-video" [routerLink]="['/']" [queryParams]="{v: video.id}" queryParamsHandling="merge" [ngClass]="{'now-playing': nowPlaying, 'now-loading': nowLoading}" (click)="selectContent()">
   <div class="position-relative h-100 w-100">
     <div class="row flex-nowrap no-gutters align-items-start">
       <div class="col thumbnail-container">
@@ -15,19 +15,6 @@
             <div class="subtitle c-smallest truncate-single-line" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{formatDate(video.dateScanned)}} <span class="label c-bold" *ngIf="video.new">New</span></div>
           </div>
       </div>
-      <!--<div class="col align-self-start play-icon-active d-none d-md-block Mt(0.25)" style="max-width:35px;">-->
-        <!--<img style="width:15px;height:12px;" src="/assets/img/svg/ic-sound-active.svg">-->
-      <!--</div>-->
-      <!--<div class="col align-self-center d-none d-md-block" style="max-width:20px;" (click)="addedContent($event, video)">-->
-        <!--<div class="text-center">-->
-          <!--<div *ngFor="let playlist of video.addedByPlaylists">-->
-            <!--<div class="playlist-icon" [style.background]="'#' + playlist.iconColor"></div>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
-      <!--<div class="col d-none d-lg-flex align-self-center justify-content-center playlist-icon-add Py(0.75)" style="max-width:45px;border-radius:50%;" (click)="addedContent($event, video)">-->
-        <!--<img style="width:19px;height:19px;" src="/assets/img/svg/ic-plus-playlist.svg">-->
-      <!--</div>-->
     </div>
     <div *ngIf="isSameDay(video.dateScanned)" class="notification-new-content-badge">
       <svg width="15px" height="15px" viewBox="0 0 15 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">

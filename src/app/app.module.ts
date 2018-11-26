@@ -42,6 +42,7 @@ import {NotificationCenterService} from './service/notification-center.service';
 import {FadeAnimationDirective} from './directives/fade-animation.directive';
 import {EventBusService} from "./service/event-bus.service";
 import {StreamPrefetchService} from './service/stream-prefetch.service';
+import { SignInComponent } from './container/content/sign-in/sign-in.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import {StreamPrefetchService} from './service/stream-prefetch.service';
     NotificationVideoComponent,
     ClickStopPropagationDirective,
     ClickPreventDefaultDirective,
-    FadeAnimationDirective
+    FadeAnimationDirective,
+    SignInComponent
   ],
   imports: [
     FormsModule,

@@ -16,4 +16,8 @@ export class StreamPrefetchService {
   updateVideoWatched(videoId: string) {
     return this.http.put(environment.apiUrl + '/api/videos/' + videoId + '/metadata', null, this.headerService.getTokenHeader());
   }
+
+  updateVideoPosition(videoId: string, position: number) {
+    return this.http.put(environment.apiUrl + '/api/videos/' + videoId + '/position?position=' + position, null, this.headerService.getTokenHeader());
+  }
 }

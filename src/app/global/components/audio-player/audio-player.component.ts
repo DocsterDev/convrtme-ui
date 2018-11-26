@@ -70,6 +70,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private fetchedStreamUrl: any;
   private isChrome: boolean;
   private videoCount = 0;
+  private previousSeek: number;
 
   private dataLoaded: boolean = false;
 
@@ -112,7 +113,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     Howl.autoSuspend = false;
     this.progress = '0';
     this.videoEventSubscription = this.audioPlayerService.triggerVideoEventEmitter$.subscribe((videoId) => {
-
       this.dataLoaded = false;
       this.showNowPlayingBar = false;
       setTimeout(() => {
@@ -164,6 +164,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       this.audioPlayerService.setPlaylingVideo(e);
       this.titleService.setTitle(e.title + ' - ' + e.owner);
     });
+    requestAnimationFrame(this.step.bind(this));
   }
 
   private goToUpNextVideo() {
@@ -213,19 +214,20 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   public bindMouseMoveSeekBar($event, elementWidth) {
+    $event.stopPropagation();
     if (this.activeSound) {
       this.seekBarHandlePosX = ($event.offsetX / elementWidth) * 100;
-      const seconds = UtilsService.formatDuration(this.duration);
+      const seconds = this.duration;
       const seekPosition = seconds * (this.seekBarHandlePosX / 100);
       this.seekTimer = UtilsService.formatTime(seekPosition);
-      $event.stopPropagation();
     }
   }
 
   public seekToPosition($event, position) {
     $event.stopPropagation();
+    $event.preventDefault();
     if (this.activeSound) {
-      const seconds = UtilsService.formatDuration(this.duration);
+      const seconds = this.duration;
       const seekPosition = Math.round(seconds * (position / 100));
       if (this.activeSound && !this.activeSound.playing()) {
         this.activeSound.play();
@@ -309,14 +311,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     }
     const recommendedFormat = this.fetchedStreamUrl.recommendedFormat;
     let streamUrl: string;
-
-    /**
-     *
-     *
-     *
-     */
-
-    console.log('Is Chrome: ' + this.isChrome);
     if (this.isChrome) {
       if (recommendedFormat.audioOnly) {
         streamUrl = recommendedFormat.url;
@@ -342,10 +336,9 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.hasPrefetched = false;
         this.audioPlayerService.triggerToggleLoading({id: videoId, toggle: false});
         this.audioPlayerService.triggerTogglePlaying({id: videoId, toggle: true});
-        requestAnimationFrame(this.step.bind(this));
       },
       onseek: () => {
-        //requestAnimationFrame(this.step.bind(this));
+
       },
       onpause: () => {
         this.isPlaying = false;
@@ -388,7 +381,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       duration: UtilsService.formatTime(stream.duration),
       owner: stream.owner,
       thumbnailUrl: 'http://i.ytimg.com/vi/' + stream.id + '/mqdefault.jpg',
-      publishedTimeAgo: 'Uploaded on ' + moment(stream.uploadDate, 'YYYY-MM-DD').format('ddd, MMMM Do YYYY')
+      publishedTimeAgo: 'Published ' + moment(stream.uploadDate, 'YYYY-MM-DD').format('ddd, MMM Do YYYY')
     };
   }
 
@@ -407,27 +400,24 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.titleService.setTitle('moup.io');
   }
 
-  private prefetchAudioStream() {
-    this.streamPrefetchSubscription = this.streamPrefetchService.prefetchStreamUrl(this.videoNext.id).subscribe((resp) => {
-
-      }, (error) => {
-      console.error('Error prefetching stream url for video id ' + this.videoNext.id);
-    });
-  }
-
   private step() {
-    if (this.activeSound) {
+    // if (this.activeSound) {
       this.seek = this.activeSound ? this.activeSound.seek() : 0;
       this.progress = (((this.seek / this.duration) * 100) || 0);
       this.elapsed = UtilsService.formatTime(Math.round(this.seek));
-      if ((this.duration - Math.floor(this.seek)) === 15 && !this.hasPrefetched) {
-        this.hasPrefetched = true;
-        this.prefetchAudioStream();
+      requestAnimationFrame(this.step.bind(this));
+      const seekVal = Math.floor(this.seek);
+      if (this.previousSeek !== seekVal) {
+        this.previousSeek = seekVal;
+        if (seekVal % 30 === 0) {
+          this.streamPrefetchService.updateVideoPosition(this.video.id, seekVal).subscribe((resp) => {
+            console.log('Successfully updated video playhead position');
+          }, (error) => {
+            console.error(error);
+          });
+        }
       }
-      if (this.activeSound.playing()) {
-        requestAnimationFrame(this.step.bind(this));
-      }
-    }
+    //}
   }
 
   ngOnDestroy() {
