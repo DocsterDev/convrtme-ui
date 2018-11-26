@@ -5,6 +5,7 @@ import {IpService} from '../../../service/ip.service';
 import {LocalStorageService} from 'ngx-webstorage';
 import {NotificationService} from '../../../global/components/notification/notification.service';
 import {Router} from '@angular/router';
+import {EventBusService} from '../../../service/event-bus.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -20,20 +21,27 @@ export class SignInComponent implements OnInit, OnDestroy {
   public passwordFocused: boolean;
 
   private ipSubscription: Subscription;
+  private eventBusSubscription1: Subscription;
+  private eventBusSubscription2: Subscription;
 
   public buttonLock: boolean;
+
+  public isMobile: boolean;
+  public isSearchModeEnabled: boolean;
 
   constructor(private userService:UserService,
               private ipService: IpService,
               private localStorage: LocalStorageService,
               private notificationService: NotificationService,
-              private router: Router) { }
+              private router: Router,
+              private eventBusService: EventBusService) { }
 
   ngOnInit() {
-  }
-
-  ngOnDestroy() {
-    this.ipSubscription.unsubscribe();
+    this.isMobile = this.eventBusService.isDeviceMobile();
+    this.eventBusSubscription1 = this.eventBusService.deviceListenerEvent$.subscribe((isMobile) => {
+      this.isMobile = isMobile;
+    });
+    this.eventBusSubscription2 = this.eventBusService.searchModeEvent$.subscribe((isSearchModeEnabled) => this.isSearchModeEnabled = isSearchModeEnabled);
   }
 
   private login(ipInfo:any) {
@@ -64,7 +72,13 @@ export class SignInComponent implements OnInit, OnDestroy {
       console.error('Could not fetch IP address / city /region for current user');
       this.login({});
     });
+  }
 
+  ngOnDestroy() {
+    if(this.ipSubscription)
+      this.ipSubscription.unsubscribe();
+    this.eventBusSubscription1.unsubscribe();
+    this.eventBusSubscription2.unsubscribe();
   }
 
 }
