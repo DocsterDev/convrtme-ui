@@ -145,7 +145,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.eventBusSubscription = this.eventBusService.deviceListenerEvent$.subscribe((isMobile) => this.isMobile = isMobile);
     this.eventBusSubscription = this.eventBusService.searchModeEvent$.subscribe((isSearchModeEnabled) => {
       this.isSearchModeEnabled = isSearchModeEnabled;
-      this.showNowPlayingBar = this.isPlaying && !this.isSearchModeEnabled;
+      this.showNowPlayingBar = this.video && !this.isSearchModeEnabled;
     });
     this.eventBusSubscription = this.eventBusService.scrollEvent$.subscribe((isScrolling) => {
       if (isScrolling) {
@@ -172,7 +172,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       return;
     }
     if (this.videoNext)
-      this.router.navigate(['.'], { relativeTo: this.route, queryParams: {v: this.videoNext.id}, queryParamsHandling: "merge" });
+      this.router.navigate([''], { relativeTo: this.route, queryParams: {v: this.videoNext.id}, queryParamsHandling: "merge" });
   }
 
   private goToPrevious() {
@@ -188,7 +188,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       return;
     }
     if (this.videoPrevious) {
-      this.router.navigate(['.'], { relativeTo: this.route, queryParams: {v: this.videoPrevious.id}, queryParamsHandling: "merge" });
+      this.router.navigate([''], { relativeTo: this.route, queryParams: {v: this.videoPrevious.id}, queryParamsHandling: "merge" });
     }
   }
 
@@ -336,6 +336,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.hasPrefetched = false;
         this.audioPlayerService.triggerToggleLoading({id: videoId, toggle: false});
         this.audioPlayerService.triggerTogglePlaying({id: videoId, toggle: true});
+        requestAnimationFrame(this.step.bind(this));
       },
       onseek: () => {
 
@@ -392,6 +393,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.showNowPlayingBar = false; // TODO Redundant???
     this.tempNowPlayingVideo = JSON.parse(JSON.stringify(this.video));
     this.video = null;
+    this.audioPlayerService.setPlaylingVideo(null);
     //this.tempNowPlayingVideo = {}; // TODO - Temp object behavior may not be necessary?? - Keep an eye out
     this.tempUpNextVideo = {};// TODO - Temp object behavior may not be necessary??
     if (this.activeSound) {
@@ -405,7 +407,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       // if (this.activeSound) {
       this.seek = this.activeSound ? this.activeSound.seek() : 0;
       this.progress = (((this.seek / this.duration) * 100) || 0);
-      this.elapsed = UtilsService.formatTime(Math.round(this.seek));
+      this.elapsed = UtilsService.formatTime(Math.floor(this.seek));
       requestAnimationFrame(this.step.bind(this));
       const seekVal = Math.floor(this.seek);
       if (this.previousSeek !== seekVal) {

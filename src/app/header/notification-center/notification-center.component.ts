@@ -26,6 +26,7 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
   public closed: EventEmitter<boolean> = new EventEmitter();
 
   public showManageSubs: boolean;
+  public sortType: string;
 
   @HostListener('document:click', ['$event'])
   handleClick(event) {
@@ -42,17 +43,19 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.showSubscriptions();
+    this.showSubscriptions('channel');
   }
 
-  public showSubscriptions() {
+  public showSubscriptions(groupBy) {
+    this.loaded = false;
     setTimeout(()=>{
       this.showManageSubs = false;
     });
-    this.notificationCenterSubscription = this.notificationCenterService.fetchNotifications('channel').subscribe((response) => {
+    this.notificationCenterSubscription = this.notificationCenterService.fetchNotifications(groupBy).subscribe((response) => {
       setTimeout(() => {
         this.notificationGroups = response;
         this.loaded = true;
+        this.sortType = groupBy;
         setTimeout(() => {
           this.fadeIn = true;
         }, 0);

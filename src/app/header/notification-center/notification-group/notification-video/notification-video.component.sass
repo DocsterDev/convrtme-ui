@@ -11,6 +11,8 @@
   max-width: 348px
   // overflow: hidden
   max-height: $thumbnailHeightMobile
+  &:focus
+    outline: 0 !important
   @media screen and (min-width: 768px) /* Turn off hover on mobile */
     &:hover .thumbnail-container
       background-color: black
@@ -162,8 +164,8 @@
   padding: 0 2px
 
 .notification-new-content-badge
-  position: absolute
-  right: 0
-  top: 50%
-  transform: translateY(-50%)
-  margin-right: -17px
+  height: 68px
+  margin-right: -25px
+
+.watched
+  opacity: 0.5
