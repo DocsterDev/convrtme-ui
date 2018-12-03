@@ -69,7 +69,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   private fetchedStreamUrl: any;
   private isChrome: boolean;
-  private videoCount = 0;
   private previousSeek: number;
 
   private dataLoaded: boolean = false;
@@ -101,15 +100,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     if (userAgent.indexOf('Chrome') !== -1) {
       this.isChrome = true;
     }
-
-
-    /**
-     * DELETE THIS   --- DUDE NEXT STEP IS TO GET CACHE WORKING FOR URL IN THE API
-     */
-    //this.isChrome = false;
-
-
-
     Howl.autoSuspend = false;
     this.progress = '0';
     this.videoEventSubscription = this.audioPlayerService.triggerVideoEventEmitter$.subscribe((videoId) => {
@@ -273,6 +263,10 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.audioPlayerService.triggerTogglePlaying({id: videoId, toggle: false});
     this.retryCount = 0;
     this.progress = '0';
+    if (this.video) {
+      console.log('Saving progress of video ' + this.video.id + ' at time ' + Math.floor(this.seek) + ' second(s)');
+      this.updateVideoPosition();
+    }
     this.clearAudio();
     // if (this.videoCount === 0 && !this.isChrome) {
     //   this.fetchedStreamUrl = {};
@@ -404,7 +398,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   private step() {
     if (this.video) {
-      // if (this.activeSound) {
       this.seek = this.activeSound ? this.activeSound.seek() : 0;
       this.progress = (((this.seek / this.duration) * 100) || 0);
       this.elapsed = UtilsService.formatTime(Math.floor(this.seek));
@@ -413,18 +406,28 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       if (this.previousSeek !== seekVal) {
         this.previousSeek = seekVal;
         if (seekVal % 30 === 0) {
-          this.streamPrefetchService.updateVideoPosition(this.video.id, seekVal).subscribe((resp) => {
-            console.log('Successfully updated video playhead position');
-          }, (error) => {
-            console.error(error);
-          });
+          this.updateVideoPosition(seekVal);
         }
       }
-      //}
     }
   }
 
+  private updateVideoPosition(seekVal?: number) {
+    if (!this.seek) {
+      return;
+    }
+    if (!seekVal) {
+      seekVal = Math.floor(this.seek);
+    }
+    this.streamPrefetchService.updateVideoPosition(this.video.id, seekVal).subscribe((resp) => {
+      console.log('Successfully updated video playhead position');
+    }, (error) => {
+      console.error(error);
+    });
+  }
+
   ngOnDestroy() {
+    this.updateVideoPosition();
     this.videoEventSubscription.unsubscribe();
     this.videoPlayingEventSubscription.unsubscribe();
     this.videoLoadingEventSubscription.unsubscribe();
