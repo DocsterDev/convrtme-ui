@@ -233,6 +233,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private fetchAudioStream(videoId: string) {
     this.streamPrefetchSubscription = this.streamPrefetchService.prefetchStreamUrl(videoId).subscribe((resp: any) => {
       this.fetchedStreamUrl = resp; // TODO - Figure out where is need url field
+
+
       setTimeout(()=>{
         this.dataLoaded = true;
       });
@@ -302,6 +304,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private buildAudioObject(videoId: string) {
     if (!this.fetchedStreamUrl) {
       console.error('No stream url object found.');
+      return;
     }
     const recommendedFormat = this.fetchedStreamUrl.recommendedFormat;
     let streamUrl: string;
@@ -330,6 +333,10 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.hasPrefetched = false;
         this.audioPlayerService.triggerToggleLoading({id: videoId, toggle: false});
         this.audioPlayerService.triggerTogglePlaying({id: videoId, toggle: true});
+        if (this.fetchedStreamUrl.watchedTime) {
+          console.log('Get time: '+JSON.stringify(this.fetchedStreamUrl.watchedTime));
+          this.activeSound.seek(this.fetchedStreamUrl.watchedTime);
+        }
         requestAnimationFrame(this.step.bind(this));
       },
       onseek: () => {
@@ -405,7 +412,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       const seekVal = Math.floor(this.seek);
       if (this.previousSeek !== seekVal) {
         this.previousSeek = seekVal;
-        if (seekVal % 30 === 0) {
+        if (seekVal % 30 === 0 || seekVal === 1) {
           this.updateVideoPosition(seekVal);
         }
       }

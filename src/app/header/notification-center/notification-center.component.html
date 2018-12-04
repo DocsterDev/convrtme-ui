@@ -3,7 +3,7 @@
   <div class="container p-0">
     <div class="row no-gutters header-shadow-desktop py-4 px-4 mb-4">
       <div class="col d-flex align-items-center justify-content-start">
-        &nbsp;<div *ngIf="showManageSubs" class="d-flex align-items-center c-font-circular c-accent-color c-smaller link-test" (click)="showSubscriptions(sortType)">
+        &nbsp;<div *ngIf="showManageSubs" class="d-flex align-items-center c-font-circular c-accent-color c-smaller link-test" (click)="showSubscriptions(sortType ? sortType : 'channel')">
           <svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
               <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                   <g id="Core" transform="translate(-424.000000, -4.000000)" fill="#A0ABBF">
@@ -22,7 +22,14 @@
         &nbsp;<div *ngIf="!showManageSubs" class="c-font-circular c-accent-color c-smaller link-test" (click)="showSubscriptionManager()">Manage</div>
       </div>
     </div>
-    <div *ngIf="loaded && !showManageSubs && notificationKeys(notificationGroups).length > 0" class="row no-gutters px-3 px-sm-4 loading-container" [ngClass]="{'fade-in-load': fadeIn}">
+    <ng-container *ngIf="!showManageSubs">
+      <div class="row no-gutters px-4">
+        <div class="cold-flex align-items-center justify-content-start">
+          <div class="c-font-circular c-accent-color c-smaller link-test" (click)="showSubscriptions('channel')">CHANNEL</div>
+        </div>
+      </div>
+    </ng-container>
+    <div *ngIf="loaded && !showManageSubs && notificationKeys(notificationGroups).length > 0" class="row no-gutters px-3 pl-sm-2 pr-sm-4 loading-container" [ngClass]="{'fade-in-load': fadeIn}">
       <div class="col">
         <div *ngFor="let key of notificationKeys(notificationGroups)">
           <app-notification-group (selected)="selected($event)" [groupTitle]="key" [groupVideos]="notificationGroups[key]"></app-notification-group>
