@@ -105,10 +105,11 @@ export class YoutubeComponent implements OnInit, OnDestroy {
           return;
         }
         this.query = params.q;
+        const permitSeek: boolean = !(this.videoId === params.v);
         this.videoId = params.v;
         if (this.videoId) {
           this.showNowPlayingContainer = true;
-          this.audioPlayerService.triggerVideoEvent(this.videoId);
+          this.audioPlayerService.triggerVideoEvent({id: this.videoId, permitSeek: permitSeek});
         } else {
           this.videoId = null;
         }

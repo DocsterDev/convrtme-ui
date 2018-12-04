@@ -73,6 +73,9 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   private dataLoaded: boolean = false;
 
+  private seekOnPlay: boolean;
+  private permitSeek: boolean;
+
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     if (event.key === ' ') {
@@ -102,7 +105,9 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     }
     Howl.autoSuspend = false;
     this.progress = '0';
-    this.videoEventSubscription = this.audioPlayerService.triggerVideoEventEmitter$.subscribe((videoId) => {
+    this.videoEventSubscription = this.audioPlayerService.triggerVideoEventEmitter$.subscribe((e) => {
+      const videoId:string = e.id;
+      this.permitSeek = e.permitSeek;
       this.dataLoaded = false;
       this.showNowPlayingBar = false;
       setTimeout(() => {
@@ -233,8 +238,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private fetchAudioStream(videoId: string) {
     this.streamPrefetchSubscription = this.streamPrefetchService.prefetchStreamUrl(videoId).subscribe((resp: any) => {
       this.fetchedStreamUrl = resp; // TODO - Figure out where is need url field
-
-
+      this.seekOnPlay = (this.fetchedStreamUrl.watchedTime !== null);
       setTimeout(()=>{
         this.dataLoaded = true;
       });
@@ -333,10 +337,11 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.hasPrefetched = false;
         this.audioPlayerService.triggerToggleLoading({id: videoId, toggle: false});
         this.audioPlayerService.triggerTogglePlaying({id: videoId, toggle: true});
-        if (this.fetchedStreamUrl.watchedTime) {
+        if (this.seekOnPlay === true && this.permitSeek === true) {
           console.log('Get time: '+JSON.stringify(this.fetchedStreamUrl.watchedTime));
           this.activeSound.seek(this.fetchedStreamUrl.watchedTime);
         }
+        this.seekOnPlay = false;
         requestAnimationFrame(this.step.bind(this));
       },
       onseek: () => {
@@ -412,7 +417,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       const seekVal = Math.floor(this.seek);
       if (this.previousSeek !== seekVal) {
         this.previousSeek = seekVal;
-        if (seekVal % 30 === 0 || seekVal === 1) {
+        if (seekVal % 30 === 0 && seekVal !== 0 && this.duration >= 300) {
           this.updateVideoPosition(seekVal);
         }
       }
