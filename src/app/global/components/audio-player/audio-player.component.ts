@@ -296,8 +296,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   private showLoadingError(videoId: string) {
     this.clearAudio();
-    this.streamPrefetchSubscription.unsubscribe();
-    this.recommendedResultsSubscription.unsubscribe();
+    //this.streamPrefetchSubscription.unsubscribe();
+    //this.recommendedResultsSubscription.unsubscribe();
     this.dataLoaded = true;
     this.videoServiceLock = false;
     this.audioPlayerService.triggerToggleLoading({id: videoId, toggle: false});
@@ -337,7 +337,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.hasPrefetched = false;
         this.audioPlayerService.triggerToggleLoading({id: videoId, toggle: false});
         this.audioPlayerService.triggerTogglePlaying({id: videoId, toggle: true});
-        if (this.seekOnPlay === true && this.permitSeek === true) {
+        if (this.seekOnPlay === true && this.permitSeek === true && this.duration >= 300) {
           console.log('Get time: '+JSON.stringify(this.fetchedStreamUrl.watchedTime));
           this.activeSound.seek(this.fetchedStreamUrl.watchedTime);
         }
