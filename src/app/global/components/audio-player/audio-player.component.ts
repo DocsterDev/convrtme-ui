@@ -337,10 +337,10 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.hasPrefetched = false;
         this.audioPlayerService.triggerToggleLoading({id: videoId, toggle: false});
         this.audioPlayerService.triggerTogglePlaying({id: videoId, toggle: true});
-        if (this.seekOnPlay === true && this.permitSeek === true && this.duration >= 300) {
-          console.log('Get time: '+JSON.stringify(this.fetchedStreamUrl.watchedTime));
-          this.activeSound.seek(this.fetchedStreamUrl.watchedTime);
-        }
+        // if (this.seekOnPlay === true && this.permitSeek === true && this.duration >= 300) {
+        //   console.log('Get time: '+JSON.stringify(this.fetchedStreamUrl.watchedTime));
+        //   this.activeSound.seek(this.fetchedStreamUrl.watchedTime);
+        // }
         this.seekOnPlay = false;
         requestAnimationFrame(this.step.bind(this));
       },
@@ -418,7 +418,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       if (this.previousSeek !== seekVal) {
         this.previousSeek = seekVal;
         if (seekVal % 30 === 0 && seekVal !== 0 && this.duration >= 300) {
-          this.updateVideoPosition(seekVal);
+         // this.updateVideoPosition(seekVal);
         }
       }
     }
