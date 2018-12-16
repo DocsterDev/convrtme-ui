@@ -364,7 +364,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       onload: () => {
         this.videoServiceLock = false;
         this.audioPlayerService.triggerNowPlayingVideoEvent(this.buildNowPlayingVideo());
-          setTimeout(()=>{
+          setTimeout(() => {
             this.videoRecommendedService.triggerVideoLoad(this.tempRecommendedResults);
             if (this.tempRecommendedResults) {
               this.audioPlayerService.triggerNextUpVideoEvent(this.tempRecommendedResults.nextUpVideo);
@@ -388,7 +388,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       duration: UtilsService.formatTime(stream.duration),
       owner: stream.owner,
       thumbnailUrl: 'http://i.ytimg.com/vi/' + stream.id + '/mqdefault.jpg',
-      publishedTimeAgo: 'Published ' + moment(stream.uploadDate, 'YYYY-MM-DD').format('ddd, MMM Do YYYY')
+      publishedTimeAgo: moment(stream.uploadDate, 'YYYY-MM-DD').format('MMMM D, YYYY')
     };
   }
 

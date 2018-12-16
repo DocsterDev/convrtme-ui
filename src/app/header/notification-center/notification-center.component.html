@@ -22,13 +22,13 @@
         &nbsp;<div *ngIf="!showManageSubs" class="c-font-circular c-accent-color c-smaller link-test" (click)="showSubscriptionManager()">Manage</div>
       </div>
     </div>
-    <ng-container *ngIf="!showManageSubs">
-      <div class="row no-gutters px-4">
-        <div class="cold-flex align-items-center justify-content-start">
-          <div class="c-font-circular c-accent-color c-smaller link-test" (click)="showSubscriptions('channel')">CHANNEL</div>
-        </div>
-      </div>
-    </ng-container>
+    <!--<ng-container *ngIf="!showManageSubs">-->
+      <!--<div class="row no-gutters px-4">-->
+        <!--<div class="cold-flex align-items-center justify-content-start">-->
+          <!--<div class="c-font-circular c-accent-color c-smaller link-test" (click)="showSubscriptions('channel')">CHANNEL</div>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</ng-container>-->
     <div *ngIf="loaded && !showManageSubs && notificationKeys(notificationGroups).length > 0" class="row no-gutters px-3 pl-sm-2 pr-sm-4 loading-container" [ngClass]="{'fade-in-load': fadeIn}">
       <div class="col">
         <div *ngFor="let key of notificationKeys(notificationGroups)">
