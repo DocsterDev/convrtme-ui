@@ -25,15 +25,14 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
   @Output()
   public closed: EventEmitter<boolean> = new EventEmitter();
 
-  public showManageSubs: boolean;
+  public showManageSubs: boolean = null;
   public sortType: string;
 
   @HostListener('document:click', ['$event'])
   handleClick(event) {
       if (!this.elementRef.nativeElement.contains(event.target)) {
         if(this.internalOpen === true) {
-          this.open = false;
-          this.closed.emit(false);
+          this.close();
         }
       }
       this.internalOpen = this.open;
@@ -46,11 +45,18 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
     this.showSubscriptions('channel');
   }
 
+  private close() {
+    this.open = false;
+    this.closed.emit(false);
+  }
+
   public showSubscriptions(groupBy) {
     this.loaded = false;
-    setTimeout(()=>{
-      this.showManageSubs = false;
-    });
+    if (this.showManageSubs === false) {
+      this.close();
+      return;
+    }
+    this.showManageSubs = false;
     this.notificationCenterSubscription = this.notificationCenterService.fetchNotifications(groupBy).subscribe((response) => {
       setTimeout(() => {
         this.notificationGroups = response;

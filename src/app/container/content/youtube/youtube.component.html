@@ -22,8 +22,8 @@
               <app-search-card [video]="this.videoNext"></app-search-card>
             </div>
           </ng-container>
-          <div class="text-left c-bold c-smaller section-text pb-3 truncate-single-line" *ngIf="previousQuery">Showing results for: <span class="c-bold c-smaller c-accent-color">{{previousQuery}}</span></div>
-          <div class="text-left pb-3 c-small c-bold section-text" *ngIf="!previousQuery">Today&rsquo;s headlines</div>
+          <div class="text-left c-bold c-smaller section-text pb-3 truncate-single-line" *ngIf="displayQuery">Showing results for: <span class="c-bold c-smaller c-accent-color">{{displayQuery}}</span></div>
+          <div class="text-left pb-3 c-small c-bold section-text" *ngIf="!displayQuery">Today&rsquo;s headlines</div>
           <div *ngFor="let video of videoList" class="mb-2">
             <app-search-card [video]="video"></app-search-card>
           </div>

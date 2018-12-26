@@ -35,6 +35,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   public progress;
   public duration: number;
   public elapsed: string;
+  public elapsedSeconds: number;
   public seekTimer: string;
   private seek: number;
 
@@ -76,6 +77,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private seekOnPlay: boolean;
   private permitSeek: boolean;
 
+  private errorResumeSeekRequired: boolean = false;
+
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     if (event.key === ' ') {
@@ -106,10 +109,20 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     Howl.autoSuspend = false;
     this.progress = '0';
     this.videoEventSubscription = this.audioPlayerService.triggerVideoEventEmitter$.subscribe((e) => {
+      if (this.videoServiceLock) {
+        console.log('Unsubscribing from current video');
+        // If a video is currently loading cancel that subscription
+        this.recommendedResultsSubscription.unsubscribe();
+        this.streamPrefetchSubscription.unsubscribe();
+      }
       const videoId:string = e.id;
       this.permitSeek = e.permitSeek;
       this.dataLoaded = false;
       this.showNowPlayingBar = false;
+      if (!videoId) {
+
+        return;
+      }
       setTimeout(() => {
         this.showNowPlayingBar = true;
         this.audioPlayerService.triggerToggleLoading({id: videoId, toggle: true});
@@ -176,9 +189,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     }
     if (this.isPlaying && this.video && this.seek > 5) {
       if (this.activeSound) {
-        this.activeSound.pause();
         this.activeSound.seek(0);
-        this.activeSound.play();
       }
       return;
     }
@@ -260,10 +271,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   async playMedia(videoId) {
-    if (this.videoServiceLock) {
-      console.log('Cant select a video right now');
-      return;
-    }
     this.videoServiceLock = true;
     this.audioPlayerService.triggerToggleLoading({id: videoId, toggle: true});
     this.audioPlayerService.triggerTogglePlaying({id: videoId, toggle: false});
@@ -296,13 +303,13 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   private showLoadingError(videoId: string) {
     this.clearAudio();
-    //this.streamPrefetchSubscription.unsubscribe();
-    //this.recommendedResultsSubscription.unsubscribe();
+    this.retryCount = 0;
     this.dataLoaded = true;
     this.videoServiceLock = false;
     this.audioPlayerService.triggerToggleLoading({id: videoId, toggle: false});
     this.notificationService.showNotification({type: 'error', message: 'Sorry :( There was an error loading this video.'});
     this.showNowPlayingBar = false;
+    this.router.navigate([''], { relativeTo: this.route, queryParams: {v: ''}, queryParamsHandling: "merge" });
   }
 
   private buildAudioObject(videoId: string) {
@@ -342,10 +349,13 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         //   this.activeSound.seek(this.fetchedStreamUrl.watchedTime);
         // }
         this.seekOnPlay = false;
+        // if (this.errorResumeSeekRequired) {
+        //   this.activeSound.seek(this.elapsedSeconds); // TODO Add seek number from already existing elapsed time---------------------------------------------
+        // }
         requestAnimationFrame(this.step.bind(this));
       },
       onseek: () => {
-
+        requestAnimationFrame(this.step.bind(this));
       },
       onpause: () => {
         this.isPlaying = false;
@@ -356,12 +366,21 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       },
       onloaderror: (e) => {
         console.error(e);
+        console.error('Received loading error. Retry attempt ' + this.retryCount);
+        if (this.retryCount < 1) {
+          this.retryCount++;
+          this.errorResumeSeekRequired = true;
+          this.router.navigate([''], { relativeTo: this.route, queryParams: {v: this.video.id}, queryParamsHandling: "merge" });
+          return;
+        }
+        this.errorResumeSeekRequired = false;
         this.showLoadingError(videoId);
       },
       onend: () => {
         this.goToUpNextVideo();
       },
       onload: () => {
+        this.retryCount = 0;
         this.videoServiceLock = false;
         this.audioPlayerService.triggerNowPlayingVideoEvent(this.buildNowPlayingVideo());
           setTimeout(() => {
@@ -381,7 +400,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private buildNowPlayingVideo(){
     const stream = this.fetchedStreamUrl;
     this.duration = stream.duration;
-    console.log('Duration: ' + this.duration);
     return {
       id: stream.id,
       title: stream.title,
@@ -395,6 +413,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private clearAudio() {
     this.audioPlayerService.triggerNowPlayingVideoEvent(false);
     this.audioPlayerService.triggerNextUpVideoEvent(false);
+    this.audioPlayerService.triggerToggleLoading({id: this.video.id, toggle: false});
+    this.audioPlayerService.triggerTogglePlaying({id: this.video.id, toggle: false});
     this.fetchedStreamUrl = null;
     this.showNowPlayingBar = false; // TODO Redundant???
     this.tempNowPlayingVideo = JSON.parse(JSON.stringify(this.video));
@@ -412,7 +432,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     if (this.video) {
       this.seek = this.activeSound ? this.activeSound.seek() : 0;
       this.progress = (((this.seek / this.duration) * 100) || 0);
-      this.elapsed = UtilsService.formatTime(Math.floor(this.seek));
+      this.elapsedSeconds = Math.floor(this.seek);
+      this.elapsed = UtilsService.formatTime(this.elapsedSeconds);
       requestAnimationFrame(this.step.bind(this));
       const seekVal = Math.floor(this.seek);
       if (this.previousSeek !== seekVal) {

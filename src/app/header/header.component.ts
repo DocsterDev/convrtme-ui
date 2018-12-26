@@ -170,7 +170,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     setTimeout(()=>{
       this.renderer.invokeElementMethod(this.searchInputText.nativeElement, 'blur', []);
     }, 5);
-    this.router.navigate([''], { relativeTo: this.route, queryParams: {q: searchQuery} });
+    this.router.navigate([''], { relativeTo: this.route, queryParams: {q: searchQuery}, queryParamsHandling: "merge"});
     this.eventBusService.triggerSearchModeEvent(false);
   }
 

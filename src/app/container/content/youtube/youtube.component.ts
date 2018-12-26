@@ -41,6 +41,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   public query: string;
   public videoId: string;
   public previousQuery: string;
+  public displayQuery: string;
   public video: any;
   public videoNext: any;
 
@@ -83,13 +84,14 @@ export class YoutubeComponent implements OnInit, OnDestroy {
         }, 15);
         if (searchResults.length > 0) {
           if (this.videoId) {
-            searchResults = searchResults.filter(video => video.id !== this.videoId);
+            // Hide video if it is currently playing
+            // searchResults = searchResults.filter(video => video.id !== this.videoId);
           } else {
             this.recommendedList = [];
             this.videoRecommendedService.recommended(searchResults[0].id);
           }
         }
-        this.previousQuery = this.query;
+        this.displayQuery = this.query;
         this.videoList = [];
         this.loadIncrementally(searchResults, this.videoList);
       });
@@ -100,23 +102,25 @@ export class YoutubeComponent implements OnInit, OnDestroy {
         }
       });
       this.route.queryParams.subscribe(params => {
-        if (this.isLoading) {
-          console.log('Cannot play new video.');
-          return;
+        if (this.query) {
+          this.previousQuery = this.query;
         }
         this.query = params.q;
-        const permitSeek: boolean = !(this.videoId === params.v);
-        this.videoId = params.v;
-        if (this.videoId) {
-          this.showNowPlayingContainer = true;
-          this.audioPlayerService.triggerVideoEvent({id: this.videoId, permitSeek: permitSeek});
+        if (params.v && params.v !== '' && !this.isLoading) {
+          this.videoId = params.v;
         } else {
           this.videoId = null;
+          //this.audioPlayerService.triggerVideoEvent({id: null, permitSeek: false});
         }
+        const permitSeek: boolean = !(this.videoId === params.v);
         if (this.previousQuery !== this.query) {
           this.videoSearchService.search(this.query);
         } else if (!this.query && this.videoList.length === 0) {
-          this.videoSearchService.search('msnbc and fox news and cnn');
+          this.videoSearchService.search('fox news or msnbc');
+        }
+        if (this.videoId && (this.previousQuery === this.query || !this.previousQuery) && !this.isLoading) {
+          this.showNowPlayingContainer = true;
+          this.audioPlayerService.triggerVideoEvent({id: this.videoId, permitSeek: permitSeek});
         }
       });
       this.audioPlayingEventSubscription = this.audioPlayerService.triggerTogglePlayingEmitter$.subscribe((e) => {
@@ -178,8 +182,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   }
 
   private initAuthentication() {
-    // this.localStorage.clear('token');
-    // this.localStorage.clear('email');
     const token = this.localStorage.retrieve('token');
     if (!token) {
       const fakeEmail = UtilsService.generateUUID() + '@gmail.com';
