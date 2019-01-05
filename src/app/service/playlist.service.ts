@@ -1,30 +1,49 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {ConfigService} from './config.service';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Subject} from 'rxjs/Subject';
+import {Observable} from 'rxjs/Observable';
+import {HeaderService} from './header.service';
+import {environment} from '../../environments/environment';
 
 @Injectable()
 export class PlaylistService {
 
-  constructor(private http: HttpClient, private config: ConfigService) { }
+  private resultList = new Subject<any>();
 
-  createPlaylist(userUuid: string, playlist: any) {
-    return this.http.post(this.config.getAddress() + '/api/playlists', playlist);
+  constructor(private http: HttpClient, private headerService: HeaderService) { }
+
+  getPlaylists() {
+    return this.http.get(environment.apiUrl + '/api/playlists', this.headerService.getTokenHeader());
   }
 
-  getPlaylist(userUuid: string, playlistUuid: any) {
-    return this.http.get(this.config.getAddress() + '/api/playlists/' + playlistUuid);
+  getPlaylist(playlistUuid: string) {
+    return this.http.get(environment.apiUrl + '/api/playlists/' + playlistUuid);
   }
 
-  getPlaylists(userUuid: string) {
-    return this.http.get(this.config.getAddress() + '/api/playlists');
+  getPlaylistVideos(playlistUuid: string) {
+    return this.http.get(environment.apiUrl + '/api/playlists/' + playlistUuid + '/videos', this.headerService.getTokenHeader());
   }
 
-  updatePlaylist(userUuid: string, playlistUuid: any, playlist: any) {
-    return this.http.put(this.config.getAddress() + '/api/playlists/' + playlistUuid, playlist);
+  updateVideos(playlistUuid: any, videos: any) {
+    return this.http.put(environment.apiUrl + '/api/playlists/' + playlistUuid + '/videos', videos, this.headerService.getTokenHeader());
   }
 
-  deletePlaylist(userUuid: string, playlistUuid: any) {
-    return this.http.delete(this.config.getAddress() + '/api/playlists/' + playlistUuid);
+  deleteVideo(playlistUuid: any, videoId: any) {
+    return this.http.delete(environment.apiUrl + '/api/playlists/' + playlistUuid + '/videos/' + videoId);
   }
 
+  getResultList(): Observable<any> {
+    return this.resultList.asObservable();
+  }
+
+  // public getPlaylistVideosEffect(videoId: string) {
+  //   if (!videoId) {
+  //     return;
+  //   }
+  //   this.getPlaylistVideos(videoId).subscribe((response) => {
+  //     this.resultList.next(response);
+  //   }, (error) => {
+  //     console.log(error);
+  //   });
+  // }
 }

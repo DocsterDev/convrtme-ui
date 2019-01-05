@@ -1,0 +1,113 @@
+<!-- NOTIFICATION -->
+<div class="notification-body header-shadow-mobile" [ngClass]="{'open-notification-body': open}">
+  <div class="container p-0">
+    <div class="row no-gutters header-shadow-desktop py-4 px-4 mb-4">
+      <div class="col d-flex align-items-center justify-content-start">
+        &nbsp;<div class="d-flex align-items-center c-font-circular c-accent-color c-smaller link-test" (click)="showSubscriptions(sortType ? sortType : 'channel')">
+          <svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                  <g id="Core" transform="translate(-424.000000, -4.000000)" fill="#A0ABBF">
+                      <g id="arrow-back" transform="translate(424.000000, 4.000000)">
+                          <polygon id="Shape" points="16 7 3.8 7 9.4 1.4 8 0 0 8 8 16 9.4 14.6 3.8 9 16 9"></polygon>
+                      </g>
+                  </g>
+              </g>
+          </svg>
+        </div>
+      </div>
+      <div class="col d-flex align-items-center justify-content-center">
+        <span class="c-font-circular c-smaller" style="color:#A0ABBF;font-weight:400">{{showManageSubs ? 'Subscriptions' : 'Notifications'}}</span>
+      </div>
+      <div class="col d-flex align-items-center justify-content-end">
+        &nbsp;<div *ngIf="!showManageSubs" class="c-font-circular c-accent-color c-smaller link-test" (click)="showSubscriptionManager()">Manage</div>
+      </div>
+    </div>
+    <!--<ng-container *ngIf="!showManageSubs">-->
+      <!--<div class="row no-gutters px-4">-->
+        <!--<div class="cold-flex align-items-center justify-content-start">-->
+          <!--<div class="c-font-circular c-accent-color c-smaller link-test" (click)="showSubscriptions('channel')">CHANNEL</div>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</ng-container>-->
+    <div *ngIf="loaded && !showManageSubs && notificationKeys(notificationGroups).length > 0" class="row no-gutters px-3 pl-sm-2 pr-sm-4 loading-container" [ngClass]="{'fade-in-load': fadeIn}">
+      <div class="col">
+        <div *ngFor="let key of notificationKeys(notificationGroups)">
+          <app-notification-group (selected)="selected($event)" [groupTitle]="key" [groupVideos]="notificationGroups[key]"></app-notification-group>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="loaded && !showManageSubs && notificationKeys(notificationGroups).length > 0"
+         class="row no-gutters loading-container my-4" [ngClass]="{'fade-in-load': fadeIn}">
+      <div class="col d-flex align-items-center justify-content-center">
+        <span class="c-font-circular c-accent-color c-smaller">View All</span>
+      </div>
+    </div>
+
+    <div *ngIf="loaded && !showManageSubs && notificationKeys(notificationGroups).length === 0"
+         class="container loading-container" [ngClass]="{'fade-in-load': fadeIn}">
+      <div class="row no-gutters h-100 mt-5">
+        <div class="col d-flex align-items-center justify-content-center">
+          <span class="c-font-circular c-light text-center c-smaller">Nice.<br/>You&rsquo;re all caught up.</span>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="loaded && showManageSubs && subscriptions.length > 0" class="container pt-3 loading-container" [ngClass]="{'fade-in-load': fadeIn}">
+      <div class="row px-1 px-sm-4 mb-4 py-1 flex-nowrap w-100 hover-state no-gutters" *ngFor="let subscription of subscriptions">
+        <div class="col-auto d-flex align-items-center justify-content-center">
+          <img width="55" height="55" [src]="subscription.channel.avatarUrl" style="border-radius: 50%;"/>
+        </div>
+        <div class="col d-flex align-items-center justify-content-start pl-3">
+          <div class="text-left c-font-circular c-light c-smaller">{{subscription.channel.name}}</div>
+          <!--<br/>-->
+          <!--<div class="text-left c-font-circular c-light c-small">Added {{formatDate(subscription.subscribedDate)}}</div>-->
+        </div>
+        <div class="col-auto d-flex align-items-center justify-content-end">
+          <div class="p-2 notification-container">
+            <svg width="18px" height="20px" viewBox="0 0 18 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g id="Icons-Social" transform="translate(-170.000000, -43.000000)" class="notification-action" fill="#CED3DE">
+                  <g id="notifications" transform="translate(170.500000, 43.000000)">
+                    <path d="M8.5,20 C9.6,20 10.5,19.1 10.5,18 L6.5,18 C6.5,19.1 7.4,20 8.5,20 L8.5,20 Z M15,14 L15,8.5 C15,5.4 12.9,2.9 10,2.2 L10,1.5 C10,0.7 9.3,0 8.5,0 C7.7,0 7,0.7 7,1.5 L7,2.2 C4.1,2.9 2,5.4 2,8.5 L2,14 L0,16 L0,17 L17,17 L17,16 L15,14 L15,14 Z" id="Shape"></path>
+                  </g>
+                </g>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <div class="col-auto d-flex align-items-center justify-content-end">
+          <div class="p-2 notification-container" (click)="removeSubscription(subscription)">
+            <svg width="14px" height="18px" viewBox="0 0 14 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g id="Core" transform="translate(-299.000000, -129.000000)" class="notification-action" fill="#CED3DE">
+                  <g id="delete" transform="translate(299.000000, 129.000000)">
+                    <path d="M1,16 C1,17.1 1.9,18 3,18 L11,18 C12.1,18 13,17.1 13,16 L13,4 L1,4 L1,16 L1,16 Z M14,1 L10.5,1 L9.5,0 L4.5,0 L3.5,1 L0,1 L0,3 L14,3 L14,1 L14,1 Z" id="Shape"></path>
+                  </g>
+                </g>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="loaded && showManageSubs && subscriptions.length === 0" class="container loading-container"
+         [ngClass]="{'fade-in-load': fadeIn}">
+      <div class="row h-100 mt-5">
+        <div class="col d-flex align-items-center justify-content-center">
+          <span class="c-font-circular c-light text-center c-smaller">Not great.<br/>You don&rsquo;t have any Subscriptions.</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- LOADING SPINNER -->
+    <div *ngIf="!loaded" class="row no-gutters height-adjusted">
+      <div class="col d-flex align-items-center justify-content-center">
+        <img src="/assets/img/svg/ic-loading-spinner.svg" />
+      </div>
+    </div>
+
+  </div>
+</div>
+

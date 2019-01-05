@@ -1,34 +1,72 @@
 @import variables
 
+%fade-animation
+  transition: opacity 50ms ease
+  -webkit-transition: opacity 50ms ease
+  will-change: opacity
+
 .search-card
+  @extend %fade-animation
   opacity: 1
-  transition: opacity, transform 100ms ease
-  min-width: 150px
-  max-width: 550px
+  min-width: 100px
+  //width: 100%
+  @media screen and (min-width: 448px)
+    max-width: 448px
+  max-width: 348px
   overflow: hidden
-  max-height: 90px
-  &:hover .thumbnail-container
-    background-color: black
-  &:hover .thumbnail
-    opacity: 0.7
-  &:hover .title-text
-    opacity: 0.7
-  &:hover .subtitle
-    opacity: 0.7
-  &:hover
-    cursor: pointer
+  max-height: $thumbnailHeightMobile
+  &:focus
+    outline: 0 !important
+  @media screen and (min-width: 768px) /* Turn off hover on mobile */
+    &:hover .thumbnail-container
+      background-color: black
+    &:hover .thumbnail
+      opacity: 0.9
+    &:hover .title-text
+      opacity: 0.7
+    &:hover .subtitle
+      opacity: 0.7
+    &:hover .playlist-icon-add
+      opacity: 0.7
+    &:hover .play-icon
+      opacity: 1
+    &:hover
+      cursor: pointer
   .title
-    color: $secondaryBtnColor !important
+    //color: $secondaryBtnColor !important
+    line-height: 1.2
   .subtitle
     color: $textColorLight
+    line-height: 1.2
+  .subtitle-owner
+    color: $textColorLight
+    line-height: 1.7
 
-.now-playing
-  transform: scale(1)
+.text-owner
+  z-index: 999 !important
   &:hover
-    transform: scale(1)
+    color: #3890dc !important
+  &:active
+    color: #3890dc !important
 
+.title-text
+  @extend %fade-animation
+.subtitle
+  @extend %fade-animation
+
+.now-playing .play-icon
+  opacity: 1 !important
+.now-playing .thumbnail-container
+  background-color: black
+.now-playing .thumbnail
+  opacity: 0.7
+.now-playing .play-icon-active
+  opacity: 0.6
+
+.now-loading .loading-icon
+  opacity: 1
 .now-loading .play-icon
-  visibility: visible
+  opacity: 1
 .now-loading .thumbnail-container
   background-color: black
 .now-loading .thumbnail
@@ -39,22 +77,99 @@
   opacity: 0.7
 
 .sub-title-op
-  opacity: 0.3 !important
+  opacity: 0.6 !important
 
-.play-icon
-  visibility: hidden
+.loading-icon
+  @extend %fade-animation
+  opacity: 0
   color: white
   position: absolute
   top: 50%
   left: 50%
   transform: translate(-50%, -50%)
 
+.play-icon
+  @extend %fade-animation
+  opacity: 0
+  color: white
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+
+.duration-badge
+  bottom: 0
+  right: 0
+  position: absolute
+  background-color: hsl(0, 0%, 6.7%)
+  margin: 4px
+  padding: 2px 4px
+  color: hsl(0, 0%, 100%)
+  opacity: .8
+  border-radius: 2px
+  letter-spacing: .5px
+  font-size: .8rem
+  font-weight: 500
+  line-height: .8rem
+
 .thumbnail-container
   background-color: white
-  max-width: 160px
-  height: 90px
-  width: 160px
+  max-width: $thumbnailWidthMobile
+  height: $thumbnailHeightMobile
+  width: $thumbnailWidthMobile
 
 .thumbnail
-  height: 90px
-  width: 160px
+  height: $thumbnailHeightMobile
+  width: $thumbnailWidthMobile
+
+@media screen and (min-width: 768px)
+  .thumbnail
+    height: $thumbnailHeightDesktop
+    width: $thumbnailWidthDesktop
+  .thumbnail-container
+    max-width: $thumbnailWidthDesktop
+    height: $thumbnailHeightDesktop
+    width: $thumbnailWidthDesktop
+  .search-card
+    max-height: $thumbnailHeightDesktop
+  .title
+    font-size: 14px
+  .subtitle
+    font-size: 13px
+  .subtitle-owner
+    font-size: 13px
+
+.playlist-icon-add
+  @extend %fade-animation
+  opacity: 0
+  &:hover
+    opacity: 1
+
+.playlist-icon
+  height: 7px
+  width: 7px
+  border-radius: 50%
+
+.play-icon-active
+  @extend %fade-animation
+  opacity: 0
+
+.truncate-double-line
+  min-height: 2.4em
+  max-height: 2.4em
+  overflow: hidden
+  text-overflow: ellipsis
+
+.truncate-single-line
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
+
+.label
+  border-radius: 2px
+  color: $primaryBtnColor
+  font-size: 11px
+  padding: 0 2px
+
+.link-no-style
+  text-decoration: none

@@ -1,0 +1,33 @@
+<div class="playlist-card My(0.5) no-select" [ngClass]="{'now-playing': nowPlaying, 'now-loading': nowLoading, 'fade-in-load': fadeIn}" (click)="selectContent(video)">
+  <div class="row flex-nowrap no-gutters">
+    <div class="col" style="max-width: 10px;">
+      <div class="color-bar" [style.background]="'#' + color"></div>
+    </div>
+    <div class="col card-border">
+      <div class="row flex-nowrap no-gutters align-items-start">
+        <!--<div class="col thumbnail-container">-->
+        <!--<img class="thumbnail" [src]="video.thumbnailUrl"/>-->
+        <!--<div class="play-icon"><img src="assets/img/svg/ic-video-loading.svg"/></div>-->
+        <!--</div>-->
+        <div class="col d-flex align-items-center" style="height: 76px;">
+          <div class="c-font-circular c-small c-light title-text text-left Mstart(1) Pend(2)" [ngClass]="{'c-accent-color': nowPlaying, 'c-color': !nowPlaying}" style="max-height: 90px !important">
+            <div class="title">{{video.title}}&nbsp;<span class="play-icon-active Mstart(0.5)"><img style="width:12px;height:12px;" src="/assets/img/svg/ic-sound-active.svg"></span></div>
+            <div class="Pt(0.25)"></div>
+            <div class="subtitle" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{video.owner}}
+            </div>
+            <div class="subtitle" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{duration}}</div>
+          </div>
+        </div>
+        <!--<div class="col text-left align-self-center d-none d-md-block play-icon-active" style="max-width: 100px">-->
+          <!--<img style="width:15px;height:12px;" src="/assets/img/svg/ic-sound-active.svg">-->
+        <!--</div>-->
+        <div class="col d-flex align-items-center" style="max-width:30px; height: 76px;">
+          <div ><img src="assets/img/svg/ic-playlist-handle.svg"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col d-none d-lg-flex align-self-center justify-content-center playlist-icon-remove Py(0.75)" style="max-width:45px;border-radius:50%;" (click)="removeContent($event, video)">
+      <img style="width:12px;height:12px;" src="/assets/img/svg/ic-close.svg">
+    </div>
+  </div>
+</div>

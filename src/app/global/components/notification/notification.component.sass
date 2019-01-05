@@ -1,0 +1,32 @@
+@import variables
+
+.header-shadow-mobile
+  box-shadow: 0 12px 20px 2px rgba(0, 0, 0, .06), 0 6px 30px 5px rgba(0, 0, 0, .05), 0 8px 10px -5px rgba(0, 0, 0, .09)
+
+.notification-header
+  z-index: 999
+  // color: $colorLightCream
+  //background: $colorLightCream
+  background: #ffffff
+  height: 100%
+  max-height: 0
+  overflow: hidden
+  -webkit-transition: max-height 50ms ease
+  transition: max-height 50ms ease
+  will-change: max-height
+  box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.05)
+
+.open-notification-header
+  max-height: 65px
+
+.error-red
+  //background: #EF5350 // Error Red
+  color: #EF5350 !important
+
+.warning-orange
+  //background: #F9A825 // Warning Orange
+  color: #F9A825 !important
+
+.success-green
+  //background: $colorLightCream // Success Cream
+  color: #3890dc !important

@@ -1,0 +1,171 @@
+@import variables
+
+.notification-video
+  opacity: 1
+  transition: opacity, transform $animationTimer ease
+  will-change: opacity
+  min-width: 100px
+  //width: 100%
+  @media screen and (min-width: 448px)
+    max-width: 448px
+  max-width: 348px
+  // overflow: hidden
+  max-height: $thumbnailHeightMobile
+  &:focus
+    outline: 0 !important
+  @media screen and (min-width: 768px) /* Turn off hover on mobile */
+    &:hover .thumbnail-container
+      background-color: black
+    &:hover .thumbnail
+      opacity: 0.9
+    &:hover .title-text
+      opacity: 0.7
+    &:hover .subtitle
+      opacity: 0.7
+    &:hover .playlist-icon-add
+      opacity: 0.7
+    &:hover .notification-new-content-badge
+      opacity: 0.6
+    //&:hover .play-icon
+    //  opacity: 1
+    &:hover
+      cursor: pointer
+  .title
+    color: #4C6085
+    line-height: 1.2
+  .subtitle
+    color: #A0ABBF
+    line-height: 1.1
+    font-size: 11px
+  .subtitle-owner
+    color: $textColorLight
+    line-height: 1.7
+
+.title-text
+  transition: opacity $animationTimer ease
+.subtitle
+  transition: opacity $animationTimer ease
+
+//.now-playing .play-icon
+//  opacity: 1 !important
+.now-playing .thumbnail-container
+  background-color: black
+.now-playing .thumbnail
+  opacity: 0.7
+.now-playing .play-icon-active
+  opacity: 0.6
+
+.now-loading .loading-icon
+  opacity: 1
+.now-loading .play-icon
+  opacity: 1
+.now-loading .thumbnail-container
+  background-color: black
+.now-loading .thumbnail
+  opacity: 0.7
+.now-loading .title-text
+  opacity: 0.7
+.now-loading .subtitle
+  opacity: 0.7
+
+.sub-title-op
+  opacity: 0.6 !important
+
+.loading-icon
+  transition: opacity $animationTimer ease
+  opacity: 0
+  color: white
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+
+.play-icon
+  transition: opacity $animationTimer ease
+  opacity: 0
+  color: white
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+
+.duration-badge
+  bottom: 0
+  right: 0
+  position: absolute
+  background-color: hsl(0, 0%, 6.7%)
+  margin: 4px
+  padding: 2px 4px
+  color: hsl(0, 0%, 100%)
+  opacity: .8
+  border-radius: 2px
+  letter-spacing: .5px
+  font-size: .8rem
+  font-weight: 500
+  line-height: .8rem
+
+.thumbnail-container
+  background-color: white
+  max-width: 120px
+  height: 68px
+  width: 120px
+
+.thumbnail
+  height: 68px
+  width: 120px
+
+@media screen and (min-width: 768px)
+  .thumbnail
+    height: 68px
+    width: 120px
+  .thumbnail-container
+    max-width: 120px
+    height: 68px
+    width: 120px
+  .search-card
+    max-height: 68px
+  .title
+    font-size: 14px
+  .subtitle
+    font-size: 13px
+  .subtitle-owner
+    font-size: 13px
+
+.playlist-icon-add
+  transition: opacity $animationTimer ease
+  opacity: 0
+  &:hover
+    opacity: 1
+
+.playlist-icon
+  height: 7px
+  width: 7px
+  border-radius: 50%
+
+.play-icon-active
+  transition: opacity $animationTimer ease
+  opacity: 0
+
+.truncate-double-line
+  min-height: 2.4em
+  max-height: 2.4em
+  overflow: hidden
+  text-overflow: ellipsis
+
+.truncate-single-line
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
+
+.label
+  border-radius: 2px
+  color: $primaryBtnColor
+  font-size: 11px
+  padding: 0 2px
+
+.notification-new-content-badge
+  height: 68px
+  margin-right: -25px
+
+.watched
+  opacity: 0.5

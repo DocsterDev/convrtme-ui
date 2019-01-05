@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="21px" height="22px" viewBox="0 0 21 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
-    <title>search</title>
-    <desc>Created with Sketch.</desc>
-    <defs></defs>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.326283482">
-        <g id="Artboard" transform="translate(-1143.000000, -104.000000)" fill="#4C6085">
-            <g id="search" transform="translate(1143.000000, 104.000000)">
-                <path d="M15,13.8285714 L14.04,13.8285714 L13.68,13.4514286 C14.88,12.0685714 15.6,10.1828571 15.6,8.17142857 C15.6,3.64571429 12.12,0 7.8,0 C3.48,0 0,3.64571429 0,8.17142857 C0,12.6971429 3.48,16.3428571 7.8,16.3428571 C9.72,16.3428571 11.52,15.5885714 12.84,14.3314286 L13.2,14.7085714 L13.2,15.7142857 L19.2,22 L21,20.1142857 L15,13.8285714 L15,13.8285714 Z M7.8,13.8285714 C4.8,13.8285714 2.4,11.3142857 2.4,8.17142857 C2.4,5.02857143 4.8,2.51428571 7.8,2.51428571 C10.8,2.51428571 13.2,5.02857143 13.2,8.17142857 C13.2,11.3142857 10.8,13.8285714 7.8,13.8285714 L7.8,13.8285714 Z" id="Shape"></path>
+<svg width="19px" height="19px" viewBox="0 0 19 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" transform="translate(-1257.000000, -25.000000)" class="search-icon-svg" fill="#39A0ED" stroke="#39A0ED">
+            <g id="Group-4" transform="translate(758.000000, 12.000000)">
+                <g id="search" transform="translate(500.000000, 14.000000)">
+                    <path d="M11.7,11 L11.4,10.7 C12.4,9.6 13,8.1 13,6.5 C13,2.9 10.1,0 6.5,0 C2.9,0 0,2.9 0,6.5 C0,10.1 2.9,13 6.5,13 C8.1,13 9.6,12.4 10.7,11.4 L11,11.7 L11,12.5 L16,17.5 L17.5,16 L12.5,11 L11.7,11 Z M6.5,11 C4,11 2,9 2,6.5 C2,4 4,2 6.5,2 C9,2 11,4 11,6.5 C11,9 9,11 6.5,11 L6.5,11 Z" id="Shape"></path>
+                </g>
             </g>
         </g>
     </g>

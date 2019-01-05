@@ -1,0 +1,15 @@
+<div class="container my-2">
+  <div class="row mb-2">
+    <div class="col">
+      <span class="c-font-circular c-small" style="color:#A0ABBF;">{{groupTitle}}</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="mb-4" *ngFor="let video of groupVideos; let i = index">
+         <!--(selected)="selectVideo(i, groupVideos)"-->
+        <app-notification-video [video]="video"></app-notification-video>
+      </div>
+    </div>
+  </div>
+</div>

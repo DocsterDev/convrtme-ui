@@ -1,0 +1,34 @@
+<div class="notification-video" [routerLink]="['/']" [queryParams]="{v: video.id}" queryParamsHandling="merge" [ngClass]="{'now-playing': nowPlaying, 'now-loading': nowLoading, 'watched' : video.dateLastWatched}">
+  <div class="position-relative h-100 w-100 flex-nowrap">
+    <div class="row flex-nowrap no-gutters align-items-start">
+      <div class="col thumbnail-container">
+          <img class="thumbnail" src="{{video.thumbnailUrl}}"/>
+          <div class="loading-icon"><img src="assets/img/svg/ic-video-loading.svg"/></div>
+          <div class="play-icon"><img src="assets/img/svg/ic-large-play-arrow.svg"/></div>
+          <div class="duration-badge">{{video.duration}}</div>
+      </div>
+      <div class="col" style="min-width: 100px;">
+          <div class="text-left c-font-circular c-small c-light title-text Mstart(0.5) mt-1" [ngClass]="{'c-accent-color': nowPlaying, 'c-color': !nowPlaying}" style="max-height: 90px !important">
+            <div class="title truncate-double-line c-small" [ngClass]="{'c-accent-color': nowPlaying}">{{video.title}}</div>
+            <div class="Pt(0.25)"></div>
+            <div class="subtitle c-smallest truncate-single-line" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{video.owner}}</div>
+            <div class="subtitle c-smallest truncate-single-line" [ngClass]="{'c-accent-color sub-title-op': nowPlaying}">{{formatDate(video.dateScanned)}} <span class="label c-bold" *ngIf="video.new">New</span></div>
+          </div>
+      </div>
+      <ng-container *ngIf="!video.dateLastWatched">
+        <div class="col-auto">
+          <div class="notification-new-content-badge d-flex align-items-center justify-content-center">
+            <svg width="15px" height="15px" viewBox="0 0 15 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g class="active-icon-svg" [ngClass]="{'action-enabled-icon': isNotificationCenterModeEnabled}" fill="#39A0ED" fill-rule="nonzero">
+                  <circle id="Oval-2" cx="7.5" cy="7.5" r="7.5"></circle>
+                </g>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+

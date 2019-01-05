@@ -1,17 +1,77 @@
 @import variables
 
-.header-search-box
-  border: 1px solid $textColor
-  color: $textColor !important
-  text-shadow: 0 0 0 $textColor
-  -webkit-text-fill-color: transparent
-  width: 100%
-  height: 45px
-  opacity: .35
+
+.content-body-container
+  position: absolute
+  width: 100% !important
+  overflow-x: hidden
+  overflow-y: scroll
+  height: -webkit-calc(100% - 65px)
+  height:    -moz-calc(100% - 65px)
+  height:         calc(100% - 65px)
 
 .dashed-border
-  border: 4px dashed #dee6f3
+  border: 3px dashed #dee6f3
   color: #dee6f3
   border-radius: 8px
   height: 80px
 
+.playlist-icon
+  height: 8px
+  width: 150px
+  transition: transform 100ms ease
+  transform: scaleY(1)
+
+.playlist-active
+  transform: scaleY(1.7)
+  z-index: 999
+
+.playlist-icon-col
+  max-width: 50px
+  height: 50px
+  &:hover
+    cursor: pointer
+  &:hover .playlist-icon
+    transform: scaleY(1.4)
+    z-index: 999
+
+.help-text
+  -webkit-animation: fadein 300ms ease
+  -moz-animation: fadein 300ms ease
+  -ms-animation: fadein 300ms ease
+  -o-animation: fadein 300ms ease
+  animation: fadein 300ms ease
+
+.section-text
+  color: $textSecondaryAccentColor
+
+@keyframes fadein
+  from
+    opacity: 0
+  to
+    opacity: 1
+
+@media screen and (min-width: 768px)
+  .solidify
+    min-width: 448px !important
+    max-width: 448px !important
+
+.expand-height
+  max-height: 185px
+
+.loader-container
+  min-height: 320px !important
+  @media screen and (min-width: 1200px)
+    min-height: 200px !important
+
+.truncate-single-line
+  @media screen and (min-width: 768px)
+    overflow: hidden
+    white-space: nowrap
+    text-overflow: ellipsis
+
+.section-text-style
+  opacity: 0.55
+
+.section-main-text-style
+  opacity: 0.70

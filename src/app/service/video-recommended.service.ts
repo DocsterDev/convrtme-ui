@@ -1,18 +1,23 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {HttpClient} from '@angular/common/http';
-import {ConfigService} from './config.service';
+import {Subscription} from 'rxjs/Subscription';
+import {environment} from '../../environments/environment';
+import 'rxjs/Rx';
 
 @Injectable()
-export class VideoRecommendedService {
-  constructor(private http: HttpClient, private config: ConfigService) {
+export class VideoRecommendedService implements OnDestroy {
+
+  private videoRecommendationSubscription: Subscription;
+
+  constructor(private http: HttpClient) {
   }
 
   private resultList = new Subject<any>();
 
-  getServiceObservable(videoId: string) {
-    return this.http.get(this.config.getAddress() + '/api/videos/recommended', {
+  public getServiceObservable(videoId: string) {
+    return this.http.get(environment.apiUrl + '/api/videos/recommended', {
       params: {
         v: videoId
       }
@@ -20,15 +25,22 @@ export class VideoRecommendedService {
   }
 
   recommended(videoId: string) {
-    this.getServiceObservable(videoId).subscribe((response) => {
-      this.resultList.next(response);
+    this.videoRecommendationSubscription = this.getServiceObservable(videoId).subscribe((response) => {
+      this.triggerVideoLoad(response);
     }, (error) => {
       console.log(error);
     });
+  }
+
+  public triggerVideoLoad(videoList:any) {
+    this.resultList.next(videoList);
   }
 
   getResultList(): Observable<any> {
     return this.resultList.asObservable();
   }
 
+  ngOnDestroy() {
+    this.videoRecommendationSubscription.unsubscribe();
+  }
 }

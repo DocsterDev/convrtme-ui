@@ -1,0 +1,8 @@
+<svg width="31px" height="31px" viewBox="0 0 31 31" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="schedule" fill="#B8C0CF">
+      <path d="M15.5,0 C6.975,0 0,6.975 0,15.5 C0,24.025 6.975,31 15.5,31 C24.025,31 31,24.025 31,15.5 C31,6.975 24.025,0 15.5,0 L15.5,0 Z M15.5,27.9 C8.68,27.9 3.1,22.32 3.1,15.5 C3.1,8.68 8.68,3.1 15.5,3.1 C22.32,3.1 27.9,8.68 27.9,15.5 C27.9,22.32 22.32,27.9 15.5,27.9 L15.5,27.9 Z" id="Shape"></path>
+      <polygon id="Shape" points="15.5 6 13 6 13 16 21.6666667 21.3333333 23 19.1666667 15.5 14.6666667"></polygon>
+    </g>
+  </g>
+</svg>

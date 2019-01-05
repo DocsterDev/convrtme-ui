@@ -7,17 +7,20 @@
 @import styles/foundation/padding
 @import styles/atoms/buttons
 @import styles/atoms/inputs
-@import styles/atoms/search-suggestions
 
 html, body
   font-family: $fontAvenir !important
+  -webkit-font-smoothing: antialiased !important
+  -moz-osx-font-smoothing: grayscale !important
+  font-smoothing: antialiased !important
+  font-smooth: always !important
 
 html
   height: 100%
   overflow: scroll
   overflow-x: hidden
 ::-webkit-scrollbar
-  width: 0px
+  width: 0
   background: transparent
 ::-webkit-scrollbar-thumb
   background: #ebebeb
@@ -25,56 +28,7 @@ html
 body
   position: relative
   min-height: 100%
-
-.dropdown-wrapper
-  @extend .c-font-circular
-  @extend .c-small
-  @extend .c-bold
-  padding: 12px 16px
-  width: 50%
-  border: 1px solid #4c6085
-  cursor: pointer
-  outline: none
-  color: #39A0ED
-  .dropdown
-    /* Styles */
-    -webkit-padding-start: 0
-    background: #fff
-    border-radius: 0 0 5px 5px
-    border: 1px solid #4c6085
-    box-sizing: border-box
-    max-height: 400px
-
-    /* Hover state */
-    .option:hover .text
-      color: #39A0ED
-
-    .option
-      padding: 0.8em
-      .text
-        text-decoration: none
-        color: #4c6085
-        padding: 1em 0
-
-.caret
-  &::after
-    content: url("/assets/img/svg/ic-expand-more.svg")
-    text-align: center
-    pointer-events: none
-
-.modal-dialog
-  max-width: 50rem !important
-
-.modal-content
-  border-radius: .75rem !important
-  border: 0 !important
-  .modal-header
-    border-bottom: none
-  .modal-body
-    padding: 3rem !important
-    margin-left: auto
-    margin-right: auto
-    padding-top: 0 !important
+  -webkit-overflow-scrolling: touch
 
 .no-outline
   &:focus

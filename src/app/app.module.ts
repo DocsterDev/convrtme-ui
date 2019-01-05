@@ -1,98 +1,99 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './header/header.component';
-import {FooterComponent} from './footer/footer.component';
 import {ContainerComponent} from './container/container.component';
-import {AdComponent} from './container/ad/ad.component';
-import {PlaylistComponent} from './container/playlist/playlist.component';
-import {VideoComponent} from './container/content/video/video.component';
-import {AudioComponent} from './container/content/audio/audio.component';
 import {ContentComponent} from './container/content/content.component';
-import {SideNavComponent} from './container/side-nav/side-nav.component';
 import {RouterModule} from '@angular/router';
 import {appRoutes} from './app.routes';
 import {TileComponent} from './common/tile/tile.component';
-import {NgCircleProgressModule} from 'ng-circle-progress';
-import {FileDropModule} from 'ngx-file-drop';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {ProgressHttpModule} from 'angular-progress-http';
-import {MetadataService} from './service/metadata.service';
 import {UserService} from './service/user.service';
 import {FormsModule} from '@angular/forms';
-import {DropdownModule} from 'ng-custom-select';
 import {ModalModule} from 'ngx-bootstrap';
 import {YoutubeComponent} from './container/content/youtube/youtube.component';
-import {StompService} from 'ng2-stomp-service';
 import {UtilsService} from './service/utils.service';
 import {LoaderComponent} from './common/loader/loader.component';
 import {SearchCardComponent} from './container/content/youtube/search-card/search-card.component';
-import {VideoService} from './service/video.service';
-import {NotificationComponent} from './global/notification/notification.component';
-import {GlobalHttpInterceptor} from './global/http-interceptor/global-http-interceptor';
-import {HttpModule} from '@angular/http';
-import {NotificationService} from './global/notification/notification.service';
-import {AudioPlayerComponent} from './global/audio-player/audio-player.component';
-import {AudioPlayerService} from './global/audio-player/audio-player.service';
+import {NotificationComponent} from './global/components/notification/notification.component';
+import {GlobalInterceptor} from './global/services/global-interceptor';
+import {NotificationService} from './global/components/notification/notification.service';
+import {AudioPlayerComponent} from './global/components/audio-player/audio-player.component';
+import {AudioPlayerService} from './global/components/audio-player/audio-player.service';
 import {MomentModule} from 'angular2-moment';
-import {ConfigService} from './service/config.service';
 import {PlaylistService} from './service/playlist.service';
 import {VideoRecommendedService} from './service/video-recommended.service';
 import {VideoAutoCompleteService} from './service/video-autocomplete.service';
 import {VideoSearchService} from './service/video-search.service';
-import {VideoMetadataService} from './service/video-metadata.service';
+import {Ng2Webstorage} from 'ngx-webstorage';
+import {PlaylistCardComponent} from './container/content/youtube/playlist-card/playlist-card.component';
+import {NgxSmoothDnDModule} from 'ngx-smooth-dnd';
+import {IpService} from './service/ip.service';
+import {HeaderService} from './service/header.service';
+import {NotificationCenterComponent} from './header/notification-center/notification-center.component';
+import {ClickStopPropagationDirective} from './directives/click-stop-propagation.directive';
+import {SearchAutoCompleteComponent} from './header/search-auto-complete/search-auto-complete.component';
+import {ClickPreventDefaultDirective} from './directives/click-prevent-default.directive';
+import {NotificationGroupComponent} from './header/notification-center/notification-group/notification-group.component';
+import {NotificationVideoComponent} from './header/notification-center/notification-group/notification-video/notification-video.component';
+import {NotificationCenterService} from './service/notification-center.service';
+import {FadeAnimationDirective} from './directives/fade-animation.directive';
+import {EventBusService} from "./service/event-bus.service";
+import {StreamPrefetchService} from './service/stream-prefetch.service';
+import { SignInComponent } from './container/content/sign-in/sign-in.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    FooterComponent,
     ContentComponent,
-    SideNavComponent,
     ContainerComponent,
-    AdComponent,
-    PlaylistComponent,
-    VideoComponent,
-    AudioComponent,
     TileComponent,
     YoutubeComponent,
     LoaderComponent,
     SearchCardComponent,
+    PlaylistCardComponent,
     NotificationComponent,
     AudioPlayerComponent,
+    NotificationCenterComponent,
+    SearchAutoCompleteComponent,
+    NotificationGroupComponent,
+    NotificationVideoComponent,
+    ClickStopPropagationDirective,
+    ClickPreventDefaultDirective,
+    FadeAnimationDirective,
+    SignInComponent
   ],
   imports: [
     FormsModule,
     BrowserModule,
     RouterModule.forRoot(appRoutes),
-    NgCircleProgressModule.forRoot(),
-    FileDropModule,
     HttpClientModule,
-    HttpModule,
-    ProgressHttpModule,
-    DropdownModule,
     ModalModule.forRoot(),
-    MomentModule
+    MomentModule,
+    Ng2Webstorage,
+    NgxSmoothDnDModule,
+    BrowserAnimationsModule
   ],
   providers: [
-    MetadataService,
     UserService,
-    StompService,
     UtilsService,
-    VideoService,
     VideoSearchService,
     VideoRecommendedService,
-    VideoMetadataService,
     VideoAutoCompleteService,
     NotificationService,
     AudioPlayerService,
-    ConfigService,
     PlaylistService,
+    IpService,
+    HeaderService,
+    NotificationCenterService,
+    EventBusService,
+    StreamPrefetchService,
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: GlobalHttpInterceptor,
+      useClass: GlobalInterceptor,
       multi: true
     }
   ],
