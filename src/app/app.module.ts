@@ -43,6 +43,10 @@ import {FadeAnimationDirective} from './directives/fade-animation.directive';
 import {EventBusService} from "./service/event-bus.service";
 import {StreamPrefetchService} from './service/stream-prefetch.service';
 import { SignInComponent } from './container/content/sign-in/sign-in.component';
+import { StoreModule } from '@ngrx/store';
+import { reducers, metaReducers } from './reducers';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -75,7 +79,9 @@ import { SignInComponent } from './container/content/sign-in/sign-in.component';
     MomentModule,
     Ng2Webstorage,
     NgxSmoothDnDModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    StoreModule.forRoot(reducers, { metaReducers }),
+    !environment.production ? StoreDevtoolsModule.instrument() : []
   ],
   providers: [
     UserService,
