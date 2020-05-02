@@ -116,7 +116,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
         if (this.previousQuery !== this.query) {
           this.videoSearchService.search(this.query);
         } else if (!this.query && this.videoList.length === 0) {
-          this.videoSearchService.search('fox news or msnbc');
+          this.videoSearchService.search('bumper2bumper');
         }
         if (this.videoId && (this.previousQuery === this.query || !this.previousQuery) && !this.isLoading) {
           this.showNowPlayingContainer = true;
